@@ -9,3 +9,6 @@ Stack:
 -   Tailwind CSS
 -   NodeJS - for tailwind
 -   Composer
+
+Need to install 
+ - Node modules - npm install 
