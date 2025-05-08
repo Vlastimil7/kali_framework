@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "watch": "npx @tailwindcss/cli -i ./src/assets/css/main.css -o ./public/assets/css/style.css --watch",
+    "build": "npx @tailwindcss/cli -i ./src/assets/css/main.css -o ./public/assets/css/style.css --minify"
+  },
+  "dependencies": {
+    "tailwindcss": "latest",
+    "@tailwindcss/cli": "latest"
+  }
+}

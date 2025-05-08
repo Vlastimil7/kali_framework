@@ -1,0 +1,6 @@
+/vendor/
+/storage/logs/*
+/storage/cache/*
+/storage/uploads/*
+.env
+/node_modules/
