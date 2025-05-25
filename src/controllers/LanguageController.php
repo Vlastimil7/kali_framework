@@ -56,7 +56,7 @@ class LanguageController extends Controller
         }
         
         $this->view('admin/translations/index', [
-            'title' => 'Správa překladů | SuperKrabicky.cz - Admin',
+            'title' => 'Správa překladů | Counter.cz - Admin',
             'keys' => $keys,
             'translations' => $translations,
             'languages' => $this->languageModel->getSupportedLanguages(),
@@ -92,7 +92,7 @@ class LanguageController extends Controller
         }
         
         $this->view('admin/translations/edit', [
-            'title' => 'Editace překladu | SuperKrabicky.cz - Admin',
+            'title' => 'Editace překladu | Counter.cz - Admin',
             'key' => $key,
             'category' => $category,
             'translations' => $translations,
@@ -164,7 +164,7 @@ class LanguageController extends Controller
         }
         
         $this->view('admin/translations/add', [
-            'title' => 'Přidání překladu | SuperKrabicky.cz - Admin',
+            'title' => 'Přidání překladu | Counter.cz - Admin',
             'languages' => $this->languageModel->getSupportedLanguages()
         ]);
     }
@@ -233,7 +233,7 @@ class LanguageController extends Controller
         }
         
         $this->view('admin/translations/import', [
-            'title' => 'Import překladů | SuperKrabicky.cz - Admin'
+            'title' => 'Import překladů | Counter.cz - Admin'
         ]);
     }
     

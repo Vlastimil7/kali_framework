@@ -6,7 +6,7 @@ use Core\Controller;
 class HomeController extends Controller {
     public function index() {
         $data = [
-            'title' => 'Domů | SuperKrabicky.cz'
+            'title' => 'Domů | Counter.cz'
         ];
         
         $this->view('home/index', $data);

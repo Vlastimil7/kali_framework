@@ -6,12 +6,12 @@
 return [
     'db' => [
         'host' => 'localhost',
-        'dbname' => 'superkrabicky',
+        'dbname' => 'counter',
         'username' => 'root',
         'password' => ''
     ],
     'app' => [
-        'name' => 'SuperKrabicky.cz',
-        'email' => 'info@superkrabicky.cz'
+        'name' => 'Counter.cz',
+        'email' => 'info@Counter.cz'
     ]
 ];

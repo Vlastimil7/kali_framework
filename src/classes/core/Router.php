@@ -289,7 +289,7 @@ class Router {
             
             // Data pro layout
             $data = [
-                'title' => 'Stránka nenalezena | SuperKrabicky.cz',
+                'title' => 'Stránka nenalezena | Counter.cz',
                 'content' => $content
             ];
             

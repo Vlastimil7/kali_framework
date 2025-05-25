@@ -4,16 +4,12 @@ namespace Controllers;
 
 use Core\Controller;
 use Models\User;
-use Models\Order;
-use Models\Menu;
-use Models\MealSize;
+
 
 class DashboardController extends Controller
 {
     private $userModel;
-    private $orderModel;
-    private $menuModel;
-    private $mealSizeModel;
+ 
 
     public function __construct()
     {
@@ -24,9 +20,7 @@ class DashboardController extends Controller
         }
 
         $this->userModel = new User();
-        $this->orderModel = new Order();
-        $this->menuModel = new Menu();
-        $this->mealSizeModel = new MealSize();
+
     }
 
     // V DashboardController.php upravte metodu index
@@ -45,24 +39,13 @@ class DashboardController extends Controller
             exit;
         }
 
-        // Pro běžné uživatele
-        $activeOrders = $this->orderModel->getActiveOrdersByUserId($userId);
-        $categories = $this->menuModel->getActiveMenuCategories();
-        $menuItems = [];
-        $mealSizes = $this->mealSizeModel->getActiveSizes();
 
-        // Získání položek pro každou kategorii
-        foreach ($categories as $category) {
-            $menuItems[$category['id']] = $this->menuModel->getCurrentMenuItemsByCategory($category['id']);
-        }
+
+    
 
         $this->view('dashboard/index', [
-            'title' => 'Můj přehled | SuperKrabicky.cz',
-            'user' => $user,
-            'activeOrders' => $activeOrders,
-            'categories' => $categories,
-            'menuItems' => $menuItems,
-            'mealSizes' => $mealSizes
+            'title' => 'Můj přehled | Counter.cz',
+            'user' => $user
         ]);
     }
 }

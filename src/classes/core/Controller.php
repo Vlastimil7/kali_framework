@@ -63,7 +63,7 @@ class Controller {
     
     protected function show404() {
         $data = [
-            'title' => __('page_not_found') . ' | SuperKrabicky.cz',
+            'title' => __('page_not_found') . ' | Counter.cz',
             'content' => $this->renderView('errors/404')
         ];
         

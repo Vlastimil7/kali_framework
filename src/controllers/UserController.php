@@ -3,7 +3,6 @@ namespace Controllers;
 
 use Core\Controller;
 use Models\User;
-use Models\Order;
 
 class UserController extends Controller {
     private $userModel;
@@ -15,7 +14,7 @@ class UserController extends Controller {
     // Zobrazení přihlašovacího formuláře
     public function showLogin() {
         $this->view('users/login', [
-            'title' => 'Přihlášení | SuperKrabicky.cz'
+            'title' => 'Přihlášení | Counter.cz'
         ]);
     }
     
@@ -58,7 +57,7 @@ class UserController extends Controller {
     // Zobrazení registračního formuláře
     public function showRegister() {
         $this->view('users/register', [
-            'title' => 'Registrace | SuperKrabicky.cz'
+            'title' => 'Registrace | Counter.cz'
         ]);
     }
     
@@ -105,14 +104,11 @@ class UserController extends Controller {
         $userId = $_SESSION['user_id'];
         $user = $this->userModel->getUserById($userId);
         
-        // Případně načtení objednávek uživatele
-        $orderModel = new Order();
-        $orders = $orderModel->getRecentOrdersByUserId($userId, 5); // Posledních 5 objednávek
+
         
         $this->view('users/profile', [
-            'title' => 'Můj profil | SuperKrabicky.cz',
-            'user' => $user,
-            'orders' => $orders
+            'title' => 'Můj profil | Counter.cz',
+            'user' => $user
         ]);
     }
     

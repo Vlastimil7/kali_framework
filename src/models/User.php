@@ -310,18 +310,18 @@ class User
     public function deleteUser($userId)
     {
         try {
-            // Kontrola, zda uživatel nemá objednávky
-            $sql = "SELECT COUNT(*) as count FROM orders WHERE user_id = :userId";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute([':userId' => $userId]);
-            $row = $stmt->fetch();
+            // // Kontrola, zda uživatel nemá objednávky
+            // $sql = "SELECT COUNT(*) as count FROM orders WHERE user_id = :userId";
+            // $stmt = $this->db->prepare($sql);
+            // $stmt->execute([':userId' => $userId]);
+            // $row = $stmt->fetch();
 
-            if ($row['count'] > 0) {
-                return [
-                    'success' => false,
-                    'message' => 'Uživatel má objednávky a nemůže být smazán'
-                ];
-            }
+            // if ($row['count'] > 0) {
+            //     return [
+            //         'success' => false,
+            //         'message' => 'Uživatel má objednávky a nemůže být smazán'
+            //     ];
+            // }
 
             // Smazání uživatele
             $sql = "DELETE FROM users WHERE id = :id";

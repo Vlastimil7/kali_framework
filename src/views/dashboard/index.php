@@ -84,51 +84,6 @@ if (!isset($_SESSION['user_id'])) {
                 </div>
             </div>
 
-            <!-- Aktivní objednávky -->
-            <div class="mb-10">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Aktivní objednávky</h3>
-                    <a href="<?= BASE_URL ?>/orders" class="text-blue-600 hover:text-blue-800 font-medium text-sm">Zobrazit všechny →</a>
-                </div>
-
-                <?php if (isset($activeOrders) && count($activeOrders) > 0): ?>
-                    <div class="bg-white shadow overflow-hidden rounded-lg">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Číslo</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Datum</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stav</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cena</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Akce</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <?php foreach ($activeOrders as $order): ?>
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#<?= $order['id'] ?></td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= date('d.m.Y', strtotime($order['created_at'])) ?></td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                                <?= htmlspecialchars($order['status']) ?>
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= number_format($order['total_price'], 2, ',', ' ') ?> Kč</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <a href="<?= BASE_URL ?>/orders/view/<?= $order['id'] ?>" class="text-blue-600 hover:text-blue-900">Zobrazit detail</a>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                <?php else: ?>
-                    <div class="bg-yellow-50 p-4 rounded-lg text-center">
-                        <p class="text-yellow-700">Nemáte žádné aktivní objednávky.</p>
-                      
-                    </div>
-                <?php endif; ?>
-            </div>
 
             <!-- Sekce s menu v tabulce -->
             <div>
