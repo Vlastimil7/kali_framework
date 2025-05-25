@@ -11,6 +11,12 @@ $router->get('register', 'UserController@showRegister');
 $router->post('register/process', 'UserController@processRegister');
 $router->get('logout', 'UserController@logout');
 
+// Reset hesla routes
+$router->get('password/reset', 'UserController@showPasswordResetRequest');
+$router->post('password/email', 'UserController@sendPasswordResetEmail');
+$router->get('password/reset/{token}', 'UserController@showPasswordReset');
+$router->post('password/update', 'UserController@updatePassword');
+
 // Dashboard pro přihlášené uživatele (Uživatelská část)
 $router->get('dashboard', 'DashboardController@index');
 

@@ -4,7 +4,11 @@
             "Core\\": "src/classes/core/",
             "Controllers\\": "src/controllers/",
             "Models\\": "src/models/",
-            "Api\\": "src/api/"
+            "Api\\": "src/api/",
+            "Helpers\\": "src/helpers/"
         }
+    },
+    "require": {
+        "phpmailer/phpmailer": "^6.10"
     }
 }

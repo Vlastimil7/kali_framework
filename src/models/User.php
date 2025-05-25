@@ -10,7 +10,7 @@ class User
 
     public function __construct()
     {
-        $this->db = new Database();
+        $this->db = Database::getInstance();
     }
 
     // Registrace nového uživatele
@@ -386,7 +386,7 @@ class User
 
                 $transStmt = $this->db->prepare($transactionSql);
                 $transStmt->bindValue(':user_id', $userId, \PDO::PARAM_INT);
-                $transStmt->bindValue(':order_id', $orderId ? : 0, \PDO::PARAM_INT);
+                $transStmt->bindValue(':order_id', $orderId ?: 0, \PDO::PARAM_INT);
                 $transStmt->bindValue(':amount', abs($amount), \PDO::PARAM_STR); // Ukládáme absolutní hodnotu
                 $transStmt->bindValue(':type', $transactionType, \PDO::PARAM_STR);
                 $transStmt->bindValue(':method', $paymentMethod, \PDO::PARAM_STR);
@@ -411,6 +411,156 @@ class User
             return [
                 'success' => false,
                 'message' => 'Chyba při aktualizaci kreditu: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    /**
+     * Získání uživatele pomocí emailu
+     */
+    public function getUserByEmail($email)
+    {
+        $sql = "SELECT id, email, name, surname, phone, credit_balance, allow_debit, role, created_at 
+            FROM users WHERE email = :email";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':email' => $email]);
+
+        if ($stmt->rowCount() === 1) {
+            return $stmt->fetch(\PDO::FETCH_ASSOC);
+        }
+
+        return null;
+    }
+
+    /**
+     * Vytvoření tokenu pro reset hesla
+     */
+    public function createPasswordResetToken($email)
+    {
+        // Kontrola, zda email existuje
+        if (!$this->emailExists($email)) {
+            return [
+                'success' => false,
+                'message' => 'Email nebyl nalezen v naší databázi'
+            ];
+        }
+
+        // Generování unikátního tokenu
+        $token = bin2hex(random_bytes(32));
+
+        // Nastavení expirace tokenu (například 1 hodina)
+        $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
+
+        try {
+            // Nejprve deaktivujeme všechny staré tokeny pro tento email
+            $deactivateSql = "UPDATE password_resets SET used = 1 WHERE email = :email";
+            $stmt = $this->db->prepare($deactivateSql);
+            $stmt->execute([':email' => $email]);
+
+            // Vložení nového tokenu
+            $sql = "INSERT INTO password_resets (email, token, expires_at) VALUES (:email, :token, :expires)";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                ':email' => $email,
+                ':token' => $token,
+                ':expires' => $expires
+            ]);
+
+            // Získání jména uživatele pro email
+            $user = $this->getUserByEmail($email);
+            $userName = $user ? $user['name'] : '';
+
+            return [
+                'success' => true,
+                'token' => $token,
+                'email' => $email,
+                'userName' => $userName
+            ];
+        } catch (\PDOException $e) {
+            return [
+                'success' => false,
+                'message' => 'Chyba databáze: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    /**
+     * Ověření tokenu pro reset hesla
+     */
+    public function verifyPasswordResetToken($token)
+    {
+        try {
+            $sql = "SELECT * FROM password_resets WHERE token = :token AND used = 0 AND expires_at > NOW()";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':token' => $token]);
+
+            if ($stmt->rowCount() === 1) {
+                return [
+                    'success' => true,
+                    'reset_data' => $stmt->fetch(\PDO::FETCH_ASSOC)
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Neplatný nebo expirovaný token pro reset hesla'
+                ];
+            }
+        } catch (\PDOException $e) {
+            return [
+                'success' => false,
+                'message' => 'Chyba databáze: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    /**
+     * Reset hesla
+     */
+    public function resetPassword($token, $newPassword)
+    {
+        try {
+            $this->db->beginTransaction();
+
+            // Ověření tokenu
+            $tokenResult = $this->verifyPasswordResetToken($token);
+            if (!$tokenResult['success']) {
+                $this->db->rollback();
+                return $tokenResult;
+            }
+
+            $resetData = $tokenResult['reset_data'];
+            $email = $resetData['email'];
+
+            // Hashování nového hesla
+            $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+            // Aktualizace hesla
+            $updateSql = "UPDATE users SET password = :password WHERE email = :email";
+            $stmt = $this->db->prepare($updateSql);
+            $stmt->execute([
+                ':password' => $hashedPassword,
+                ':email' => $email
+            ]);
+
+            // Označení tokenu jako použitého
+            $tokenSql = "UPDATE password_resets SET used = 1 WHERE token = :token";
+            $stmt = $this->db->prepare($tokenSql);
+            $stmt->execute([':token' => $token]);
+
+            $this->db->commit();
+
+            return [
+                'success' => true,
+                'message' => 'Heslo bylo úspěšně změněno'
+            ];
+        } catch (\PDOException $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollback();
+            }
+
+            return [
+                'success' => false,
+                'message' => 'Chyba databáze: ' . $e->getMessage()
             ];
         }
     }

@@ -1,5 +1,6 @@
 <?php
 define('ROOT_PATH', dirname(__DIR__));
+require_once ROOT_PATH . '/vendor/autoload.php'; 
 require_once ROOT_PATH . '/src/config/config.php';
 
 
@@ -19,7 +20,8 @@ spl_autoload_register(function ($className) {
         'Api\\' => 'Api/',
         'Core\\' => 'classes/core/',
         'Controllers\\' => 'controllers/',
-        'Models\\' => 'models/'
+        'Models\\' => 'models/',
+        'Helpers\\' => 'helpers/'
     ];
 
     foreach ($namespaceMap as $namespace => $path) {

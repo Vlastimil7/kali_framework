@@ -7,6 +7,7 @@ Stack:
 -   PHP 8+
 -   Vanila Javascript
 -   Tailwind CSS
+-   PHPMailer
 -   NodeJS - for tailwind
 -   Composer
 
