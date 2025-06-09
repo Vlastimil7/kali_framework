@@ -56,7 +56,7 @@ class LanguageController extends Controller
         }
         
         $this->view('admin/translations/index', [
-            'title' => 'Správa překladů | Counter.cz - Admin',
+            'title' => 'Správa překladů | Kali-framework - Admin',
             'keys' => $keys,
             'translations' => $translations,
             'languages' => $this->languageModel->getSupportedLanguages(),
@@ -92,7 +92,7 @@ class LanguageController extends Controller
         }
         
         $this->view('admin/translations/edit', [
-            'title' => 'Editace překladu | Counter.cz - Admin',
+            'title' => 'Editace překladu | Kali-framework - Admin',
             'key' => $key,
             'category' => $category,
             'translations' => $translations,
@@ -164,7 +164,7 @@ class LanguageController extends Controller
         }
         
         $this->view('admin/translations/add', [
-            'title' => 'Přidání překladu | Counter.cz - Admin',
+            'title' => 'Přidání překladu | Kali-framework - Admin',
             'languages' => $this->languageModel->getSupportedLanguages()
         ]);
     }
@@ -233,7 +233,7 @@ class LanguageController extends Controller
         }
         
         $this->view('admin/translations/import', [
-            'title' => 'Import překladů | Counter.cz - Admin'
+            'title' => 'Import překladů | Kali-framework - Admin'
         ]);
     }
     

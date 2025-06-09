@@ -63,7 +63,7 @@ class Controller {
     
     protected function show404() {
         $data = [
-            'title' => __('page_not_found') . ' | Counter.cz',
+            'title' => __('page_not_found') . ' | Kali-framework',
             'content' => $this->renderView('errors/404')
         ];
         

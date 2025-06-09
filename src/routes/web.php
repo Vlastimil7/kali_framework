@@ -26,3 +26,9 @@ $router->post('profile/update', 'UserController@updateProfile');
 
 // Změna jazyka
 $router->get('language/change/{lang}', 'LanguageController@changeLanguage');
+
+// Definice cest - cookies 
+$router->get('cookies/settings', 'CookieController@showSettings');
+$router->post('cookies/save', 'CookieController@saveConsent');
+$router->get('cookies/accept-all', 'CookieController@acceptAll');
+$router->get('cookies/reject', 'CookieController@rejectAll');

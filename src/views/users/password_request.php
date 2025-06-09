@@ -1,11 +1,15 @@
 <?php
-// Pohled pro reset hesla
+// Pohled pro žádost o reset hesla
+
+// Získání případných dat z předchozího odeslání s chybami
+$formData = $_SESSION['form_data'] ?? [];
+unset($_SESSION['form_data']);
 ?>
 
 <div class="max-w-md mx-auto">
     <div class="bg-white shadow-md rounded-lg overflow-hidden">
         <div class="bg-blue-600 px-6 py-4">
-            <h1 class="text-2xl font-bold text-white">Reset hesla</h1>
+            <h1 class="text-2xl font-bold text-white">Zapomenuté heslo</h1>
         </div>
 
         <?php if (isset($_SESSION['flash_message'])): ?>
@@ -19,43 +23,30 @@
         <?php endif; ?>
 
         <div class="p-6 space-y-6">
-            <p class="text-gray-600">Zadejte nové heslo.</p>
+            <p class="text-gray-600">Zadejte svůj e-mail a my vám zašleme instrukce pro reset hesla.</p>
             
-            <form id="reset-form" action="<?= BASE_URL ?>/password/update" method="post" class="space-y-4" onsubmit="return validateForm()">
-                <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
+            <form id="reset-form" action="<?= BASE_URL ?>/password/email" method="post" class="space-y-4" onsubmit="return validateForm()">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        value="<?= htmlspecialchars($formData['email'] ?? '') ?>"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                        required
+                    >
+                </div>
+                
                 <!-- Skryté pole pro reCAPTCHA token -->
                 <input type="hidden" id="recaptcha-token" name="recaptcha_token">
-                
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Nové heslo</label>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
-                        required
-                        minlength="6"
-                    >
-                    <p class="text-xs text-gray-500 mt-1">Heslo musí mít alespoň 6 znaků</p>
-                </div>
-                
-                <div>
-                    <label for="password_confirm" class="block text-sm font-medium text-gray-700 mb-1">Potvrzení hesla</label>
-                    <input 
-                        type="password" 
-                        id="password_confirm" 
-                        name="password_confirm" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
-                        required
-                    >
-                </div>
                 
                 <div>
                     <button 
                         type="submit" 
                         class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer"
                     >
-                        Resetovat heslo
+                        Odeslat odkaz pro reset hesla
                     </button>
                 </div>
             </form>
@@ -90,24 +81,17 @@
     function validateForm() {
         event.preventDefault(); // Zastaví výchozí akci formuláře
         
-        // Kontrola shodnosti hesel
-        var password = document.getElementById('password').value;
-        var confirmPassword = document.getElementById('password_confirm').value;
-        
-        if (password !== confirmPassword) {
-            alert('Hesla se neshodují!');
-            return false;
-        }
-        
-        // Kontrola minimální délky
-        if (password.length < 6) {
-            alert('Heslo musí mít alespoň 6 znaků!');
+        // Validace vstupu
+        const email = document.getElementById('email').value;
+        if (!email) {
+            alert('Zadejte prosím emailovou adresu');
             return false;
         }
         
         // Získání reCAPTCHA tokenu
         grecaptcha.ready(function() {
-            grecaptcha.execute('<?= RECAPTCHA_SITE_KEY ?>', {action: 'password_reset_confirm'}).then(function(token) {
+            grecaptcha.execute('<?= RECAPTCHA_SITE_KEY ?>', {action: 'password_reset'}).then(function(token) {
+                console.log('reCAPTCHA token:', token);
                 document.getElementById('recaptcha-token').value = token;
                 document.getElementById('reset-form').submit();
             });

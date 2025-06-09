@@ -11,7 +11,7 @@ return [
         'password' => ''
     ],
     'app' => [
-        'name' => 'Counter.cz',
-        'email' => 'info@Counter.cz'
+        'name' => 'Kali-framework',
+        'email' => 'info@Kali-framework'
     ]
 ];

@@ -36,7 +36,7 @@ class AdminController extends Controller
         // Můžete přidat další statistiky podle potřeby
 
         $this->view('admin/dashboard', [
-            'title' => 'Admin Dashboard | Counter.cz',
+            'title' => 'Admin Dashboard | Kali-framework',
             'userCount' => $userCount
 
         ]);
@@ -49,7 +49,7 @@ class AdminController extends Controller
         $users = $this->userModel->getAllUsers();
 
         $this->view('admin/users/index', [
-            'title' => 'Správa uživatelů | Counter.cz',
+            'title' => 'Správa uživatelů | Kali-framework',
             'users' => $users
         ]);
     }
@@ -58,7 +58,7 @@ class AdminController extends Controller
     public function addUser()
     {
         $this->view('admin/users/create', [
-            'title' => 'Přidat uživatele | Counter.cz'
+            'title' => 'Přidat uživatele | Kali-framework'
         ]);
     }
     // Zobrazení editace uživatele
@@ -73,7 +73,7 @@ class AdminController extends Controller
         }
 
         $this->view('admin/users/edit', [
-            'title' => 'Úprava uživatele | Counter.cz',
+            'title' => 'Úprava uživatele | Kali-framework',
             'user' => $user
         ]);
     }
@@ -174,7 +174,7 @@ class AdminController extends Controller
         }
 
         $this->view('admin/users/add_credit', [
-            'title' => 'Dobít kredit | Counter.cz',
+            'title' => 'Dobít kredit | Kali-framework',
             'user' => $user
         ]);
     }

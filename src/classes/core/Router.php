@@ -289,7 +289,7 @@ class Router {
             
             // Data pro layout
             $data = [
-                'title' => 'Stránka nenalezena | Counter.cz',
+                'title' => 'Stránka nenalezena | Kali-framework',
                 'content' => $content
             ];
             

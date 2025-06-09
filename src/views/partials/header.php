@@ -3,7 +3,7 @@
         <div class="flex justify-between items-center h-16">
             <!-- Logo -->
             <a href="<?= BASE_URL ?>/" class="text-2xl font-bold text-green-600">
-                Counter.cz
+                Kali-Framework
             </a>
 
             <!-- Přepínač jazyků -->

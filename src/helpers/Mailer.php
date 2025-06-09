@@ -43,7 +43,7 @@ class Mailer
             $this->mail->isHTML(true);
             
             // Předmět
-            $this->mail->Subject = 'Reset hesla na Counter.cz';
+            $this->mail->Subject = 'Reset hesla na Kali-framework';
             
             // Vytvoření odkazu pro reset
             $resetLink = BASE_URL . '/password/reset/' . $token;
@@ -58,7 +58,7 @@ class Mailer
                 . "Pro reset hesla klikněte na následující odkaz:\n\n"
                 . $resetLink . "\n\n"
                 . "Pokud jste o reset hesla nežádali, tento email můžete ignorovat.\n\n"
-                . "S pozdravem,\nTým Counter.cz";
+                . "S pozdravem,\nTým Kali-framework";
             
             // Odeslání emailu
             $this->mail->send();
@@ -135,7 +135,7 @@ class Mailer
                 </div>
                 <div class="content">
                     <p>Dobrý den, ' . $name . ',</p>
-                    <p>obdrželi jsme žádost o reset hesla pro váš účet na webu Counter.cz.</p>
+                    <p>obdrželi jsme žádost o reset hesla pro váš účet na webu Kali-framework.</p>
                     <p>Pro reset hesla klikněte na následující tlačítko:</p>
                     
                     <div style="text-align: center;">
@@ -149,10 +149,10 @@ class Mailer
                     
                     <p>Pokud jste o reset hesla nežádali, tento email můžete ignorovat.</p>
                     
-                    <p>S pozdravem,<br>Tým Counter.cz</p>
+                    <p>S pozdravem,<br>Tým Kali-framework</p>
                 </div>
                 <div class="footer">
-                    <p>© ' . date('Y') . ' Counter.cz - Všechna práva vyhrazena</p>
+                    <p>© ' . date('Y') . ' Kali-framework - Všechna práva vyhrazena</p>
                 </div>
             </div>
         </body>

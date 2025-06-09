@@ -44,7 +44,7 @@ class DashboardController extends Controller
     
 
         $this->view('dashboard/index', [
-            'title' => 'Můj přehled | Counter.cz',
+            'title' => 'Můj přehled | Kali-framework',
             'user' => $user
         ]);
     }
