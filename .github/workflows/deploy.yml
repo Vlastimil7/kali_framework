@@ -1,5 +1,4 @@
 name: Deploy Kali Framework
-
 on:
   push:
     branches: [ main ]
@@ -9,21 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        
-    - name: Install Node dependencies
-      run: npm ci
-      
-    - name: Build Tailwind CSS
-      run: npm run build
-      
     - name: Deploy to server
       uses: appleboy/ssh-action@v1.0.0
       with:
@@ -35,23 +19,16 @@ jobs:
           
           echo "🚀 Starting deployment..."
           
-          # Pull latest changes
+          # Pull latest changes (including your built CSS)
           echo "📥 Pulling latest changes..."
           git fetch origin
           git reset --hard origin/main
           
-          # Install PHP dependencies
+          # Only PHP dependencies
           echo "📦 Installing PHP dependencies..."
           composer install --no-dev --optimize-autoloader --no-interaction
           
-          # Install Node dependencies and build
-          echo "📦 Installing Node dependencies..."
-          npm ci --production
-          
-          echo "🏗️ Building assets..."
-          npm run build
-          
-          # Set proper permissions
+          # Set permissions
           echo "🔧 Setting permissions..."
           sudo chown -R deploy:www-data .
           sudo chmod -R 755 .
@@ -61,10 +38,9 @@ jobs:
           # Clear cache
           echo "🧹 Clearing cache..."
           rm -rf storage/cache/*
-          rm -rf storage/logs/*.log
           
           # Reload web server
           echo "🔄 Reloading Apache..."
-          sudo systemctl reload php8.2-fpm apache2
+          sudo systemctl reload apache2
           
           echo "✅ Deployment completed successfully!"
