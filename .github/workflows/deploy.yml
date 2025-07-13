@@ -35,11 +35,10 @@ jobs:
           
           echo "🚀 Starting deployment..."
           
-          # Pull latest changes (safe method)
+          # Pull latest changes
           echo "📥 Pulling latest changes..."
-          git stash push -m "Auto-stash before deployment" || true
-          git pull origin main
-          git stash pop || true
+          git fetch origin
+          git reset --hard origin/main
           
           # Install PHP dependencies
           echo "📦 Installing PHP dependencies..."
