@@ -7,5 +7,6 @@
     console.log("Kali-Framework loaded successfully");
     console.log("Here is again 2")
     console.log("Here is again 3")
+    console.log("Here is again 4")
 
 </script>
