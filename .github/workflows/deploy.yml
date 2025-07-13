@@ -33,10 +33,11 @@ jobs:
           sudo chown -R deploy:www-data .
           sudo chmod -R 755 .
           
-          # FORCE sync with GitHub from MAIN
+          # FORCE sync with GitHub from MAIN branch
           echo "📥 Force syncing with GitHub from main..."
           git fetch origin
           git reset --hard origin/main
+          git checkout main
           git clean -fd
           
           # Restore critical files
