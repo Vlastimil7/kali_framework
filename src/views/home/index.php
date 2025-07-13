@@ -5,5 +5,5 @@
 
 <script>
     console.log("Kali-Framework loaded successfully");
-    console.log("Environment configuration and setup for database and SMTP settings are in place.");
+ 
 </script>

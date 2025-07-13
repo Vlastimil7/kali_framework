@@ -1,30 +1,18 @@
 name: Deploy Kali Framework
 on:
-  push:
-    branches: [ develop ]  # Staging deployment z develop větve
   pull_request:
     branches: [ main ]
-    types: [ closed ]      # Production deployment pouze při merge do main
+    types: [ closed ]      # POUZE production deployment při merge do main
+  # Odstraněno: push na develop = žádný auto deployment
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     
-    # Pouze při merge do main (ne při zavření PR bez merge)
-    if: github.event_name == 'push' || (github.event.pull_request.merged == true)
+    # Pouze při merge do main
+    if: github.event.pull_request.merged == true
     
     steps:
-    - name: Determine deployment environment
-      id: env
-      run: |
-        if [ "${{ github.ref }}" == "refs/heads/develop" ] || [ "${{ github.head_ref }}" == "develop" ]; then
-          echo "environment=staging" >> $GITHUB_OUTPUT
-          echo "branch=develop" >> $GITHUB_OUTPUT
-        else
-          echo "environment=production" >> $GITHUB_OUTPUT
-          echo "branch=main" >> $GITHUB_OUTPUT
-        fi
-    
     - name: Deploy to server
       uses: appleboy/ssh-action@v1.0.0
       with:
@@ -34,22 +22,21 @@ jobs:
         script: |
           cd /var/www/web.kalasekvyvoj.cz/web/kali-framework
           
-          echo "🚀 Starting ${{ steps.env.outputs.environment }} deployment..."
+          echo "🚀 Starting production deployment..."
           
           # Backup critical files
           echo "💾 Backing up critical files..."
           cp .env /tmp/deploy-env-backup 2>/dev/null || true
-          # Nebackupujeme .htaccess - server specific
           
           # Fix permissions BEFORE Git operations
           echo "🔧 Fixing permissions for Git operations..."
           sudo chown -R deploy:www-data .
           sudo chmod -R 755 .
           
-          # FORCE sync with GitHub
-          echo "📥 Force syncing with GitHub from ${{ steps.env.outputs.branch }}..."
+          # FORCE sync with GitHub from MAIN
+          echo "📥 Force syncing with GitHub from main..."
           git fetch origin
-          git reset --hard origin/${{ steps.env.outputs.branch }}
+          git reset --hard origin/main
           git clean -fd
           
           # Restore critical files
@@ -80,4 +67,4 @@ jobs:
           echo "🔄 Reloading services..."
           sudo systemctl reload php8.1-fpm apache2
           
-          echo "✅ ${{ steps.env.outputs.environment }} deployment completed successfully!"
+          echo "✅ Production deployment completed successfully!"
