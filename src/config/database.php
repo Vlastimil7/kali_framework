@@ -1,17 +1,16 @@
 <?php
 // src/config/database.php
 
-
-// Database setting
+// Database setting using environment variables
 return [
     'db' => [
-        'host' => 'localhost',
-        'dbname' => 'counter',
-        'username' => 'root',
-        'password' => ''
+        'host' => env('DB_HOST'),
+        'dbname' => env('DB_NAME'),
+        'username' => env('DB_USERNAME'),
+        'password' => env('DB_PASSWORD')
     ],
     'app' => [
-        'name' => 'Kali-framework',
-        'email' => 'info@Kali-framework'
+        'name' => env('MAIL_FROM_NAME'),
+        'email' => env('MAIL_FROM_ADDRESS')
     ]
 ];

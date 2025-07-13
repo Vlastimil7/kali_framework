@@ -1,6 +1,11 @@
 /vendor/
+/node_modules/
 /storage/logs/*
 /storage/cache/*
 /storage/uploads/*
 .env
-/node_modules/
+.env.production
+Thumbs.db
+desktop.ini
+.vscode/settings.json
+public/.htaccess
