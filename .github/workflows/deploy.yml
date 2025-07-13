@@ -1,5 +1,4 @@
 name: Deploy Kali Framework
-
 on:
   push:
     branches: [ main ]
@@ -9,21 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        
-    - name: Install Node dependencies
-      run: npm ci
-      
-    - name: Build Tailwind CSS
-      run: npm run build
-      
     - name: Deploy to server
       uses: appleboy/ssh-action@v1.0.0
       with:
@@ -35,12 +19,12 @@ jobs:
           
           echo "🚀 Starting deployment..."
           
-          # Backup critical files BEFORE anything
+          # Backup critical files
           echo "💾 Backing up critical files..."
           cp .env /tmp/deploy-env-backup 2>/dev/null || true
           cp public/.htaccess /tmp/deploy-htaccess-backup 2>/dev/null || true
           
-          # FORCE sync - ignore all local changes
+          # FORCE sync with GitHub
           echo "📥 Force syncing with GitHub..."
           git fetch origin
           git reset --hard origin/main
@@ -52,27 +36,23 @@ jobs:
           cp /tmp/deploy-htaccess-backup public/.htaccess 2>/dev/null || true
           chmod 600 .env
           
-          # Install dependencies
+          # Install ONLY PHP dependencies
           echo "📦 Installing PHP dependencies..."
           composer install --no-dev --optimize-autoloader --no-interaction
           
-          echo "📦 Installing Node dependencies..."
-          npm ci --production
+          # Remove node_modules if exists (cleanup)
+          echo "🧹 Cleaning up..."
+          rm -rf node_modules/
+          rm -rf storage/cache/*
+          rm -rf storage/logs/*.log
           
-          echo "🏗️ Building assets..."
-          npm run build
-          
-          # Set permissions
+          # Set CORRECT permissions for ISPConfig
           echo "🔧 Setting permissions..."
-          sudo chown -R deploy:www-data .
+          sudo chown -R web2:client1 .
+          sudo chown -R web2:www-data storage/
           sudo chmod -R 755 .
           sudo chmod -R 775 storage/
           sudo chmod 600 .env
-          
-          # Clear cache
-          echo "🧹 Clearing cache..."
-          rm -rf storage/cache/*
-          rm -rf storage/logs/*.log
           
           # Reload services
           echo "🔄 Reloading Apache..."
