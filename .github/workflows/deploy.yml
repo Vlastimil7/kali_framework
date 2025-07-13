@@ -1,71 +1,72 @@
 name: Deploy Kali Framework
 on:
   pull_request:
-    branches: [ main ]
-    types: [ closed ]      # POUZE production deployment při merge do main
+    branches: [main]
+    types: [closed] # POUZE production deployment při merge do main
   # Odstraněno: push na develop = žádný auto deployment
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     # Pouze při merge do main
     if: github.event.pull_request.merged == true
-    
+
     steps:
-    - name: Deploy to server
-      uses: appleboy/ssh-action@v1.0.0
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          cd /var/www/web.kalasekvyvoj.cz/web/kali-framework
-          
-          echo "🚀 Starting production deployment..."
-          
-          # Backup critical files
-          echo "💾 Backing up critical files..."
-          cp .env /tmp/deploy-env-backup 2>/dev/null || true
-          
-          # Fix permissions BEFORE Git operations
-          echo "🔧 Fixing permissions for Git operations..."
-          sudo chown -R deploy:www-data .
-          sudo chmod -R 755 .
-          
-          # FORCE sync with GitHub from MAIN branch
-          echo "📥 Force syncing with GitHub from main..."
-          git fetch origin
-          git reset --hard origin/main
-          git checkout main
-          git clean -fd
-          
-          # Restore critical files
-          echo "🔄 Restoring critical files..."
-          cp /tmp/deploy-env-backup .env 2>/dev/null || true
-          # .htaccess zůstává server specific - nepřepisuje se
-          chmod 600 .env
-          
-          # Install ONLY PHP dependencies
-          echo "📦 Installing PHP dependencies..."
-          composer install --no-dev --optimize-autoloader --no-interaction
-          
-          # Remove node_modules if exists (cleanup)
-          echo "🧹 Cleaning up..."
-          rm -rf node_modules/
-          rm -rf storage/cache/*
-          rm -rf storage/logs/*.log
-          
-          # Set FINAL permissions for ISPConfig
-          echo "🔧 Setting final permissions for web server..."
-          sudo chown -R web2:client1 .
-          sudo chown -R web2:www-data storage/
-          sudo chmod -R 755 .
-          sudo chmod -R 775 storage/
-          sudo chmod 600 .env
-          
-          # Reload services
-          echo "🔄 Reloading services..."
-          sudo systemctl reload php8.1-fpm apache2
-          
-          echo "✅ Production deployment completed successfully!"
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/web.kalasekvyvoj.cz/web/kali-framework
+
+            echo "🚀 Starting production deployment..."
+
+            # Backup critical files
+            echo "💾 Backing up critical files..."
+            cp .env /tmp/deploy-env-backup 2>/dev/null || true
+
+            # Fix permissions BEFORE Git operations
+            echo "🔧 Fixing permissions for Git operations..."
+            sudo chown -R deploy:www-data .
+            sudo chmod -R 755 .
+
+            # FORCE sync with GitHub from MAIN branch
+            echo "📥 Force syncing with GitHub from main..."
+            git fetch origin
+            git reset --hard origin/main
+            git checkout main
+            # Nemazej storage adresář
+            git clean -fd -e storage/
+
+            # Restore critical files
+            echo "🔄 Restoring critical files..."
+            cp /tmp/deploy-env-backup .env 2>/dev/null || true
+            # .htaccess zůstává server specific - nepřepisuje se
+            chmod 600 .env
+
+            # Install ONLY PHP dependencies
+            echo "📦 Installing PHP dependencies..."
+            composer install --no-dev --optimize-autoloader --no-interaction
+
+            # Remove node_modules if exists (cleanup)
+            echo "🧹 Cleaning up..."
+            rm -rf node_modules/
+            rm -rf storage/cache/*
+            rm -rf storage/logs/*.log
+
+            # Set FINAL permissions for ISPConfig
+            echo "🔧 Setting final permissions for web server..."
+            sudo chown -R web2:client1 .
+            sudo chown -R web2:www-data storage/
+            sudo chmod -R 755 .
+            sudo chmod -R 775 storage/
+            sudo chmod 600 .env
+
+            # Reload services
+            echo "🔄 Reloading services..."
+            sudo systemctl reload php8.1-fpm apache2
+
+            echo "✅ Production deployment completed successfully!"
