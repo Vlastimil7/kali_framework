@@ -1,46 +1,49 @@
-name: Deploy Kali Framework
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Deploy to server
-      uses: appleboy/ssh-action@v1.0.0
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          cd /var/www/web.kalasekvyvoj.cz/web/kali-framework
-          
-          echo "🚀 Starting deployment..."
-          
-          # Pull latest changes (including your built CSS)
-          echo "📥 Pulling latest changes..."
-          git fetch origin
-          git reset --hard origin/main
-          
-          # Only PHP dependencies
-          echo "📦 Installing PHP dependencies..."
-          composer install --no-dev --optimize-autoloader --no-interaction
-          
-          # Set permissions
-          echo "🔧 Setting permissions..."
-          sudo chown -R deploy:www-data .
-          sudo chmod -R 755 .
-          sudo chmod -R 775 storage/
-          sudo chmod 600 .env
-          
-          # Clear cache
-          echo "🧹 Clearing cache..."
-          rm -rf storage/cache/*
-          
-          # Reload web server
-          echo "🔄 Reloading Apache..."
-          sudo systemctl reload apache2
-          
-          echo "✅ Deployment completed successfully!"
+script: |
+  cd /var/www/web.kalasekvyvoj.cz/web/kali-framework
+  
+  echo "🚀 Starting deployment..."
+  
+  # Backup critical files BEFORE anything
+  echo "💾 Backing up critical files..."
+  cp .env /tmp/deploy-env-backup 2>/dev/null || true
+  cp public/.htaccess /tmp/deploy-htaccess-backup 2>/dev/null || true
+  
+  # FORCE sync - ignore all local changes
+  echo "📥 Force syncing with GitHub..."
+  git fetch origin
+  git reset --hard origin/main
+  git clean -fd
+  
+  # Restore critical files
+  echo "🔄 Restoring critical files..."
+  cp /tmp/deploy-env-backup .env 2>/dev/null || true
+  cp /tmp/deploy-htaccess-backup public/.htaccess 2>/dev/null || true
+  chmod 600 .env
+  
+  # Install dependencies
+  echo "📦 Installing PHP dependencies..."
+  composer install --no-dev --optimize-autoloader --no-interaction
+  
+  echo "📦 Installing Node dependencies..."
+  npm ci --production
+  
+  echo "🏗️ Building assets..."
+  npm run build
+  
+  # Set permissions
+  echo "🔧 Setting permissions..."
+  sudo chown -R deploy:www-data .
+  sudo chmod -R 755 .
+  sudo chmod -R 775 storage/
+  sudo chmod 600 .env
+  
+  # Clear cache
+  echo "🧹 Clearing cache..."
+  rm -rf storage/cache/*
+  rm -rf storage/logs/*.log
+  
+  # Reload services
+  echo "🔄 Reloading Apache..."
+  sudo systemctl reload php8.2-fpm apache2
+  
+  echo "✅ Deployment completed successfully!"
