@@ -5,4 +5,5 @@
 
 <script>
     console.log("Kali-Framework loaded successfully");
+ 
 </script>
