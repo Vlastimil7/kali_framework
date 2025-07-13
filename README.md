@@ -251,3 +251,5 @@ sudo chmod -R 775 storage/
 ## 📄 License
 
 This project is open source and available under the [MIT License](LICENSE).
+
+Test automatic deployment
