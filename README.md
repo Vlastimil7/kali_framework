@@ -252,4 +252,4 @@ sudo chmod -R 775 storage/
 
 This project is open source and available under the [MIT License](LICENSE).
 
-Test automatic deployment
+Test automatic deployment - fixed
