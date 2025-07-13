@@ -4,5 +4,5 @@
 </div>
 
 <script>
-    alert("Hello, this is a test alert from the home page!");
+    alert("Hello, this is a test alert from the home page 2!");
 </script>
