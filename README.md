@@ -163,6 +163,13 @@ project/
 │ └── uploads/ # File uploads
 └── vendor/ # Composer dependencies (ignored by git)
 
+## LOGGER
+
+HOW TO USE IT IN PROJECT
+
+1. Use a helper - use Helpers/Logger;
+2. Use a function from Logger fyi:  Logger::error('LogoBrief - PDF render failed', ['error' => $e->getMessage()]);
+
 ## 🚀 Deployment
 
 ### Automatic Deployment with GitHub Actions
