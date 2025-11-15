@@ -15,3 +15,9 @@ $router->get('api/v1/menu/category/{id}', 'Api\V1\Controllers\MenuController@cat
 $router->get('api/test', 'Api\TestController@index');
 $router->get('api/v1/simple', 'Api\V1\Controllers\SimpleController@index');
 $router->get('api/v1/random', 'Api\V1\Controllers\SimpleController@randomNumber');
+
+
+$router->get('api/v1/chat/status', 'Api\V1\Controllers\ChatController@status');
+$router->get('api/v1/chat/health', 'Api\V1\Controllers\ChatController@health'); 
+$router->get('api/v1/chat/test', 'Api\V1\Controllers\ChatController@test');
+$router->post('api/v1/chat', 'Api\V1\Controllers\ChatController@index');

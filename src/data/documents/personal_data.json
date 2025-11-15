@@ -1,0 +1,17 @@
+{
+    "personal": {
+        "name": "Vlastimil Kalášek",
+        "position": "MES System Support Specialist & Developer",
+        "location": "Hradec Králové",
+        "motto": "Life is a bug, and you're the debugger"
+    },
+    "skills": {
+        "programming": ["PHP", "JavaScript", "Python", "SQL"],
+        "technologies": ["MES systems", "Web development", "Database design"],
+        "frameworks": ["Tailwind CSS", "React", "Custom frameworks"]
+    },
+    "experience": {
+        "companies": ["Milacron", "Hartmann", "Technistone", "APAG"],
+        "specialties": ["Industrial automation", "System integration", "Process optimization"]
+    }
+}

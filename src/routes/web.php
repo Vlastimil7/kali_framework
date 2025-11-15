@@ -32,3 +32,5 @@ $router->get('cookies/settings', 'CookieController@showSettings');
 $router->post('cookies/save', 'CookieController@saveConsent');
 $router->get('cookies/accept-all', 'CookieController@acceptAll');
 $router->get('cookies/reject', 'CookieController@rejectAll');
+
+$router->get('chat', 'ChatController@index');

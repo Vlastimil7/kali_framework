@@ -1,0 +1,64 @@
+{
+  "personal": {
+    "name": "Vlastimil Kalášek",
+    "role": "MES System Support Specialist & Developer", 
+    "location": "Hradec Králové, Czech Republic",
+    "motto": "Life is a bug, and you're the debugger",
+    "philosophy": "Approaching every challenge as a problem to be systematically solved"
+  },
+  "education": {
+    "secondary": "SOS a SOU André Citroëna - Electronics and Computer Systems",
+    "university": "University of Pardubice - Informatics (ongoing)"
+  },
+  "experience": [
+    {
+      "position": "MES System Support Specialist",
+      "company": "APAGCoSyst Electronic Control Systems",
+      "period": "2024-present",
+      "description": "Ensuring smooth operation of Manufacturing Execution Systems, combining industrial experience with advanced technical expertise"
+    },
+    {
+      "position": "Application Administrator", 
+      "company": "Technistone, s.r.o.",
+      "period": "2021-2024",
+      "description": "Managing critical business applications, bridging gap between technical systems and business needs"
+    },
+    {
+      "position": "Process Engineer",
+      "company": "HARTMANN GROUP", 
+      "period": "2018-2021",
+      "description": "Process optimization and system efficiency"
+    },
+    {
+      "position": "Manufacturing Engineer",
+      "company": "Milacron",
+      "period": "2014-2018", 
+      "description": "Industrial processes and technical problem-solving"
+    }
+  ],
+  "skills": {
+    "backend": ["PHP", "MySQL"],
+    "frontend": ["JavaScript", "jQuery", "HTML", "CSS", "Tailwind CSS", "React"],
+    "industrial": ["Manufacturing Execution Systems (MES)", "Process optimization", "Industrial digitalization"],
+    "tools": ["Git", "Composer", "NPM", "Manufacturing systems"]
+  },
+  "specialties": [
+    "Industrial digitalization projects",
+    "Smart manufacturing initiatives", 
+    "Bridge between traditional industry and modern digital solutions",
+    "Enterprise application management",
+    "Manufacturing process troubleshooting"
+  ],
+  "projects": [
+    {
+      "name": "Kali Framework",
+      "description": "Custom MVC framework in PHP for web applications",
+      "technologies": ["PHP", "JavaScript", "Tailwind CSS"],
+      "github": "https://github.com/Vlastimil7/kali_framework.git"
+    }
+  ],
+  "contact": {
+    "github": "https://github.com/Vlastimil7",
+    "location": "Hradec Králové, Czech Republic"
+  }
+}
