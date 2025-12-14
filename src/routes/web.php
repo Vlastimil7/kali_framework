@@ -11,6 +11,9 @@ $router->get('register', 'UserController@showRegister');
 $router->post('register/process', 'UserController@processRegister');
 $router->get('logout', 'UserController@logout');
 
+$router->get('contact', 'ContactController@index');
+$router->post('contact/send', 'ContactController@sendMessage');
+
 // Reset hesla routes
 $router->get('password/reset', 'UserController@showPasswordResetRequest');
 $router->post('password/email', 'UserController@sendPasswordResetEmail');

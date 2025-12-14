@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use Helpers\Logger;
+
 
 class Database
 {
@@ -20,6 +22,7 @@ class Database
     public static function setConfig($config)
     {
         if (!isset($config['db'])) {
+            Logger::error("Invalid database configuration format");
             throw new \Exception("Invalid database configuration format");
         }
         self::$config = $config;
@@ -29,13 +32,10 @@ class Database
     // Privátní konstruktor - zabrání vytvoření instance mimo třídu
     private function __construct()
     {
-        // Načtení konfigurace
-        // $this->host = "localhost";
-        // $this->dbname = "superkrabicky";
-        // $this->username = "root"; // Změňte na váš uživatelský název
-        // $this->password = ""; // Změňte na vaše heslo
+
         
         if (self::$config === null) {
+            Logger::error("Database configuration not set. Call Database::setConfig() first.");
             throw new \Exception("Database configuration not set. Call Database::setConfig() first.");
         }
 
@@ -77,29 +77,11 @@ class Database
 
             $this->pdo = new \PDO($dsn, $this->username, $this->password, $options);
 
-            // Log úspěšného spojení
-            $timestamp = date('Y-m-d H:i:s');
-            $logMessage = "[{$timestamp}] Database connection successful: {$this->username}@{$this->host}/{$this->dbname}\n";
 
-            // Zajistit, že adresář pro logy existuje
-            $logDir = "../storage/logs";
-            if (!file_exists($logDir)) {
-                mkdir($logDir, 0755, true);
-            }
-
-            error_log($logMessage, 3, "../storage/logs/db_connection.log");
         } catch (\PDOException $e) {
             // Log chyby do souboru s časovým razítkem
-            $timestamp = date('Y-m-d H:i:s');
-            $logMessage = "[{$timestamp}] Database connection error: " . $e->getMessage() . "\n";
+            Logger::error("Database connection error: " . $e->getMessage());
 
-            // Zajistit, že adresář pro logy existuje
-            $logDir = "../storage/logs";
-            if (!file_exists($logDir)) {
-                mkdir($logDir, 0755, true);
-            }
-
-            error_log($logMessage, 3, "../storage/logs/db_error.log");
 
             die("Database connection error: " . $e->getMessage());
         }
@@ -109,17 +91,7 @@ class Database
     public function closeConnection()
     {
         if ($this->pdo !== null) {
-            // Log uzavření spojení
-            $timestamp = date('Y-m-d H:i:s');
-            $logMessage = "[{$timestamp}] Database connection closed\n";
-
-            // Zajistit, že adresář pro logy existuje
-            $logDir = "../storage/logs";
-            if (!file_exists($logDir)) {
-                mkdir($logDir, 0755, true);
-            }
-
-            error_log($logMessage, 3, "../storage/logs/db_connection.log");
+            
 
             $this->pdo = null;
         }
