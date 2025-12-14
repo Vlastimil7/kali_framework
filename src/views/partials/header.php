@@ -6,7 +6,7 @@
 
                 <!--      Logo -->
                 <a href="<?= BASE_URL ?>/" class="block">
-                    <img src="<?= BASE_URL ?>/assets/images/home/loga/pedia_logo.png"
+                    <img src="<?= BASE_URL ?>/assets/images/logo/ivision_media_logo_new.png"
                         alt="Logo"
                         class="h-18 w-auto  rounded-4xl ">
                 </a>
