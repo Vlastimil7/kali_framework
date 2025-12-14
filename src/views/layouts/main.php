@@ -21,7 +21,7 @@
     $seoTitle = $data['title'] ?? 'MUDr. Ziad Albahri, Ph.D. – pediatr Jaroměř';
     $seoDesc  = $data['description'] ?? 'Praktický lékař pro děti a dorost – ordinace PEDIA s.r.o. a PEDIA AZ s.r.o. v Jaroměři (okolí Náchoda).';
     $seoKw    = $data['keywords'] ?? 'pediatr Jaroměř, pediatr Náchod, dětský lékař Jaroměř, praktický lékař pro děti a dorost, MUDr. Ziad Albahri, PEDIA s.r.o., PEDIA AZ s.r.o., očkování, preventivní prohlídky';
-    $ogImage  = $data['og_image'] ?? (rtrim(SITE_URL, '/') . '/assets/images/home/loga/pedia_logo.png'); // dej si tam reálný obrázek 1200x630
+    $ogImage  = $data['og_image'] ?? (rtrim(SITE_URL, '/') . '/assets/images/logo/ivision_media_logo_new.png'); // dej si tam reálný obrázek 1200x630
     ?>
     <title><?= htmlspecialchars($seoTitle, ENT_QUOTES) ?></title>
     <meta name="description" content="<?= htmlspecialchars($seoDesc, ENT_QUOTES) ?>">
