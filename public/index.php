@@ -3,7 +3,7 @@ define('ROOT_PATH', dirname(__DIR__));
 require_once ROOT_PATH . '/vendor/autoload.php'; 
 require_once ROOT_PATH . '/src/config/config.php';
 
-
+use Helpers\Logger;
 
 
 // Spuštění session
@@ -11,7 +11,8 @@ session_start();
 
 // Vylepšený autoloader
 spl_autoload_register(function ($className) {
-    error_log("Attempting to load class: $className");
+
+    Logger::info("Attempting to load class: $className");
 
     $baseDir = ROOT_PATH . '/src/';
 
@@ -29,19 +30,20 @@ spl_autoload_register(function ($className) {
             $relativeClass = substr($className, strlen($namespace));
             $file = $baseDir . $path . str_replace('\\', '/', $relativeClass) . '.php';
             
-            error_log("Looking for file: " . $file);
+            Logger::info("Looking for file: " . $file);
 
             if (file_exists($file)) {
                 require_once $file;
-                error_log("File loaded: " . $file);
+                Logger::info("Successfully loaded class: " . $className);
                 return true;
             }
         }
     }
 
-    error_log("File not found for class: " . $className);
+    Logger::error("File not found for class: " . $className);
     return false;
 });
+
 // Načtení konfiguračního souboru
 use Core\Database;
 Database::setConfig($config);

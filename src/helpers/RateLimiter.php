@@ -43,7 +43,7 @@ class RateLimiter
             )";
             $this->db->execute($sql);
         } catch (\PDOException $e) {
-            error_log('Chyba při vytváření tabulky rate_limits: ' . $e->getMessage());
+            Logger::error('Chyba při vytváření tabulky rate_limits: ' . $e->getMessage());
         }
     }
     
@@ -105,7 +105,7 @@ class RateLimiter
             
             return true; // V pořádku, limit nebyl překročen
         } catch (\PDOException $e) {
-            error_log('Chyba při kontrole rate limit: ' . $e->getMessage());
+            Logger::error('Chyba při kontrole rate limit: ' . $e->getMessage());
             return true; // V případě chyby povolíme akci
         }
     }
@@ -120,7 +120,7 @@ class RateLimiter
             $sql = "DELETE FROM rate_limits WHERE last_attempt_at < DATE_SUB(NOW(), INTERVAL 24 HOUR)";
             $this->db->execute($sql);
         } catch (\PDOException $e) {
-            error_log('Chyba při čištění starých rate limit záznamů: ' . $e->getMessage());
+            Logger::error('Chyba při čištění starých rate limit záznamů: ' . $e->getMessage());
         }
     }
     
@@ -156,7 +156,7 @@ class RateLimiter
             
             return 0;
         } catch (\PDOException $e) {
-            error_log('Chyba při získávání zbývajícího času: ' . $e->getMessage());
+            Logger::error('Chyba při získávání zbývajícího času: ' . $e->getMessage());
             return 0;
         }
     }
