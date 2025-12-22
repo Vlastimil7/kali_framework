@@ -31,7 +31,6 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jméno</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kredit</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vytvořeno</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Akce</th>
                         </tr>
@@ -50,11 +49,11 @@
                                         <?= htmlspecialchars($user['role']) ?>
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= number_format($user['credit_balance'], 2, ',', ' ') ?> Kč</td>
+                              
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= date('d.m.Y', strtotime($user['created_at'])) ?></td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <a href="<?= BASE_URL ?>/admin/users/edit/<?= $user['id'] ?>" class="text-indigo-600 hover:text-indigo-900 mr-3">Upravit</a>
-                                    <a href="<?= BASE_URL ?>/credit/admin/add?user_id=<?= $user['id'] ?>" class="text-green-600 hover:text-green-800 mr-3">Dobít kredit</a>
+                                   
                                     
                                     <button 
                                         onclick="confirmDelete(<?= $user['id'] ?>, '<?= htmlspecialchars($user['name'] . ' ' . $user['surname']) ?>')" 

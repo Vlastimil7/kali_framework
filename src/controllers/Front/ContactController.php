@@ -1,6 +1,6 @@
 <?php
 
-namespace Controllers;
+namespace Controllers\Front;
 
 use Core\Controller;
 use Helpers\RateLimiter;
@@ -39,7 +39,7 @@ class ContactController extends Controller
 
     /**
      * Udělá z clinic bezpečný "namespace" klíč pro session
-     * Příklad: "PEDIA s.r.o." -> "contact_pedia_s_r_o_"
+     * Příklad: "Midobarbershop.cz s.r.o." -> "contact_Midobarbershop.cz_s_r_o_"
      */
     private function clinicNs(string $clinic): string
     {

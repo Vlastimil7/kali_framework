@@ -1,4 +1,4 @@
-<nav class="bg-white shadow-lg sticky top-0 z-50">
+<nav class="bg-black shadow-lg sticky top-0 z-50">
     <div class="container mx-auto px-4">
         <div class="flex justify-between items-center h-20">
             <!-- Logo + info -->
@@ -6,36 +6,12 @@
 
                 <!--      Logo -->
                 <a href="<?= BASE_URL ?>/" class="block">
-                    <img src="<?= BASE_URL ?>/assets/images/logo/ivision_media_logo_new.png"
+                    <img src="<?= BASE_URL ?>/assets/images/logo/mido_barbershop_logo.png"
                         alt="Logo"
-                        class="h-18 w-auto  rounded-4xl ">
+                        class="h-14 w-auto ">
                 </a>
 
-                <!-- Brand -->
-                <a href="<?= BASE_URL ?>/" class="flex flex-col leading-tight max-w-[200px]">
-                    <span class="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
-                        Dětská ordinace v Jaroměři
-                    </span>
-                    <span class="text-[0.65rem] sm:text-xs text-slate-500 flex items-center gap-1">
-                        <span class="text-indigo-500 font-medium">PEDIA s.r.o.</span>
-                        <span>•</span>
-                        <span class="text-emerald-500 font-medium">PEDIA AZ s.r.o.</span>
-                    </span>
-
-                    <!-- Doktor – viditelné pouze na mobilu -->
-                    <span class="block md:hidden text-[0.65rem] text-slate-600 mt-1 leading-tight">
-                        MUDr. Ziad Albahri, Ph.D.<br>
-                        <span class="text-[0.6rem] text-slate-500">praktický lékař pro děti a dorost</span>
-                    </span>
-                </a>
-
-                <!-- Doktor – verze pro větší displeje -->
-                <div class="hidden md:block border-l border-slate-200 pl-3 text-[0.7rem] leading-tight">
-                    <div class="font-semibold text-gray-800">MUDr. Ziad Albahri, Ph.D.</div>
-                    <div class="text-gray-600">praktický lékař pro děti a dorost</div>
-                </div>
             </div>
-
 
             <!-- Přepínač jazyků -->
             <!-- <div class="language-switcher flex space-x-2">
@@ -75,13 +51,20 @@
                     : $linkBaseClasses;
             ?>
 
-                <!-- Vždy: Domů + Novinky -->
-                <a href="<?= BASE_URL ?>/" class="<?= $linkClasses ?>">Úvod</a>
+                <a href="<?= BASE_URL ?>/vouchers" class="<?= $linkClasses ?>">Vouchery</a>
 
-                <a href="<?= BASE_URL ?>/contact/#google-address" class="<?= $linkClasses ?>">Adresa</a>
-                <a href="<?= BASE_URL ?>/#hours" class="<?= $linkClasses ?>">Ordinační hodiny</a>
-                <a href="<?= BASE_URL ?>/news" class="<?= $linkClasses ?>">Novinky</a>
-                <a href="<?= BASE_URL ?>/#vacations" class="<?= $linkClasses ?>">Dovolená / Zástup</a>
+                <!-- Košík -->
+                <a href="<?= BASE_URL ?>/cart" class="relative text-gray-600 hover:text-blue-600 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <?php if (isset($_SESSION['cart']) && !empty($_SESSION['cart']['count'])): ?>
+                        <span class="absolute -top-2 -right-2 bg-green-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                            <?= $_SESSION['cart']['count'] ?>
+                        </span>
+                    <?php endif; ?>
+                </a>
+
 
                 <?php if (isset($_SESSION['user_id'])): ?>
 
@@ -99,95 +82,13 @@
 
                     <?php if ($isMobile): ?>
                         <!-- MOBILE: "Informace" jako rozbalovací akordeon -->
-                        <button type="button"
-                            id="mobile-info-toggle"
-                            class="<?= $linkBaseClasses ?> flex items-center justify-between w-full">
-                            <span>Informace</span>
-                            <svg id="mobile-info-icon"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 20 20"
-                                class="h-4 w-4 transform transition-transform duration-200">
-                                <path fill="currentColor"
-                                    d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.25a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08Z" />
-                            </svg>
-                        </button>
 
-                        <div id="mobile-info-menu" class="ml-4 mt-1 space-y-1 hidden">
-                            <a href="<?= BASE_URL ?>/information"
-                                class="block text-sm text-gray-700 hover:text-blue-600 font-medium">
-                                Informace pro rodiče
-                            </a>
-                            <a href="<?= BASE_URL ?>/information/cenik"
-                                class="block text-sm text-gray-700 hover:text-blue-600 font-medium">
-                                Ceník
-                            </a>
-                            <a href="<?= BASE_URL ?>/ambulance"
-                                class="block text-sm text-gray-700 hover:text-blue-600 font-medium">
-                                Kontakty na odborné ambulance
-                            </a>
-                            <a href="<?= BASE_URL ?>/tips"
-                                class="block text-sm text-gray-700 hover:text-blue-600 font-medium">
-                                Praktické rady
-                            </a>
-                            <a href="<?= BASE_URL ?>/about"
-                                class="block text-sm text-gray-700 hover:text-blue-600 font-medium">
-                                O mně
-                            </a>
-                            <a href="<?= BASE_URL ?>/videa"
-                                class="block text-sm text-gray-700 hover:text-blue-600 font-medium">
-                                Videa
-                            </a>
-                        </div>
+
+
 
                     <?php else: ?>
                         <!-- DESKTOP: dropdown "Informace" -->
-                        <div class="relative group">
-                            <button type="button"
-                                class="<?= $linkBaseClasses ?> flex items-center gap-1">
-                                Informace
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20"
-                                    class="h-4 w-4">
-                                    <path fill="currentColor"
-                                        d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.25a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08Z" />
-                                </svg>
-                            </button>
 
-                            <!-- FIX: padding-top + větší hover zóna -->
-                            <div class="absolute right-0 w-56 pt-2
-                                        opacity-0 invisible group-hover:opacity-100 group-hover:visible
-                                        transition-all duration-150 z-50">
-
-                                <div class="rounded-xl bg-white shadow-lg border border-slate-100 overflow-hidden">
-
-                                    <a href="<?= BASE_URL ?>/information"
-                                        class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                                        Informace pro rodiče
-                                    </a>
-                                    <a href="<?= BASE_URL ?>/information/cenik"
-                                        class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                                        Ceník
-                                    </a>
-                                    <a href="<?= BASE_URL ?>/ambulance"
-                                        class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                                        Kontakty na odborné ambulance
-                                    </a>
-                                    <a href="<?= BASE_URL ?>/tips"
-                                        class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                                        Praktické rady
-                                    </a>
-                                    <a href="<?= BASE_URL ?>/about"
-                                        class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                                        O mně
-                                    </a>
-
-                                    <a href="<?= BASE_URL ?>/videa"
-                                        class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                                        Videa
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
                     <?php endif; ?>
 
                     <!-- Zbytek odkazů je stejný pro mobil i desktop -->
@@ -203,7 +104,7 @@
                 <?php renderMainNav('desktop'); ?>
 
                 <!-- FB ikona vpravo v menu -->
-                <a href="https://www.facebook.com/profile.php?id=61584071354442"
+                <a href="https://www.facebook.com/profile.php?id=100063520150213"
                     target="_blank" rel="noopener noreferrer"
                     class="inline-flex items-center justify-center rounded-full border border-blue-500 text-blue-500 hover:bg-blue-50 px-3 py-1.5 text-sm font-medium transition">
                     <svg xmlns="http://www.w3.org/2000/svg"
@@ -224,11 +125,11 @@
 
             <!-- FB sekce v mobilním menu -->
             <div class="mt-4 pt-4 border-t border-slate-200">
-                <p class="px-2 mb-2 text-[0.75rem] font-semibold tracking-wide text-slate-500 uppercase">
+                <p class="px-2 mb-4 text-[0.75rem] font-semibold tracking-wide text-slate-500 uppercase">
                     Sledujte nás
                 </p>
 
-                <a href="https://www.facebook.com/profile.php?id=61584071354442"
+                <a href="https://www.facebook.com/profile.php?id=100063520150213"
                     target="_blank" rel="noopener noreferrer"
                     class="mx-2 inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 transition">
 

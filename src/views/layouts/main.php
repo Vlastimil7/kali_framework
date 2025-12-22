@@ -14,14 +14,14 @@
     $ownStylePath  = __DIR__ . '/../../public/assets/css/ownStyles.css';
     $styleVersion    = file_exists($stylePath) ? filemtime($stylePath) : time();
     $ownStyleVersion = file_exists($ownStylePath) ? filemtime($ownStylePath) : time();
-    $hideSidebar = $data['hide_sidebar'] ?? false;
+    $hideSidebar = $data['show_sidebar'] ?? false;
     $currentUrl = rtrim(SITE_URL, '/') . ($_SERVER['REQUEST_URI'] ?? '');
 
     // SEO defaulty
-    $seoTitle = $data['title'] ?? 'MUDr. Ziad Albahri, Ph.D. – pediatr Jaroměř';
-    $seoDesc  = $data['description'] ?? 'Praktický lékař pro děti a dorost – ordinace PEDIA s.r.o. a PEDIA AZ s.r.o. v Jaroměři (okolí Náchoda).';
-    $seoKw    = $data['keywords'] ?? 'pediatr Jaroměř, pediatr Náchod, dětský lékař Jaroměř, praktický lékař pro děti a dorost, MUDr. Ziad Albahri, PEDIA s.r.o., PEDIA AZ s.r.o., očkování, preventivní prohlídky';
-    $ogImage  = $data['og_image'] ?? (rtrim(SITE_URL, '/') . '/assets/images/logo/ivision_media_logo_new.png'); // dej si tam reálný obrázek 1200x630
+    $seoTitle = $data['title'] ?? 'MUDr. Ziad Albahri, Ph.D. – Midobarbershop.cztr Jaroměř';
+    $seoDesc  = $data['description'] ?? 'Praktický lékař pro děti a dorost – ordinace Midobarbershop.cz s.r.o. a Midobarbershop.cz AZ s.r.o. v Jaroměři (okolí Náchoda).';
+    $seoKw    = $data['keywords'] ?? 'Midobarbershop.cztr Jaroměř, Midobarbershop.cztr Náchod, dětský lékař Jaroměř, praktický lékař pro děti a dorost, MUDr. Ziad Albahri, Midobarbershop.cz s.r.o., Midobarbershop.cz AZ s.r.o., očkování, preventivní prohlídky';
+    $ogImage  = $data['og_image'] ?? (rtrim(SITE_URL, '/') . '/assets/images/logo/mido_barbershop_logo.png'); // dej si tam reálný obrázek 1200x630
     ?>
     <title><?= htmlspecialchars($seoTitle, ENT_QUOTES) ?></title>
     <meta name="description" content="<?= htmlspecialchars($seoDesc, ENT_QUOTES) ?>">
@@ -32,7 +32,7 @@
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="MUDr. Ziad Albahri – Pediatr">
+    <meta property="og:site_name" content="MUDr. Ziad Albahri – Midobarbershop.cztr">
     <meta property="og:title" content="<?= htmlspecialchars($seoTitle, ENT_QUOTES) ?>">
     <meta property="og:description" content="<?= htmlspecialchars($seoDesc, ENT_QUOTES) ?>">
     <meta property="og:url" content="<?= htmlspecialchars($currentUrl, ENT_QUOTES) ?>">
@@ -49,8 +49,8 @@
         {
             "@context": "https://schema.org",
             "@type": "MedicalOrganization",
-            "name": "MUDr. Ziad Albahri – Pediatr",
-            "medicalSpecialty": "Pediatrics",
+            "name": "MUDr. Ziad Albahri – Midobarbershop.cztr",
+            "medicalSpecialty": "Midobarbershop.cztrics",
             "url": "<?= SITE_URL ?>",
             "logo": "<?= SITE_URL ?>/assets/images/logo/logo.png",
             "address": {
@@ -146,10 +146,10 @@
     </script>
 
     <!-- GA připravené, ale neaktivní do souhlasu -->
-    <script type="text/plain" data-consent="analytics" data-src="https://www.googletagmanager.com/gtag/js?id=G-4FJHBGGYT3"></script>
+    <script type="text/plain" data-consent="analytics" data-src="https://www.googletagmanager.com/gtag/js?id=G-M95Q53XWQX"></script>
     <script type="text/plain" data-consent="analytics">
         gtag('js', new Date());
-      gtag('config', 'G-4FJHBGGYT3');
+      gtag('config', 'G-M95Q53XWQX');
     </script>
 </head>
 
@@ -157,10 +157,18 @@
     <?php include "../src/views/partials/header.php"; ?>
 
     <!-- Main content -->
-    <div class="flex-grow px-4 bg-[#e5e9ff] lg:px-8 py-16 lg:py-20 flex justify-center gap-8">
+    <div
+        class="relative flex-grow px-4 lg:px-8 py-16 lg:py-20
+         flex justify-center gap-8
+        ">
+         <!-- bg-center bg-cover bg-no-repeat"
+        style="background-image: url('https://www.midobarbershop.com/wp-content/uploads/2019/08/Beard-Trimming.jpg'); -->
+
+        <!-- overlay -->
+        <!-- <div class="absolute inset-0 bg-black/20 pointer-events-none"></div> -->
 
         <!-- Sidebar (mobil + desktop) -->
-        <?php if (!$hideSidebar): ?>
+        <?php if ($hideSidebar): ?>
             <?php include "../src/views/partials/sidebar.php"; ?>
         <?php endif; ?>
 

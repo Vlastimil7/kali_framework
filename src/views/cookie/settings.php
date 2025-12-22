@@ -1,6 +1,6 @@
 <!-- Cookie Settings Section -->
-<section id="cookie-settings" class="py-20 px-6 relative z-10 bg-gray-900">
-    <div class="container mt-32 mx-auto">
+<section id="cookie-settings" class="py-20 px-6 relative z-10 bg-black">
+    <div class="container  mx-auto">
         <div class="text-center mb-16 animate-on-scroll">
             <h2 class="text-4xl font-bold mb-4 text-white">Nastavení <span class="text-green-400">cookies</span></h2>
             <p class="text-xl text-white max-w-3xl mx-auto">
@@ -63,7 +63,7 @@
                                         <input type="checkbox" name="marketing" id="marketing" value="1"
                                             <?= $preferences['marketing'] ? 'checked' : '' ?>
                                             class="sr-only peer">
-                                            <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-green-500"></div>
+                                        <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-green-500"></div>
                                     </label>
                                 </div>
                             </div>
@@ -83,7 +83,7 @@
                                         <input type="checkbox" name="preferences" id="preferences" value="1"
                                             <?= $preferences['preferences'] ? 'checked' : '' ?>
                                             class="sr-only peer">
-                                            <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-green-500"></div>
+                                        <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-green-500"></div>
                                     </label>
                                 </div>
                             </div>

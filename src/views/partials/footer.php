@@ -1,229 +1,160 @@
-<footer class=" w-full bg-slate-900 text-slate-200">
+<footer class="w-full bg-[black] text-slate-200">
     <div class="max-w-7xl mx-auto px-4 py-10">
-        <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4 mb-10">
-            <!-- Logo + krátké info -->
-            <div class="space-y-4">
-                <a href="<?= BASE_URL ?>/" class="flex flex-col leading-tight">
-                    <span class="text-sm sm:text-base font-bold text-slate-100 tracking-tight">
-                        Dětská ordinace v Jaroměři
-                    </span>
-                    <span class="text-xs text-slate-400">
-                        PEDIA s.r.o. • PEDIA AZ s.r.o.
-                    </span>
-                    <span class="mt-2 text-[0.75rem] text-slate-300">
-                        MUDr. Ziad Albahri, Ph.D.<br>
-                        <span class="text-[0.7rem] text-slate-400">praktický lékař pro děti a dorost</span>
-                    </span>
+        <div class="grid gap-10 lg:grid-cols-3 items-start">
+
+            <!-- LEFT: Logo + CTA -->
+            <div
+                class="space-y-6
+         flex flex-col
+         items-start
+         text-left
+         min-[1123px]:items-start">
+                <a href="<?= BASE_URL ?>/" class="inline-block">
+                    <img
+                        src="<?= BASE_URL ?>/assets/images/logo/mido_barbershop_01_logo.png"
+                        alt="Mido Barbershop"
+                        class="h-24 w-auto"
+                        loading="lazy">
                 </a>
 
-                <p class="text-sm text-slate-300">
-                    Dětská ordinace v Jaroměři – PEDIA s.r.o. a PEDIA AZ s.r.o. poskytují
-                    péči pro děti a dorost od narození až do dospělosti.
-                </p>
-                <p class="text-[0.7rem] text-slate-500">
-                    Čekárna a vnější prostory zdravotnického zařízení jsou monitorovány
-                    kamerovým systémem. Záběry nejsou archivovány, jedná se pouze o online přenos.
-                </p>
+                <a
+                    href="tel:+420777711135"
+                    class="inline-flex items-center gap-3 rounded-md bg-[#b38700] px-6 py-4 font-semibold text-black hover:bg-[#c59600] transition">
+                    <span aria-hidden="true"></span>
+                    Rezervujte si místo!
+                </a>
             </div>
 
-            <!-- Adresa + kontakty obou ordinací -->
-            <div class="space-y-5 text-sm">
-                <h3 class="text-base font-semibold text-white">Adresa &amp; kontakty</h3>
+            <!-- MIDDLE: Contacts + Hours + Social -->
+            <div class="space-y-8 text-sm">
+                <!-- Contacts -->
+                <div class="space-y-3">
+                    <h3 class="text-lg font-semibold text-white">Kontaktujte nás</h3>
 
-                <!-- Společná adresa -->
-                <div class="space-y-1">
-                    <p class="text-slate-300 font-medium">
-                        <span class="text-indigo-500 hover:text-indigo-400">PEDIA s.r.o.</span> &amp;
-                        <span class="text-emerald-500 hover:text-emerald-400">PEDIA AZ s.r.o.</span>
-                    </p>
-                    <p class="text-slate-400">
-                        Kostelní 39<br>
-                        551 01&nbsp;Jaroměř
-                    </p>
+                    <div class="text-slate-300 space-y-1">
+                        <p class="font-medium text-[#b38700]">Mido Barbershop</p>
+                        <p class="text-slate-400">
+                            nám. Svobody 372/3<br>
+                            500 02 Hradec Králové<br>
+                            Czech Republic
+                        </p>
+                    </div>
+
+                    <div class="text-slate-400 space-y-1 pt-2">
+                        <p>
+                            tel:
+                            <a href="tel:+420777711135" class="text-[#b38700] hover:text-[#d2a400] transition">
+                                +420 7777 111 35
+                            </a>
+                        </p>
+                        <p>
+                            email:
+                            <a href="mailto:reception@midobarbershop.com" class="text-[#b38700] hover:text-[#d2a400] transition">
+                                reception@midobarbershop.com
+                            </a>
+                        </p>
+                        <p>
+                            La Mido invest s.r.o.
+                        <p>
+                            ICO: 10779990
+                        </p>
+                    </div>
                 </div>
 
-                <!-- Kontakty PEDIA -->
-                <div class="pt-4 border-t border-slate-800 space-y-1">
-                    <p class="text-indigo-500 font-medium hover:text-indigo-400 transition cursor-default">
-                        PEDIA s.r.o.
-                    </p>
-                    <p class="text-[0.7rem] text-slate-500">
-                        IČO&nbsp;28829018, Jaroměř – zapsáno v Obchodním rejstříku firem
-                    </p>
-
-                    <p class="text-slate-300 font-medium mt-1">Telefon</p>
-                    <p class="text-slate-400">
-                        📱 <a href="tel:+420721001600" class="hover:text-indigo-300">+420 721 001 600</a>
-                        <span class="text-[0.7rem] text-slate-500">&nbsp;(tel / SMS)</span><br>
-                        ☎️ <a href="tel:+420491815150" class="hover:text-indigo-300">+420 491 815 150</a>
-                    </p>
-
-                    <p class="text-slate-300 font-medium mt-1">E-mail</p>
-                    <p class="text-slate-400">
-                        ✉️ <a href="mailto:pedia@post.cz" class="hover:text-indigo-300">pedia@post.cz</a>
-                    </p>
+                <!-- Opening Hours -->
+                <div class="space-y-2">
+                    <h3 class="text-lg font-semibold text-white">Otevírací Doba:</h3>
+                    <div class="space-y-1 text-slate-400">
+                        <p><span class="text-[#b38700]">PO- PÁ:</span> 8:00 – 20:00</p>
+                        <p><span class="text-[#b38700]">SO:</span> 10:00 – 19:00</p>
+                        <p><span class="text-[#b38700]">NE:</span> volání rezervovat</p>
+                    </div>
                 </div>
 
-                <!-- Kontakty PEDIA AZ -->
-                <div class="pt-4 border-t border-slate-800 space-y-1">
-                    <p class="text-emerald-500 font-medium hover:text-emerald-400 transition cursor-default">
-                        PEDIA AZ s.r.o.
-                    </p>
-                    <p class="text-[0.7rem] text-slate-500">
-                        IČO&nbsp;04087216, Jaroměř – zapsáno v Obchodním rejstříku firem
-                    </p>
+                <!-- Social -->
+                <div class="space-y-3">
+                    <h3 class="text-lg font-semibold text-white">Sledujte nás!</h3>
 
-                    <p class="text-slate-300 font-medium mt-1">Telefon</p>
-                    <p class="text-slate-400">
-                        📱 <a href="tel:+420721001180" class="hover:text-indigo-300">+420 721 001 180</a>
-                        <span class="text-[0.7rem] text-slate-500">&nbsp;(tel / SMS / WhatsApp)</span><br>
-                        ☎️ <a href="tel:+420491813810" class="hover:text-indigo-300">+420 491 813 810</a>
-                    </p>
+                    <div class="flex items-center gap-4">
+                        <!-- Facebook -->
+                        <a href="https://www.facebook.com/profile.php?id=100063520150213" target="_blank" rel="noopener noreferrer"
+                            class="h-11 w-11 grid place-items-center rounded-md bg-[#1e3a8a] hover:opacity-90 transition"
+                            aria-label="Facebook">
+                            <!-- simple icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-white">
+                                <path d="M22 12.06C22 6.51 17.52 2 12 2S2 6.51 2 12.06C2 17.08 5.66 21.22 10.44 22v-6.9H7.9v-3.03h2.54V9.74c0-2.5 1.48-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 3.03h-2.34V22C18.34 21.22 22 17.08 22 12.06Z" />
+                            </svg>
+                        </a>
 
-                    <p class="text-slate-300 font-medium mt-1">E-mail</p>
-                    <p class="text-slate-400">
-                        ✉️ <a href="mailto:PediaAZ@post.cz" class="hover:text-indigo-300">PediaAZ@post.cz</a>
-                    </p>
-                </div>
+                        <!-- Youtube -->
+                        <a href="https://www.youtube.com/channel/UCK1atG4tM3-fqu7BrwZEblA" target="_blank" rel="noopener noreferrer"
+                            class="h-11 w-11 grid place-items-center rounded-md bg-[#dc2626] hover:opacity-90 transition"
+                            aria-label="YouTube">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-white">
+                                <path d="M21.6 7.2a3 3 0 0 0-2.1-2.1C17.8 4.6 12 4.6 12 4.6s-5.8 0-7.5.5A3 3 0 0 0 2.4 7.2 31.6 31.6 0 0 0 2 12a31.6 31.6 0 0 0 .4 4.8 3 3 0 0 0 2.1 2.1c1.7.5 7.5.5 7.5.5s5.8 0 7.5-.5a3 3 0 0 0 2.1-2.1A31.6 31.6 0 0 0 22 12a31.6 31.6 0 0 0-.4-4.8ZM10 15.5v-7l6 3.5-6 3.5Z" />
+                            </svg>
+                        </a>
 
-            </div>
-
-
-
-            <!-- Pohotovost -->
-            <div class="space-y-4 text-sm">
-                <h3 class="text-base font-semibold text-white">Pohotovost pro děti</h3>
-
-                <div class="space-y-1">
-                    <p class="text-slate-300 font-medium">Náchod</p>
-                    <p class="text-slate-400">
-                        📞 <a href="tel:+420841155155" class="hover:text-indigo-400 transition">841 155 155</a><br>
-                        📞 <a href="tel:+420491601771" class="hover:text-indigo-400 transition">491 601 771</a>
-                    </p>
-                    <p class="text-[0.7rem] text-slate-500">
-                        Po–Pá 16:00–22:00<br>
-                        So, Ne, svátky 8:00–22:00
-                    </p>
-                </div>
-
-                <div class="space-y-1 pt-2">
-                    <p class="text-slate-300 font-medium">Hradec Králové</p>
-                    <p class="text-slate-400">
-                        📞 <a href="tel:+420495832826" class="hover:text-indigo-400 transition">495 832 826</a>
-                    </p>
-                    <p class="text-[0.7rem] text-slate-500">
-                        Po–Pá 15:30–22:00<br>
-                        So, Ne, svátky 8:00–22:00
-                    </p>
+                        <!-- WhatsApp -->
+                        <a href="https://api.whatsapp.com/send?phone=420777711135" target="_blank" rel="noopener noreferrer"
+                            class="h-11 w-11 grid place-items-center rounded-md bg-[#16a34a] hover:opacity-90 transition"
+                            aria-label="WhatsApp">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-white">
+                                <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.8 14.4c-.3.8-1.6 1.5-2.3 1.6-.5.1-1.1.1-1.8-.1-1.6-.5-3.6-1.8-5.1-3.3-1.4-1.4-2.8-3.5-3.3-5.1-.2-.7-.2-1.3-.1-1.8.1-.7.8-2 1.6-2.3.4-.2.7-.2 1 0l.7 1.7c.1.3.1.6 0 .9-.1.2-.2.4-.4.6l-.3.3c-.2.2-.3.4-.2.6.3 1 1.7 2.9 3.5 4 .2.1.5 0 .7-.2l.3-.3c.2-.2.4-.3.6-.4.3-.1.6-.1.9 0l1.7.7c.2.3.2.6 0 1Z" />
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
 
-            <!-- Rychlé odkazy -->
-            <div class="space-y-4 text-sm">
-                <h3 class="text-base font-semibold text-white">Rychlé odkazy</h3>
-                <ul class="space-y-2">
-                    <li>
-                        <a href="<?= BASE_URL ?>/#hours" class="flex items-center text-slate-300 hover:text-indigo-300 transition">
-                            <span class="mr-2 inline-block h-4 w-4 border border-slate-500 rounded-full"></span>
-                            Ordinační hodiny
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?= BASE_URL ?>/#services" class="flex items-center text-slate-300 hover:text-indigo-300 transition">
-                            <span class="mr-2 inline-block h-4 w-4 border border-slate-500 rounded-full"></span>
-                            Naše služby
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?= BASE_URL ?>/#booking" class="flex items-center text-slate-300 hover:text-indigo-300 transition">
-                            <span class="mr-2 inline-block h-4 w-4 border border-slate-500 rounded-full"></span>
-                            Jak se objednat
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?= BASE_URL ?>/#contact" class="flex items-center text-slate-300 hover:text-indigo-300 transition">
-                            <span class="mr-2 inline-block h-4 w-4 border border-slate-500 rounded-full"></span>
-                            Kontakt &amp; registrace
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?= BASE_URL ?>/#galerie" class="flex items-center text-slate-300 hover:text-indigo-300 transition">
-                            <span class="mr-2 inline-block h-4 w-4 border border-slate-500 rounded-full"></span>
-                            Galerie ordinace
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://my.medevio.cz/mudr-albahri"
-                            target="_blank" rel="noopener noreferrer"
-                            class="flex items-center text-indigo-300 hover:text-indigo-200 transition">
-                            <span class="mr-2 inline-block h-4 w-4 border border-indigo-400 rounded-full"></span>
-                            Objednání přes Medevio Pedia
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://my.medevio.cz/pedia-az"
-                            target="_blank" rel="noopener noreferrer"
-                            class="flex items-center text-indigo-300 hover:text-indigo-200 transition">
-                            <span class="mr-2 inline-block h-4 w-4 border border-indigo-400 rounded-full"></span>
-                            Objednání přes Medevio Pedia AZ
-                        </a>
-                    </li>
-                </ul>
-                <!-- Facebook Link (samostatný blok mimo seznam) -->
-                <div class="pt-4 border-t border-slate-800">
-                    <a href="https://www.facebook.com/profile.php?id=61584071354442"
-                        target="_blank" rel="noopener noreferrer"
-                        class="flex items-center gap-3 text-blue-300 hover:text-blue-200 transition">
-
-                        <!-- Ikona Facebook -->
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                            class="h-5 w-5 fill-current"
-                            viewBox="0 0 24 24">
-                            <path d="M22 12.06C22 6.51 17.52 2 12 2S2 6.51 2 12.06C2 17.08 5.66 21.22 10.44 22v-6.9H7.9v-3.03h2.54V9.74c0-2.5 1.48-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 3.03h-2.34V22C18.34 21.22 22 17.08 22 12.06Z" />
-                        </svg>
-
-                        <span class="text-sm">Navštivte nás na Facebooku</span>
-                    </a>
+            <!-- RIGHT: Map -->
+            <div class="w-full">
+                <div class="overflow-hidden rounded-md border border-white/10">
+                    <iframe
+                        title="Mido Barbershop mapa"
+                        src="https://www.google.com/maps?q=n%C3%A1m.%20Svobody%20372/3%20Hradec%20Kr%C3%A1lov%C3%A9&output=embed"
+                        class="w-full h-[320px] lg:h-[360px]"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
                 </div>
+                <a href="<?= BASE_URL ?>/terms/shipping-payment" target="_blank" rel="noopener noreferrer">
+                    <img
+                        src="<?= BASE_URL ?>/assets/images/comgate/comgate_footer.png"
+                        alt="Platebni podminky Comgate"
+                        title="Platebni podminky Comgate"
+                        class="mt-6 h-8 w-auto"
+                        loading="lazy">
+                </a>
             </div>
 
         </div>
+    </div>
+    <!-- FOOTER BOTTOM: Legal -->
+    <div class="border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-4 py-4
+                flex flex-col sm:flex-row items-center justify-between
+                text-xs text-slate-400 gap-2">
 
-        <!-- Spodní lišta -->
-        <div class="border-t border-slate-800 pt-4 mt-2">
-            <div class="flex flex-col gap-3 items-center justify-between text-xs text-slate-500 md:flex-row">
-                <p>
-                    &copy; <?= date('Y'); ?> PEDIA s.r.o. &amp; PEDIA AZ s.r.o. – MUDr. Ziad Albahri, Ph.D. Všechna práva vyhrazena.
-                </p>
-                <div class="flex flex-wrap items-center gap-4">
-                    <a href="<?= BASE_URL ?>/gdpr" class="hover:text-indigo-300 transition">
-                        Ochrana osobních údajů
-                    </a>
-                    <a href="<?= BASE_URL ?>/gdpr/tos" class="hover:text-indigo-300 transition">
-                        Podmínky použití
-                    </a>
-                    <a href="<?= BASE_URL ?>/cookies/settings" class="hover:text-indigo-300 transition">
-                        Nastavení cookies
-                    </a>
-                    <!-- Vyrobila iVision Media -->
-                    <span class="hidden md:inline text-slate-700">|</span>
-                    <a
-                        href="https://ivisionmedia.cz/"
-                        target="_blank"
-                        rel="nofollow sponsored noopener noreferrer"
-                        class="inline-flex items-center gap-2 rounded-full"
-                        aria-label="Web vytvořila iVision Media"
-                        title="Web vytvořila iVision Media">
-                        <img
-                            src="https://www.ivisionmedia.cz/assets/images/logo/ivision_media_logo_new.png"
-                            alt="iVision Media"
-                            class="h-4 w-auto "
-                            loading="lazy">
-                        <span class="text-[0.7rem] text-slate-300/90">
-                            Web vytvořila iVision Media
-                        </span>
-                    </a>
-                </div>
+            <div>
+                © <?= date('Y') ?> Mido Barbershop. Všechna práva vyhrazena.
+            </div>
+
+            <div class="flex items-center gap-4">
+                <a href="<?= BASE_URL ?>/cookies/settings"
+                    class="hover:text-[#b38700] transition underline-offset-4 hover:underline">
+                    Cookies
+                </a>
+
+                <a href="<?= BASE_URL ?>/gdpr"
+                    class="hover:text-[#b38700] transition underline-offset-4 hover:underline">
+                    Ochrana osobních údajů
+                </a>
+
+                <a href="<?= BASE_URL ?>/terms"
+                    class="hover:text-[#b38700] transition underline-offset-4 hover:underline">
+                    Obchodní podmínky
+                </a>
             </div>
         </div>
     </div>

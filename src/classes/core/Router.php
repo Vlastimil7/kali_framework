@@ -11,8 +11,9 @@ class Router
 
     // Výchozí namespace pro kontrolery
     private array $namespaces = [
-        'api' => 'Api\\V1\\Controllers\\',
-        'default' => 'Controllers\\'
+        'api'     => 'Api\\V1\\Controllers\\',
+        'admin'   => 'Controllers\\Admin\\',
+        'default' => 'Controllers\\Front\\',
     ];
 
     /**
@@ -229,19 +230,24 @@ class Router
      */
     private function resolveControllerNamespace(string $route, string $controllerName): string
     {
-        // Pokud je již uveden plný namespace, vrátíme ho
-        if (strpos($controllerName, '\\') !== false) {
+        // 1) Pokud je to už plně kvalifikované (Controllers\..., Api\...), nech to být
+        if (str_starts_with($controllerName, 'Controllers\\') || str_starts_with($controllerName, 'Api\\')) {
             return $controllerName;
         }
 
-        // Hledání specifického namespace podle prefixu route
+        // 2) Alias zápis: "Admin\XController" nebo "Front\XController"
+        if (str_contains($controllerName, '\\')) {
+            return 'Controllers\\' . $controllerName; // => Controllers\Admin\XController
+        }
+
+        // 3) Podle prefixu route
         foreach ($this->namespaces as $prefix => $namespace) {
-            if (strpos($route, $prefix . '/') === 0) {
+            if ($prefix !== 'default' && str_starts_with($route, $prefix . '/')) {
                 return $namespace . $controllerName;
             }
         }
 
-        // Výchozí namespace
+        // 4) Default = Front
         return $this->namespaces['default'] . $controllerName;
     }
 
@@ -252,8 +258,8 @@ class Router
      */
     private function logDispatch(string $url, string $method): void
     {
-   
-      //  Logger::info("Dispatching URL: $url, Method: $method");
+
+        //  Logger::info("Dispatching URL: $url, Method: $method");
 
     }
 
@@ -313,7 +319,7 @@ class Router
 
             // Data pro layout
             $data = [
-                'title' => 'Stránka nenalezena | Pedia',
+                'title' => 'Stránka nenalezena | Midobarbershop.cz',
                 'content' => $content
             ];
 

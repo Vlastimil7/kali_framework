@@ -1,39 +1,69 @@
 <?php
 
-// Definice cest - hlavní stránky
-$router->get('', 'HomeController@index');  // prázdná URL = homepage
-$router->get('home', 'HomeController@index');
+// ============================
+// FRONT (veřejná část)
+// namespace: Controllers\Front
+// ============================
 
-// Uživatelské cesty - přihlášení a registrace
-$router->get('login', 'UserController@showLogin');
-$router->post('login/process', 'UserController@processLogin');
-$router->get('register', 'UserController@showRegister');
-$router->post('register/process', 'UserController@processRegister');
-$router->get('logout', 'UserController@logout');
+// Home / Vouchery
+$router->get('', 'Front\\VoucherController@index');
+$router->get('vouchers', 'Front\\VoucherController@index');
 
-$router->get('contact', 'ContactController@index');
-$router->post('contact/send', 'ContactController@sendMessage');
+// Contact
+$router->get('contact', 'Front\\ContactController@index');
+$router->post('contact/send', 'Front\\ContactController@sendMessage');
 
-// Reset hesla routes
-$router->get('password/reset', 'UserController@showPasswordResetRequest');
-$router->post('password/email', 'UserController@sendPasswordResetEmail');
-$router->get('password/reset/{token}', 'UserController@showPasswordReset');
-$router->post('password/update', 'UserController@updatePassword');
+// Auth
+$router->get('login', 'Front\\UserController@showLogin');
+$router->post('login/process', 'Front\\UserController@processLogin');
+$router->get('logout', 'Front\\UserController@logout');
 
-// Dashboard pro přihlášené uživatele (Uživatelská část)
-$router->get('dashboard', 'DashboardController@index');
+$router->get('register', 'Front\\UserController@showRegister');
+$router->post('register/process', 'Front\\UserController@processRegister');
 
-// Uživatelský profil (Uživatelská část)
-$router->get('profile', 'UserController@showProfile');
-$router->post('profile/update', 'UserController@updateProfile');
+// Password reset
+$router->get('password/reset', 'Front\\UserController@showPasswordResetRequest');
+$router->post('password/email', 'Front\\UserController@sendPasswordResetEmail');
+$router->get('password/reset/{token}', 'Front\\UserController@showPasswordReset');
+$router->post('password/update', 'Front\\UserController@updatePassword');
 
-// Změna jazyka
-$router->get('language/change/{lang}', 'LanguageController@changeLanguage');
+// Profile
+$router->get('profile', 'Front\\UserController@showProfile');
+$router->post('profile/update', 'Front\\UserController@updateProfile');
 
-// Definice cest - cookies 
-$router->get('cookies/settings', 'CookieController@showSettings');
-$router->post('cookies/save', 'CookieController@saveConsent');
-$router->get('cookies/accept-all', 'CookieController@acceptAll');
-$router->get('cookies/reject', 'CookieController@rejectAll');
+// Cart
+$router->get('cart', 'Front\\CartController@index');
+$router->post('cart/add-voucher', 'Front\\CartController@addVoucher');
+$router->post('cart/update', 'Front\\CartController@updateItem');
+$router->post('cart/remove', 'Front\\CartController@removeItem');
+$router->post('cart/clear', 'Front\\CartController@clearCart');
 
-$router->get('chat', 'ChatController@index');
+$router->get('cart/checkout', 'Front\\CartController@checkout');
+$router->post('cart/create-order', 'Front\\CartController@createOrder');
+
+// Order pages
+$router->get('order/success', 'Front\\OrderController@success');
+
+// Payments (Comgate)
+$router->get('payment/comgate/return', 'Front\\PaymentController@comgateReturn');
+$router->post('payment/comgate/notify', 'Front\\PaymentController@comgateNotify');
+
+// Language
+$router->get('language/change/{lang}', 'Front\\LanguageController@changeLanguage');
+
+// Cookies / Consent
+$router->get('cookies/settings', 'Front\\CookieController@showSettings');
+$router->post('cookies/save', 'Front\\CookieController@saveConsent');
+$router->get('cookies/accept-all', 'Front\\CookieController@acceptAll');
+$router->get('cookies/reject', 'Front\\CookieController@rejectAll');
+
+
+// GDPR / Privacy Policy
+$router->get('gdpr', 'Front\\GdprController@show');
+
+// Terms and Conditions
+$router->get('terms', 'Front\\TermsController@show');
+$router->get('terms/shipping-payment', 'Front\\TermsController@showShippingPayment');
+
+// Chat
+$router->get('chat', 'Front\\ChatController@index');

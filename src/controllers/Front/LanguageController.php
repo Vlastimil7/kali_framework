@@ -1,6 +1,6 @@
 <?php
 
-namespace Controllers;
+namespace Controllers\Front;
 
 use Core\Controller;
 use Models\Language;
@@ -8,12 +8,12 @@ use Models\Language;
 class LanguageController extends Controller
 {
     private $languageModel;
-    
+
     public function __construct()
     {
         $this->languageModel = new Language();
     }
-    
+
     /**
      * Změna jazyka
      * 
@@ -23,16 +23,16 @@ class LanguageController extends Controller
     {
         // Sanitizace vstupu
         $lang = strtolower(trim($lang));
-        
+
         // Nastavení jazyka
         $this->languageModel->setLanguage($lang);
-        
+
         // Přesměrování zpět na předchozí stránku
         $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : BASE_URL;
         header('Location: ' . $referer);
         exit;
     }
-    
+
     /**
      * Admin: Seznam překladů
      */
@@ -43,20 +43,20 @@ class LanguageController extends Controller
             header('Location: ' . BASE_URL . '/dashboard');
             exit;
         }
-        
+
         $selectedLang = $_GET['lang'] ?? 'cs';
         $selectedCategory = $_GET['category'] ?? null;
-        
+
         // Získání všech klíčů a překladů
         $keys = $this->languageModel->getAllTranslationKeys($selectedCategory);
         $translations = [];
-        
+
         foreach ($this->languageModel->getSupportedLanguages() as $langCode) {
             $translations[$langCode] = $this->languageModel->getTranslations($langCode, $selectedCategory);
         }
-        
+
         $this->view('admin/translations/index', [
-            'title' => 'Správa překladů | Kali-framework - Admin',
+            'title' => 'Správa překladů | Midobarbershop.cz - Admin',
             'keys' => $keys,
             'translations' => $translations,
             'languages' => $this->languageModel->getSupportedLanguages(),
@@ -64,7 +64,7 @@ class LanguageController extends Controller
             'selectedCategory' => $selectedCategory
         ]);
     }
-    
+
     /**
      * Admin: Editace překladu
      */
@@ -75,31 +75,31 @@ class LanguageController extends Controller
             header('Location: ' . BASE_URL . '/dashboard');
             exit;
         }
-        
+
         if (!$key) {
             $_SESSION['flash_message'] = 'Neplatný klíč překladu.';
             $_SESSION['flash_type'] = 'error';
             header('Location: ' . BASE_URL . '/admin/translations');
             exit;
         }
-        
-        
+
+
         // Získání překladu pro všechny jazyky
         $translations = [];
         foreach ($this->languageModel->getSupportedLanguages() as $langCode) {
             $langTranslations = $this->languageModel->getTranslations($langCode, $category);
             $translations[$langCode] = $langTranslations[$category][$key] ?? '';
         }
-        
+
         $this->view('admin/translations/edit', [
-            'title' => 'Editace překladu | Kali-framework - Admin',
+            'title' => 'Editace překladu | Midobarbershop.cz - Admin',
             'key' => $key,
             'category' => $category,
             'translations' => $translations,
             'languages' => $this->languageModel->getSupportedLanguages()
         ]);
     }
-    
+
     /**
      * Admin: Zpracování editace překladu
      */
@@ -110,36 +110,36 @@ class LanguageController extends Controller
             header('Location: ' . BASE_URL . '/dashboard');
             exit;
         }
-        
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . BASE_URL . '/admin/translations');
             exit;
         }
-        
+
         $key = $_POST['key'] ?? '';
         $category = $_POST['category'] ?? 'general';
         $translations = $_POST['translations'] ?? [];
-        
+
         if (!$key || empty($translations)) {
             $_SESSION['flash_message'] = 'Neplatný požadavek.';
             $_SESSION['flash_type'] = 'error';
             header('Location: ' . BASE_URL . '/admin/translations');
             exit;
         }
-        
+
         $success = true;
         $errors = [];
-        
+
         // Uložení překladů pro všechny jazyky
         foreach ($translations as $langCode => $value) {
             $result = $this->languageModel->saveTranslation($langCode, $key, $value, $category);
-            
+
             if (!$result['success']) {
                 $success = false;
                 $errors[] = "Jazyk $langCode: " . $result['message'];
             }
         }
-        
+
         if ($success) {
             $_SESSION['flash_message'] = 'Překlad byl úspěšně aktualizován.';
             $_SESSION['flash_type'] = 'success';
@@ -147,11 +147,11 @@ class LanguageController extends Controller
             $_SESSION['flash_message'] = 'Při ukládání překladu došlo k chybám: ' . implode(', ', $errors);
             $_SESSION['flash_type'] = 'error';
         }
-        
+
         header('Location: ' . BASE_URL . '/admin/translations');
         exit;
     }
-    
+
     /**
      * Admin: Přidání nového překladu
      */
@@ -162,13 +162,13 @@ class LanguageController extends Controller
             header('Location: ' . BASE_URL . '/dashboard');
             exit;
         }
-        
+
         $this->view('admin/translations/add', [
-            'title' => 'Přidání překladu | Kali-framework - Admin',
+            'title' => 'Přidání překladu | Midobarbershop.cz - Admin',
             'languages' => $this->languageModel->getSupportedLanguages()
         ]);
     }
-    
+
     /**
      * Admin: Zpracování přidání nového překladu
      */
@@ -179,36 +179,36 @@ class LanguageController extends Controller
             header('Location: ' . BASE_URL . '/dashboard');
             exit;
         }
-        
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . BASE_URL . '/admin/translations');
             exit;
         }
-        
+
         $key = $_POST['key'] ?? '';
         $category = $_POST['category'] ?? 'general';
         $translations = $_POST['translations'] ?? [];
-        
+
         if (!$key || empty($translations)) {
             $_SESSION['flash_message'] = 'Neplatný požadavek.';
             $_SESSION['flash_type'] = 'error';
             header('Location: ' . BASE_URL . '/admin/translations/add');
             exit;
         }
-        
+
         $success = true;
         $errors = [];
-        
+
         // Uložení překladů pro všechny jazyky
         foreach ($translations as $langCode => $value) {
             $result = $this->languageModel->saveTranslation($langCode, $key, $value, $category);
-            
+
             if (!$result['success']) {
                 $success = false;
                 $errors[] = "Jazyk $langCode: " . $result['message'];
             }
         }
-        
+
         if ($success) {
             $_SESSION['flash_message'] = 'Překlad byl úspěšně přidán.';
             $_SESSION['flash_type'] = 'success';
@@ -220,7 +220,7 @@ class LanguageController extends Controller
         }
         exit;
     }
-    
+
     /**
      * Admin: Import překladů
      */
@@ -231,12 +231,12 @@ class LanguageController extends Controller
             header('Location: ' . BASE_URL . '/dashboard');
             exit;
         }
-        
+
         $this->view('admin/translations/import', [
-            'title' => 'Import překladů | Kali-framework - Admin'
+            'title' => 'Import překladů | Midobarbershop.cz - Admin'
         ]);
     }
-    
+
     /**
      * Admin: Zpracování importu překladů
      */
@@ -247,12 +247,12 @@ class LanguageController extends Controller
             header('Location: ' . BASE_URL . '/dashboard');
             exit;
         }
-        
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . BASE_URL . '/admin/translations');
             exit;
         }
-        
+
         // Zpracování nahraného souboru
         if (!isset($_FILES['import_file']) || $_FILES['import_file']['error'] !== UPLOAD_ERR_OK) {
             $_SESSION['flash_message'] = 'Chyba při nahrávání souboru.';
@@ -260,19 +260,19 @@ class LanguageController extends Controller
             header('Location: ' . BASE_URL . '/admin/translations/import');
             exit;
         }
-        
+
         $fileContent = file_get_contents($_FILES['import_file']['tmp_name']);
         $translations = json_decode($fileContent, true);
-        
+
         if (!$translations) {
             $_SESSION['flash_message'] = 'Neplatný formát souboru. Musí být ve formátu JSON.';
             $_SESSION['flash_type'] = 'error';
             header('Location: ' . BASE_URL . '/admin/translations/import');
             exit;
         }
-        
+
         $result = $this->languageModel->importTranslations($translations);
-        
+
         if ($result['success']) {
             $_SESSION['flash_message'] = 'Překlady byly úspěšně importovány.';
             $_SESSION['flash_type'] = 'success';
@@ -284,7 +284,7 @@ class LanguageController extends Controller
         }
         exit;
     }
-    
+
     /**
      * Admin: Export překladů
      */
@@ -295,25 +295,19 @@ class LanguageController extends Controller
             header('Location: ' . BASE_URL . '/dashboard');
             exit;
         }
-        
+
         $category = $_GET['category'] ?? null;
-        
+
         $exports = [];
         foreach ($this->languageModel->getSupportedLanguages() as $langCode) {
             $exports[$langCode] = $this->languageModel->getTranslations($langCode, $category);
         }
-        
+
         // Nastavení hlaviček pro stažení souboru
         header('Content-Type: application/json');
         header('Content-Disposition: attachment; filename="translations_export_' . date('Y-m-d') . '.json"');
-        
+
         echo json_encode($exports, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         exit;
     }
-
-
-
-
-
-    
 }
