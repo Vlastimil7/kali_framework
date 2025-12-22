@@ -1,3 +1,5 @@
+public/.htaccess
+public/uploads/.htaccess
 /vendor/
 /node_modules/
 /storage/logs/*

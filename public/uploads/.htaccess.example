@@ -1,0 +1,17 @@
+# uploads: zakaz listingu
+Options -Indexes
+
+# Povolit jen konkretni pripony (uprav dle potreby)
+<FilesMatch "\.(jpg|jpeg|png|webp|gif|pdf)$">
+    Require all granted
+</FilesMatch>
+
+# Vse ostatni zakazat
+<FilesMatch ".*">
+    Require all denied
+</FilesMatch>
+
+# Zakaz .htaccess a skrytych souboru
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
