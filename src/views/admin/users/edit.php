@@ -56,21 +56,9 @@
                         </select>
                     </div>
                     
-                    <div>
-                        <label for="credit_balance" class="block text-sm font-medium text-gray-700 mb-1">Kredit (Kč)</label>
-                        <input type="number" id="credit_balance" name="credit_balance" value="<?= htmlspecialchars($user['credit_balance']) ?>" 
-                               step="0.01" min="0" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
+
                 </div>
-                
-                <div class="flex items-center">
-                    <input type="checkbox" id="allow_debit" name="allow_debit" value="1" <?= $user['allow_debit'] ? 'checked' : '' ?> 
-                           class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                    <label for="allow_debit" class="ml-2 block text-sm text-gray-900">
-                        Povolit záporný kredit
-                    </label>
-                </div>
+
                 
                 <div class="pt-4 border-t border-gray-200">
                     <h3 class="text-lg font-medium text-gray-900 mb-3">Změna hesla</h3>

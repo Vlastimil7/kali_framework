@@ -1,52 +1,91 @@
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <!-- Statistika uživatelů -->
-    <div class="bg-blue-50 p-6 rounded-lg shadow border border-blue-100">
-        <div class="flex items-center">
-            <div class="p-3 rounded-full bg-blue-600 bg-opacity-25">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- Stat: Users -->
+    <div class="relative overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-zinc-200 p-6">
+        <div class="pointer-events-none absolute -top-10 -right-10 h-32 w-32 rounded-full bg-zinc-900/5 blur-2xl"></div>
+
+        <div class="flex items-start justify-between">
+            <div>
+                <div class="text-xs font-semibold uppercase tracking-wide text-zinc-500">Počet uživatelů</div>
+                <div class="mt-2 text-4xl font-black tracking-tight text-zinc-900"><?= (int)$userCount ?></div>
+                <div class="mt-1 text-sm text-zinc-500">Celkem registrovaných v systému</div>
             </div>
-            <div class="ml-6">
-                <h2 class="text-xl font-bold text-gray-900">Uživatelé</h2>
-                <p class="text-3xl font-bold text-blue-600"><?= $userCount ?></p>
+
+            <div class="grid place-items-center h-12 w-12 rounded-2xl bg-zinc-900 text-white shadow-sm">
+                <span class="text-base font-black">👤</span>
             </div>
         </div>
-        <div class="mt-4">
-            <a href="<?= BASE_URL ?>/admin/users" class="text-blue-600 hover:text-blue-800 font-medium">
-                Spravovat uživatele →
+
+     
+    </div>
+
+    <!-- Quick links -->
+    <div class="md:col-span-2 rounded-2xl bg-white shadow-sm ring-1 ring-zinc-200 p-6">
+        <div class="flex items-start justify-between gap-4">
+            <div>
+                <div class="text-xs font-semibold uppercase tracking-wide text-zinc-500">Rychlé odkazy</div>
+                <div class="mt-2 text-xl font-extrabold tracking-tight text-zinc-900">Správa administrace</div>
+                <div class="mt-1 text-sm text-zinc-500">Nejčastější sekce na jedno kliknutí.</div>
+            </div>
+
+            <div class="grid place-items-center h-12 w-12 rounded-2xl bg-zinc-50 ring-1 ring-zinc-200 text-zinc-900">
+                <span class="text-base font-black">⚡</span>
+            </div>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <a href="<?= BASE_URL ?>/admin/orders"
+                class="group flex items-center justify-between rounded-xl px-4 py-3 bg-zinc-50 ring-1 ring-zinc-200
+                      hover:bg-white hover:shadow-sm transition">
+                <div class="flex items-center gap-3">
+                    <span class="grid place-items-center h-9 w-9 rounded-xl bg-white ring-1 ring-zinc-200">📦</span>
+                    <div>
+                        <div class="text-sm font-extrabold text-zinc-900">Objednávky</div>
+                        <div class="text-xs text-zinc-500">přehled a detail</div>
+                    </div>
+                </div>
+                <span class="text-zinc-400 group-hover:text-zinc-900 transition">→</span>
+            </a>
+
+            <a href="<?= BASE_URL ?>/admin/vouchers"
+                class="group flex items-center justify-between rounded-xl px-4 py-3 bg-zinc-50 ring-1 ring-zinc-200
+                      hover:bg-white hover:shadow-sm transition">
+                <div class="flex items-center gap-3">
+                    <span class="grid place-items-center h-9 w-9 rounded-xl bg-white ring-1 ring-zinc-200">🎟️</span>
+                    <div>
+                        <div class="text-sm font-extrabold text-zinc-900">Vouchery</div>
+                        <div class="text-xs text-zinc-500">produkty a ceny</div>
+                    </div>
+                </div>
+                <span class="text-zinc-400 group-hover:text-zinc-900 transition">→</span>
+            </a>
+
+            <a href="<?= BASE_URL ?>/admin/voucher-codes/verify"
+                class="group flex items-center justify-between rounded-xl px-4 py-3 bg-zinc-50 ring-1 ring-zinc-200
+                      hover:bg-white hover:shadow-sm transition">
+                <div class="flex items-center gap-3">
+                    <span class="grid place-items-center h-9 w-9 rounded-xl bg-white ring-1 ring-zinc-200">✅</span>
+                    <div>
+                        <div class="text-sm font-extrabold text-zinc-900">Ověřit kód voucheru</div>
+                        <div class="text-xs text-zinc-500">rychlá kontrola</div>
+                    </div>
+                </div>
+                <span class="text-zinc-400 group-hover:text-zinc-900 transition">→</span>
+            </a>
+
+            <a href="<?= BASE_URL ?>/admin/users"
+                class="group flex items-center justify-between rounded-xl px-4 py-3 bg-zinc-50 ring-1 ring-zinc-200
+                      hover:bg-white hover:shadow-sm transition">
+                <div class="flex items-center gap-3">
+                    <span class="grid place-items-center h-9 w-9 rounded-xl bg-white ring-1 ring-zinc-200">👥</span>
+                    <div>
+                        <div class="text-sm font-extrabold text-zinc-900">Uživatelé</div>
+                        <div class="text-xs text-zinc-500">role a přístupy</div>
+                    </div>
+                </div>
+                <span class="text-zinc-400 group-hover:text-zinc-900 transition">→</span>
             </a>
         </div>
     </div>
-
-
-
-
-</div>
-
-
-
-
-
-<div class="bg-white rounded-lg shadow-md border border-gray-200">
-    <div class="px-6 py-4 border-b border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-800">Rychlé akce</h2>
-    </div>
-    <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-
-
-
-
-        <a href="<?= BASE_URL ?>/admin/users/create" class="flex flex-col items-center justify-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition duration-150">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-            </svg>
-            <span class="text-sm font-medium text-gray-700">Přidat uživatele</span>
-        </a>
-
-
-
-    </div>
-
 
 </div>

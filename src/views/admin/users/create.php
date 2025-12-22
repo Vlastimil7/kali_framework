@@ -74,21 +74,10 @@ unset($_SESSION['form_data']);
                         </select>
                     </div>
                     
-                    <div>
-                        <label for="credit_balance" class="block text-sm font-medium text-gray-700 mb-1">Počáteční kredit (Kč)</label>
-                        <input type="number" id="credit_balance" name="credit_balance" value="<?= htmlspecialchars($formData['credit_balance'] ?? '0') ?>" 
-                               step="0.01" min="0" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
+
                 </div>
                 
-                <div class="flex items-center">
-                    <input type="checkbox" id="allow_debit" name="allow_debit" value="1" <?= isset($formData['allow_debit']) && $formData['allow_debit'] ? 'checked' : '' ?> 
-                           class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                    <label for="allow_debit" class="ml-2 block text-sm text-gray-900">
-                        Povolit záporný kredit
-                    </label>
-                </div>
+
                 
                 <div class="flex justify-between mt-8">
                     <a href="<?= BASE_URL ?>/admin/users" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">

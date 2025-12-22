@@ -22,7 +22,7 @@ div[id] {
 
 /* Základní styly pro bílé pozadí */
 body {
-  background-color: var(--color-white);
+  background-color: var(--color-black);
   color: #333333;
 }
 

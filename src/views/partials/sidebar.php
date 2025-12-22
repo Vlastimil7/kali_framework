@@ -61,7 +61,7 @@ $navAmbulance = [
         <div class="flex items-center gap-2 text-sm font-semibold text-slate-800">
             <!--      Logo -->
             <a href="<?= BASE_URL ?>/" class="block">
-                <img src="<?= BASE_URL ?>/assets/images/logo/ivision_media_logo_new.png"
+                <img src="<?= BASE_URL ?>/assets/images/logo/mido_barbershop_logo.png"
                     alt="Logo"
                     class="h-20 w-auto  rounded-[100px] ">
             </a>
@@ -128,7 +128,7 @@ $navAmbulance = [
     class="hidden lg:block w-60 shrink-0 sticky top-20 self-start bg-[#d9deff] border-blue-200 backdrop-blur  rounded-2xl p-4 text-sm shadow-sm">
     <!--      Logo -->
     <a href="<?= BASE_URL ?>/" class="block pb-5">
-        <img src="<?= BASE_URL ?>/assets/images/logo/ivision_media_logo_new.png"
+        <img src="<?= BASE_URL ?>/assets/images/logo/mido_barbershop_logo.png"
             alt="Logo"
             class="h-18 w-auto  rounded-[50px] ">
     </a>

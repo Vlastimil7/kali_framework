@@ -1,6 +1,6 @@
 <?php
 
-namespace Controllers;
+namespace Controllers\Front;
 
 use Core\Controller;
 use Models\User;
@@ -18,7 +18,7 @@ class UserController extends Controller
     {
         $this->userModel = new User();
         $this->mailer = new Mailer();
-        
+
         // RateLimiter a ReCaptcha inicializujeme až při potřebě, protože potřebují parametry
     }
 
@@ -26,7 +26,8 @@ class UserController extends Controller
     public function showLogin()
     {
         $this->view('users/login', [
-            'title' => 'Přihlášení | Kali-Framework'
+            'title' => 'Přihlášení | Midobarbershop.cz',
+            'show_sidebar' => false,
         ]);
     }
 
@@ -50,7 +51,7 @@ class UserController extends Controller
                 if ($result['user']['role'] === 'admin') {
                     header('Location: ' . BASE_URL . '/admin/dashboard');
                 } else {
-                    header('Location: ' . BASE_URL . '/dashboard');
+                    header('Location: ' . BASE_URL . '/profile');
                 }
                 exit;
             } else {
@@ -71,7 +72,8 @@ class UserController extends Controller
     public function showRegister()
     {
         $this->view('users/register', [
-            'title' => 'Registrace | Kali-Framework'
+            'title' => 'Registrace | Midobarbershop.cz',
+            'show_sidebar' => false,
         ]);
     }
 
@@ -122,8 +124,9 @@ class UserController extends Controller
 
 
         $this->view('users/profile', [
-            'title' => 'Můj profil | Kali-Framework',
-            'user' => $user
+            'title' => 'Můj profil | Midobarbershop.cz',
+            'user' => $user,
+            'show_sidebar' => false,
         ]);
     }
 
@@ -187,7 +190,8 @@ class UserController extends Controller
     public function showPasswordResetRequest()
     {
         $this->view('users/password_request', [
-            'title' => 'Zapomenuté heslo | Kali-Framework'
+            'title' => 'Zapomenuté heslo | Midobarbershop.cz',
+            'show_sidebar' => false,
         ]);
     }
 
@@ -225,31 +229,31 @@ class UserController extends Controller
             // Pokud ověření selhalo, zobrazíme vhodnou chybovou zprávu
             // if (!$recaptchaResult['success']) {
             //     $errorMessage = 'Ověření reCAPTCHA selhalo. ';
-                
+
             //     // Přidáme specifický typ chyby pro lepší debugging
             //     switch ($recaptchaResult['error_type'] ?? '') {
             //         case 'configuration':
             //             $errorMessage .= 'Chyba konfigurace reCAPTCHA.';
             //             error_log('reCAPTCHA configuration error: ' . ($recaptchaResult['message'] ?? 'Unknown'));
             //             break;
-                        
+
             //         case 'connection':
             //             $errorMessage .= 'Nepodařilo se připojit k ověřovací službě.';
             //             error_log('reCAPTCHA connection error: ' . ($recaptchaResult['message'] ?? 'Unknown'));
             //             break;
-                        
+
             //         case 'expired_token':
             //             $errorMessage .= 'Vypršela platnost ověření, zkuste to znovu.';
             //             break;
-                        
+
             //         case 'low_score':
             //             $errorMessage .= 'Vaše aktivita byla vyhodnocena jako potenciálně nebezpečná.';
             //             break;
-                        
+
             //         default:
             //             $errorMessage .= 'Zkuste to prosím znovu.';
             //     }
-                
+
             //     $_SESSION['flash_message'] = $errorMessage;
             //     $_SESSION['flash_type'] = 'error';
             //     header('Location: ' . BASE_URL . '/password/reset');
@@ -280,7 +284,6 @@ class UserController extends Controller
             header('Location: ' . BASE_URL . '/password/reset');
             exit;
         }
-    
     }
 
     /**
@@ -299,8 +302,9 @@ class UserController extends Controller
         }
 
         $this->view('users/password_reset', [
-            'title' => 'Reset hesla | Kali-Framework',
-            'token' => $token
+            'title' => 'Reset hesla | Midobarbershop.cz',
+            'token' => $token,
+            'show_sidebar' => false,
         ]);
     }
 

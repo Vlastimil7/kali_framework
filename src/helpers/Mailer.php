@@ -56,7 +56,7 @@ class Mailer
             $this->mail->isHTML(true);
 
             // Předmět
-            $this->mail->Subject = 'Reset hesla na Detsky-doktor-albahri.cz';
+            $this->mail->Subject = 'Reset hesla na Midobarbershop.cz';
 
             // Vytvoření odkazu pro reset
             $resetLink = BASE_URL . '/password/reset/' . $token;
@@ -71,7 +71,7 @@ class Mailer
                 . "Pro reset hesla klikněte na následující odkaz:\n\n"
                 . $resetLink . "\n\n"
                 . "Pokud jste o reset hesla nežádali, tento email můžete ignorovat.\n\n"
-                . "S pozdravem,\nTým Detsky-doktor-albahri.cz";
+                . "S pozdravem,\nTým Midobarbershop.cz";
 
             // Odeslání emailu
             $this->mail->send();
@@ -96,9 +96,9 @@ class Mailer
     {
         // komu se má mail poslat
         $to = match ($formData['clinic'] ?? '') {
-            'PEDIA s.r.o.'    => 'pedia@post.cz',
-            'PEDIA AZ s.r.o.' => 'PediaAZ@post.cz',
-            default           => 'pedia@post.cz',
+            'Midobarbershop.cz s.r.o.'    => 'Midobarbershop.cz@post.cz',
+            'Midobarbershop.cz AZ s.r.o.' => 'Midobarbershop.czAZ@post.cz',
+            default           => 'Midobarbershop.cz@post.cz',
         };
 
         $subject = '[Kontaktní formulář] '
@@ -234,7 +234,7 @@ class Mailer
                 </div>
                 <div class="content">
                     <p>Dobrý den, ' . $name . ',</p>
-                    <p>obdrželi jsme žádost o reset hesla pro váš účet na webu Detsky-doktor-albahri.cz.</p>
+                    <p>obdrželi jsme žádost o reset hesla pro váš účet na webu Midobarbershop.cz.</p>
                     <p>Pro reset hesla klikněte na následující tlačítko:</p>
                     
                     <div style="text-align: center;">
@@ -248,10 +248,10 @@ class Mailer
                     
                     <p>Pokud jste o reset hesla nežádali, tento email můžete ignorovat.</p>
                     
-                    <p>S pozdravem,<br>Tým Detsky-doktor-albahri.cz</p>
+                    <p>S pozdravem,<br>Tým Midobarbershop.cz</p>
                 </div>
                 <div class="footer">
-                    <p>© ' . date('Y') . ' Detsky-doktor-albahri.cz - Všechna práva vyhrazena</p>
+                    <p>© ' . date('Y') . ' Midobarbershop.cz - Všechna práva vyhrazena</p>
                 </div>
             </div>
         </body>
@@ -320,7 +320,7 @@ class Mailer
         <body>
             <div class="container">
                 <div class="header" style="text-align: center; padding: 20px; background-color: white; color: black;">
-                  <img src="https://web.kalasekvyvoj.cz/ziad_pedia/public/assets/images/home/loga/pedia_logo.png" alt="Pedia s.r.o. a PediaAZ s.r.o." style="max-width: 250px; height: auto; display: block; margin: 0 auto 10px;">
+                  <img src="https://web.kalasekvyvoj.cz/ziad_Midobarbershop.cz/public/assets/images/home/loga/Midobarbershop.cz_logo.png" alt="Midobarbershop.cz s.r.o. a Midobarbershop.czAZ s.r.o." style="max-width: 250px; height: auto; display: block; margin: 0 auto 10px;">
                    <h1 style="color: white; margin-top: 0; font-size: 24px;">Nová zpráva z webu</h1>
                  </div>
                 <div class="content">
@@ -355,7 +355,7 @@ class Mailer
                 </div>
                 <div class="footer">
                     <p><strong>💡 Tip:</strong> Pro odpověď můžete použít tlačítko "Odpovědět" - email se automaticky odešle na adresu odesílatele.</p>
-                    <p>© ' . date('Y') . ' Detsky-doktor-albahri.cz - Automatická zpráva z kontaktního formuláře</p>
+                    <p>© ' . date('Y') . ' Midobarbershop.cz - Automatická zpráva z kontaktního formuláře</p>
                 </div>
             </div>
         </body>
@@ -382,8 +382,174 @@ class Mailer
         $text .= "ZPRÁVA:\n";
         $text .= "-------\n";
         $text .= $formData['message'] . "\n\n";
-        $text .= "© " . date('Y') . " Detsky-doktor-albahri.cz";
+        $text .= "© " . date('Y') . " Midobarbershop.cz";
 
         return $text;
+    }
+
+    public function sendOrderPaidWithVouchers(array $order, string $pdfPath, array $meta = []): array
+    {
+        try {
+            $email = trim((string)($order['billing_email'] ?? ''));
+            if ($email === '') {
+                return ['success' => false, 'message' => 'Objednávka nemá billing_email.'];
+            }
+
+            $orderNo = (string)($order['order_number'] ?? ('#' . ($order['id'] ?? '')));
+            $name    = (string)($order['billing_name'] ?? '');
+
+            $this->mail->clearAddresses();
+            $this->mail->clearReplyTos();
+            $this->mail->clearAttachments();
+
+            $this->mail->addAddress($email, $name ?: $email);
+            $this->mail->isHTML(true);
+
+            $this->mail->Subject = "Vaše objednávka {$orderNo} – voucher(y) v příloze";
+
+            $this->mail->Body = $this->getOrderPaidTemplate($order, $meta);
+            $this->mail->AltBody = $this->getOrderPaidPlainText($order, $meta);
+
+            if (is_file($pdfPath)) {
+                $this->mail->addAttachment($pdfPath, basename($pdfPath));
+            }
+
+            $this->mail->send();
+
+            return ['success' => true, 'message' => 'Email s vouchery odeslán.'];
+        } catch (Exception $e) {
+            Logger::error('PHPMailer sendOrderPaidWithVouchers failed', [
+                'order_id' => $order['id'] ?? null,
+                'order_no' => $order['order_number'] ?? null,
+                'to'       => $order['billing_email'] ?? null,
+                'error'    => $e->getMessage(),
+                'errorInfo' => $this->mail->ErrorInfo ?? null,
+            ]);
+
+            return ['success' => false, 'message' => 'Nepodařilo se odeslat email: ' . $e->getMessage()];
+        }
+    }
+
+    public function sendOrderStatusChanged(array $order, string $newStatus, string $note = ''): array
+    {
+        try {
+            $email = trim((string)($order['billing_email'] ?? ''));
+            if ($email === '') {
+                return ['success' => false, 'message' => 'Objednávka nemá billing_email.'];
+            }
+
+            $orderNo = (string)($order['order_number'] ?? ('#' . ($order['id'] ?? '')));
+            $name    = (string)($order['billing_name'] ?? '');
+
+            $this->mail->clearAddresses();
+            $this->mail->clearReplyTos();
+            $this->mail->clearAttachments();
+
+            $this->mail->addAddress($email, $name ?: $email);
+            $this->mail->isHTML(true);
+
+            $this->mail->Subject = "Stav objednávky {$orderNo}: {$newStatus}";
+            $this->mail->Body    = $this->getOrderStatusTemplate($order, $newStatus, $note);
+            $this->mail->AltBody = $this->getOrderStatusPlainText($order, $newStatus, $note);
+
+            $this->mail->send();
+
+            return ['success' => true, 'message' => 'Email o změně stavu odeslán.'];
+        } catch (Exception $e) {
+            Logger::error('PHPMailer sendOrderStatusChanged failed', [
+                'order_id' => $order['id'] ?? null,
+                'order_no' => $order['order_number'] ?? null,
+                'to'       => $order['billing_email'] ?? null,
+                'status'   => $newStatus,
+                'error'    => $e->getMessage(),
+                'errorInfo' => $this->mail->ErrorInfo ?? null,
+            ]);
+
+            return ['success' => false, 'message' => 'Nepodařilo se odeslat email: ' . $e->getMessage()];
+        }
+    }
+
+    private function getOrderPaidTemplate(array $order, array $meta = []): string
+    {
+        $orderNo = htmlspecialchars((string)($order['order_number'] ?? ''));
+        $name = htmlspecialchars((string)($order['billing_name'] ?? ''));
+        return "
+      <div style='font-family:Arial,sans-serif;line-height:1.5'>
+        <h2>Děkujeme za objednávku {$orderNo}</h2>
+        <p>Dobrý den {$name},</p>
+        <p>Vaše objednávka byla <b>zaplacena</b>. V příloze posíláme voucher(y) v PDF.</p>
+        <p>Hezký den,<br>Midobarbershop.cz</p>
+      </div>
+    ";
+    }
+
+    private function getOrderPaidPlainText(array $order, array $meta = []): string
+    {
+        $orderNo = (string)($order['order_number'] ?? '');
+        $name = (string)($order['billing_name'] ?? '');
+        return "Dobrý den {$name},\n\nObjednávka {$orderNo} byla zaplacena. V příloze posíláme voucher(y) v PDF.\n\nMidobarbershop.cz\n";
+    }
+
+    private function getOrderStatusTemplate(array $order, string $newStatus, string $note = ''): string
+    {
+        $orderNo = htmlspecialchars((string)($order['order_number'] ?? ''));
+        $name = htmlspecialchars((string)($order['billing_name'] ?? ''));
+        $st = htmlspecialchars($newStatus);
+        $noteHtml = $note !== '' ? "<p><b>Poznámka:</b> " . nl2br(htmlspecialchars($note)) . "</p>" : "";
+        return "
+      <div style='font-family:Arial,sans-serif;line-height:1.5'>
+        <h2>Objednávka {$orderNo}</h2>
+        <p>Dobrý den {$name},</p>
+        <p>Stav objednávky byl změněn na: <b>{$st}</b>.</p>
+        {$noteHtml}
+        <p>Midobarbershop.cz</p>
+      </div>
+    ";
+    }
+
+    private function getOrderStatusPlainText(array $order, string $newStatus, string $note = ''): string
+    {
+        $orderNo = (string)($order['order_number'] ?? '');
+        $name = (string)($order['billing_name'] ?? '');
+        $txt = "Dobrý den {$name},\n\nStav objednávky {$orderNo} byl změněn na: {$newStatus}.\n";
+        if ($note !== '') $txt .= "\nPoznámka: {$note}\n";
+        $txt .= "\nMidobarbershop.cz\n";
+        return $txt;
+    }
+
+    public function sendOrderPaidWithVoucherAttachments(array $order, array $pdfPaths): array
+    {
+        try {
+            $this->mail->clearAddresses();
+            $this->mail->clearAttachments();
+
+            $to = (string)($order['billing_email'] ?? '');
+            if ($to === '') {
+                return ['success' => false, 'message' => 'Objednávka nemá billing_email.'];
+            }
+
+            $this->mail->addAddress($to, (string)($order['billing_name'] ?? ''));
+
+            $orderNo = (string)($order['order_number'] ?? '');
+            $this->mail->isHTML(true);
+            $this->mail->Subject = 'Vouchery k objednávce ' . $orderNo;
+
+            $this->mail->Body = '<p>Dobrý den,</p><p>v příloze posíláme vaše vouchery k objednávce <b>'
+                . htmlspecialchars($orderNo) . '</b>.</p><p>Děkujeme,<br>Midobarbershop</p>';
+
+            $this->mail->AltBody = "Dobrý den,\n\nV příloze posíláme vaše vouchery k objednávce {$orderNo}.\n\nMidobarbershop";
+
+            foreach ($pdfPaths as $path) {
+                if ($path && is_file($path)) {
+                    $this->mail->addAttachment($path);
+                }
+            }
+
+            $this->mail->send();
+            return ['success' => true];
+        } catch (\Throwable $e) {
+            Logger::error('sendOrderPaidWithVoucherAttachments failed: ' . $e->getMessage());
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
     }
 }

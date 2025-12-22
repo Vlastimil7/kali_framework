@@ -20,7 +20,7 @@
         <?php endif; ?>
 
         <div class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mb-8">
                 <div class="bg-gray-50 p-4 rounded-lg">
                     <h2 class="text-lg font-semibold text-gray-800 mb-4">Informace o účtu</h2>
                     
@@ -43,11 +43,7 @@
                         <span class="block text-sm font-medium text-gray-500">Telefon</span>
                         <span class="text-gray-900"><?= htmlspecialchars($user['phone'] ?: '---') ?></span>
                     </div>
-                    
-                    <div class="mb-3">
-                        <span class="block text-sm font-medium text-gray-500">Kredit</span>
-                        <span class="text-gray-900 font-medium"><?= number_format($user['credit_balance'], 2, ',', ' ') ?> Kč</span>
-                    </div>
+
                     
                     <div class="mb-3">
                         <span class="block text-sm font-medium text-gray-500">Účet vytvořen</span>
@@ -55,30 +51,7 @@
                     </div>
                 </div>
                 
-                <div class="bg-gray-50 p-4 rounded-lg">
-                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Poslední objednávky</h2>
-                    
-                    <?php if (isset($orders) && count($orders) > 0): ?>
-                        <div class="space-y-3">
-                            <?php foreach ($orders as $order): ?>
-                                <div class="border-b border-gray-200 pb-2">
-                                    <div class="flex justify-between">
-                                        <span class="font-medium"><?= date('d.m.Y', strtotime($order['created_at'])) ?></span>
-                                        <span class="<?= $order['status'] === 'completed' ? 'text-green-600' : 'text-blue-600' ?>"><?= htmlspecialchars($order['status']) ?></span>
-                                    </div>
-                                    <div class="text-sm text-gray-600">
-                                        Objednávka #<?= $order['id'] ?> - <?= number_format($order['total_price'], 2, ',', ' ') ?> Kč
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                        <div class="mt-4">
-                            <a href="<?= BASE_URL ?>/orders" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Zobrazit všechny objednávky →</a>
-                        </div>
-                    <?php else: ?>
-                        <p class="text-gray-600">Zatím nemáte žádné objednávky.</p>
-                    <?php endif; ?>
-                </div>
+
             </div>
             
             <div class="bg-gray-50 p-6 rounded-lg mt-6">
@@ -135,7 +108,7 @@
     </div>
     
     <div class="flex justify-between">
-        <a href="<?= BASE_URL ?>/dashboard" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        <a href="<?= BASE_URL ?>/" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
             Zpět na přehled
         </a>
         

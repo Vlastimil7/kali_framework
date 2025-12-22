@@ -24,8 +24,8 @@ if (APP_ENV === 'production') {
     define('BASE_URL', env('BASE_URL', ''));
     define('SITE_URL', env('SITE_URL', 'https://web.kalasekvyvoj.cz'));
 } else {
-    define('BASE_URL', env('BASE_URL_DEV', '/__Framework/1_v0/public'));
-    define('SITE_URL', env('SITE_URL_DEV', 'http://localhost/05_WWW/__Framework/1_v0'));
+    define('BASE_URL', env('BASE_URL_DEV', '/08a_midovouchers/public'));
+    define('SITE_URL', env('SITE_URL_DEV', 'http://localhost/08a_midovouchers/public/'));
 }
 
 // SMTP nastavení
@@ -39,6 +39,22 @@ define('MAIL_FROM_NAME', env('MAIL_FROM_NAME'));
 // reCAPTCHA
 define('RECAPTCHA_SITE_KEY', env('RECAPTCHA_SITE_KEY'));
 define('RECAPTCHA_SECRET_KEY', env('RECAPTCHA_SECRET_KEY'));
+
+// Comgate config
+define('COMGATE_MERCHANT', env('COMGATE_MERCHANT'));
+define('COMGATE_SECRET', env('COMGATE_SECRET'));
+define('COMGATE_TEST', env('COMGATE_TEST', 'true') === 'true');
+
+define('COMGATE_CURRENCY', env('COMGATE_CURRENCY', 'CZK'));
+define('COMGATE_LANG', env('COMGATE_LANG', 'cs'));
+define('COMGATE_COUNTRY', env('COMGATE_COUNTRY', 'CZ'));
+
+// URL pro návrat a notifikace (doplníš podle domény projektu)
+define('COMGATE_RETURN_URL',  env('COMGATE_RETURN_URL', SITE_URL . '/payment/comgate/return'));
+define('COMGATE_NOTIFY_URL',  env('COMGATE_NOTIFY_URL', SITE_URL . '/payment/comgate/notify'));
+
+// Prefix pro kódy voucherů (např. MIDO → 2025MIDO00001)
+define('VOUCHER_CODE_PREFIX', env('VOUCHER_CODE_PREFIX', 'MIDO'));
 
 // Error reporting
 if (APP_ENV === 'production') {

@@ -8,10 +8,10 @@ class ReCaptcha
 
     // Volitelné: povolené domény (uprav si podle reality)
     private array $allowedHostnames = [
-        'pediaaz.cz',
-        'www.pediaaz.cz',
-        'detsky-doktor-albahri.cz',
-        'www.detsky-doktor-albahri.cz',
+        'Midobarbershop.czaz.cz',
+        'www.Midobarbershop.czaz.cz',
+        'Midobarbershop.cz',
+        'www.Midobarbershop.cz',
         'web.kalasekvyvoj.cz',
         // případně i test doména:
         // 'web.kalasekvyvoj.cz',
