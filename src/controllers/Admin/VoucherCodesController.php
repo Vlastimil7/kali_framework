@@ -19,7 +19,7 @@ class VoucherCodesController extends BaseAdminController
     {
         $this->view('admin/voucher_codes/verify', [
             'title' => 'Ověření voucheru | Admin',
-            'show_sidebar' => false,
+
             'result' => null,
         ]);
     }
@@ -63,7 +63,7 @@ class VoucherCodesController extends BaseAdminController
 
         $this->view('admin/voucher_codes/verify', [
             'title' => 'Ověření voucheru | Admin',
-            'show_sidebar' => false,
+
             'result' => $row,
         ]);
     }

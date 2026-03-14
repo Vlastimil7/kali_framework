@@ -1,91 +1,125 @@
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
+<!-- Chat area pod navem: 100vh - 95px -->
+<div class="bg-black">
     <div class="max-w-4xl mx-auto px-4">
-        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-            <!-- Header -->
-            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                            <span class="text-xl font-bold">VK</span>
+        <div class="relative h-[calc(100vh-95px)] overflow-hidden">
+
+            <div id="chat-scroll" class="h-full overflow-y-auto overscroll-contain hide-scrollbar">
+
+                <!-- persistent disclaimer -->
+                <div class="py-3">
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-3 text-xs text-white/60">
+                        <?= __('chat_disclaimer_text_before', [], 'chat') ?>
+                        <a href="<?= BASE_URL ?>/contact" class="underline hover:no-underline text-white">
+                            <?= __('chat_disclaimer_contact_link', [], 'chat') ?>
+                        </a>.
+                    </div>
+                </div>
+
+                <div id="chat-messages" class="py-6 space-y-6 pb-40">
+
+                    <!-- Intro -->
+                    <div id="initial-message" class="rounded-2xl border border-white/10 bg-white/5 p-5">
+                        <div class="text-white font-semibold text-lg"><?= __('chat_intro_title', [], 'chat') ?></div>
+
+                        <div class="mt-3 rounded-xl border border-white/10 bg-white/5 p-3">
+                            <div class="text-xs text-white/70 leading-relaxed">
+                                <?= __('chat_intro_body', [], 'chat') ?>
+                                <a href="<?= BASE_URL ?>/contact" class="underline hover:no-underline text-white">
+                                    <?= __('chat_intro_contact_form_link', [], 'chat') ?>
+                                </a>.
+                            </div>
                         </div>
-                        <div>
-                            <h1 class="text-2xl font-bold">Vlastimil Kalášek</h1>
-                            <p class="text-blue-100">MES System Support Specialist & Developer</p>
-                            <p class="text-sm text-blue-200 italic">"Life is a bug, and you're the debugger"</p>
+
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <button class="suggestion-btn px-3 py-1.5 rounded-full text-xs border border-white/10 bg-white/5 text-white/80 hover:bg-white/10 transition">
+                                <?= __('chat_suggestion_experience', [], 'chat') ?>
+                            </button>
+                            <button class="suggestion-btn px-3 py-1.5 rounded-full text-xs border border-white/10 bg-white/5 text-white/80 hover:bg-white/10 transition">
+                                <?= __('chat_suggestion_tech', [], 'chat') ?>
+                            </button>
+                            <button class="suggestion-btn px-3 py-1.5 rounded-full text-xs border border-white/10 bg-white/5 text-white/80 hover:bg-white/10 transition">
+                                <?= __('chat_suggestion_projects', [], 'chat') ?>
+                            </button>
+                            <button class="suggestion-btn px-3 py-1.5 rounded-full text-xs border border-white/10 bg-white/5 text-white/80 hover:bg-white/10 transition">
+                                <?= __('chat_suggestion_pricing', [], 'chat') ?>
+                            </button>
                         </div>
                     </div>
-                    <!-- Status indicator -->
-                    <div class="flex items-center space-x-2">
-                        <div id="status-indicator" class="w-3 h-3 bg-red-400 rounded-full"></div>
-                        <span id="status-text" class="text-sm text-blue-100">Checking...</span>
-                    </div>
+
                 </div>
             </div>
 
-            <!-- Chat messages -->
-            <div id="chat-messages" class="h-96 overflow-y-auto p-6 space-y-4 bg-gray-50">
-                <div class="text-center text-gray-500">
-                    <div class="bg-white p-4 rounded-lg shadow-sm inline-block">
-                        <p class="font-medium">Ahoj! 👋</p>
-                        <p class="text-sm mt-2">Zeptej se mě na cokoliv o mé práci, zkušenostech, projektech nebo dovednostech!</p>
-                        <div class="mt-3 flex flex-wrap gap-2 justify-center">
-                            <button class="suggestion-btn bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs hover:bg-blue-200 transition-colors">
-                                Jaké máš zkušenosti?
-                            </button>
-                            <button class="suggestion-btn bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs hover:bg-green-200 transition-colors">
-                                Ukaž mi své CV
-                            </button>
-                            <button class="suggestion-btn bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs hover:bg-purple-200 transition-colors">
-                                Jaké projekty děláš?
-                            </button>
-                            <button class="suggestion-btn bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs hover:bg-orange-200 transition-colors">
-                                Certifikáty a školení
-                            </button>
+            <!-- Composer -->
+            <div class="absolute left-0 right-0 bottom-0 border-white/10 bg-black">
+                <div class="py-4">
+
+                    <!-- Typing indicator -->
+                    <div id="typing-indicator"
+                        class="hidden absolute left-0 right-0 bottom-[100px] border-white/10 bg-black/80">
+                        <div class="py-2">
+                            <div class="flex items-center gap-2 text-white/60 text-sm">
+                                <div class="flex gap-1">
+                                    <div class="w-2 h-2 bg-white/40 rounded-full animate-bounce"></div>
+                                    <div class="w-2 h-2 bg-white/40 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                                    <div class="w-2 h-2 bg-white/40 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                                </div>
+                                <span><?= __('chat_typing_text', [], 'chat') ?></span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Typing indicator -->
-            <div id="typing-indicator" class="hidden px-6 py-2">
-                <div class="flex items-center space-x-2 text-gray-500">
-                    <div class="flex space-x-1">
-                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                    <!-- Status -->
+                    <div class="flex items-center justify-end gap-2 mb-2">
+                        <div id="status-indicator" class="w-2.5 h-2.5 bg-red-400 rounded-full"></div>
+                        <span id="status-text" class="text-xs text-white/60">
+                            <?= __('chat_status_checking', [], 'chat') ?>
+                        </span>
                     </div>
-                    <span class="text-sm">Vlastimil píše...</span>
+
+                    <!-- Error -->
+                    <div id="error-message" class="hidden mb-3 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-200">
+                        <span id="error-text"></span>
+                        <button id="retry-btn" class="ml-2 underline hover:no-underline">
+                            <?= __('chat_retry_button', [], 'chat') ?>
+                        </button>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row items-stretch md:items-end gap-3">
+                        <div class="flex-1 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                            <textarea
+                                id="chat-input"
+                                rows="1"
+                                placeholder="<?= __('chat_input_placeholder', [], 'chat') ?>"
+                                class="w-full resize-none bg-transparent outline-none text-white placeholder:text-white/40 leading-relaxed"></textarea>
+                        </div>
+
+                        <button id="send-btn"
+                            class="w-full md:w-auto shrink-0 rounded-2xl px-5 py-3 bg-[var(--color-green)] text-white font-semibold hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                            <span id="send-text"><?= __('chat_send_button', [], 'chat') ?></span>
+                            <span id="loading-text" class="hidden"><?= __('chat_sending_text', [], 'chat') ?></span>
+                        </button>
+
+                        <button id="clear-chat-btn"
+                            class="w-full md:w-auto shrink-0 rounded-2xl px-5 py-3 bg-red-600 text-white font-semibold hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
+                            <?= __('chat_clear_button', [], 'chat') ?>
+                        </button>
+                    </div>
+
+                    <div class="mt-1 text-[11px] text-white/35 leading-relaxed">
+                        <?= __('chat_input_hint', [], 'chat') ?>
+                    </div>
+
                 </div>
             </div>
 
-            <!-- Input -->
-            <div class="p-6 border-t bg-white">
-                <div class="flex space-x-3">
-                    <input type="text"
-                        id="chat-input"
-                        placeholder="Zeptej se na cokoliv..."
-                        class="flex-1 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <button id="send-btn"
-                        class="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                        <span id="send-text">Odeslat</span>
-                        <span id="loading-text" class="hidden">Odesílám...</span>
-                    </button>
-                </div>
-                <div class="mt-2 text-xs text-gray-500">
-                    Tip: Zkus se zeptat na "CV", "certifikáty", "projekty" pro detailní informace
-                </div>
-                <!-- Error message -->
-                <div id="error-message" class="hidden mt-2 p-2 bg-red-100 border border-red-300 text-red-700 rounded text-sm">
-                    <span id="error-text"></span>
-                    <button id="retry-btn" class="ml-2 underline hover:no-underline">Zkusit znovu</button>
-                </div>
-            </div>
         </div>
     </div>
 </div>
 
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const chatScroll = document.getElementById('chat-scroll');
         const chatMessages = document.getElementById('chat-messages');
         const chatInput = document.getElementById('chat-input');
         const sendBtn = document.getElementById('send-btn');
@@ -98,45 +132,95 @@
         const errorMessage = document.getElementById('error-message');
         const errorText = document.getElementById('error-text');
         const retryBtn = document.getElementById('retry-btn');
+        const clearBtn = document.getElementById('clear-chat-btn');
+
+        const STORAGE_KEY = 'vk_chat_history_v1';
 
         let initialMessageShown = true;
         let lastFailedMessage = '';
+        let history = [];
 
-        // Check API status on load
-        setTimeout(checkApiStatus, 500); // Delay to ensure page is loaded
-
-        function checkApiStatus() {
-            console.log('Checking API status...');
-            fetch('/__Framework/1_v0/public/api/v1/chat/status')
-                .then(response => {
-                    console.log('Status response:', response.status);
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Status data:', data);
-                    // BaseApiController wraps response in success/data structure
-                    const apiData = data.success ? data.data : data;
-                    console.log('Parsed status:', apiData);
-
-                    if (apiData.status === 'ok') {
-                        setStatus('online');
-                    } else {
-                        setStatus('offline');
-                    }
-                })
-                .catch((error) => {
-                    console.error('Status check failed:', error);
-                    setStatus('offline');
-                });
+        if (typeof STATUS_URL === 'undefined' || typeof CHAT_URL === 'undefined') {
+            console.error('Missing API constants (STATUS_URL / CHAT_URL).');
+            setStatus('offline');
+            return;
         }
 
-        function setStatus(status) {
-            console.log('Setting status to:', status);
+        if (clearBtn) {
+            clearBtn.addEventListener('click', clearHistory);
+        }
+
+        function isNearBottom(el, threshold = 160) {
+            return el.scrollHeight - el.scrollTop - el.clientHeight < threshold;
+        }
+
+        function scrollToBottom(el) {
+            el.scrollTo({
+                top: el.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+
+        function loadHistory() {
+            try {
+                return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveHistory(items) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+            } catch (e) {
+                // storage plný / zakázaný -> ignoruj
+            }
+        }
+
+        function clearHistory() {
+            if (!confirm('Opravdu chcete smazat celou historii chatu?')) return;
+            history = [];
+            try {
+                localStorage.removeItem(STORAGE_KEY);
+                window.location.reload();
+            } catch (e) {}
+            // vyčisti UI
+            chatMessages.innerHTML = '';
+            initialMessageShown = false;
+        }
+
+        // textarea autosize
+        function autoResizeTextarea(el) {
+            el.style.height = 'auto';
+            const max = 220;
+            const h = Math.min(el.scrollHeight, max);
+            el.style.height = h + 'px';
+            el.style.overflowY = (el.scrollHeight > max) ? 'auto' : 'hidden';
+        }
+
+        autoResizeTextarea(chatInput);
+        chatInput.addEventListener('input', () => autoResizeTextarea(chatInput));
+
+        setTimeout(checkApiStatus, 500);
+
+        function checkApiStatus() {
+            fetch(STATUS_URL)
+                .then(r => r.json())
+                .then(data => {
+                    const apiData = data.success ? data.data : data;
+                    if (apiData.status === 'ok') setStatus('online', apiData.provider ?? null);
+                    else setStatus('offline');
+                })
+                .catch(() => setStatus('offline'));
+        }
+
+        function setStatus(status, provider = null) {
             if (status === 'online') {
-                statusIndicator.className = 'w-3 h-3 bg-green-400 rounded-full animate-pulse';
-                statusText.textContent = 'Online';
+                statusIndicator.className = 'w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse';
+                statusText.textContent = provider ? `Online (${provider})` : 'Online';
             } else {
-                statusIndicator.className = 'w-3 h-3 bg-red-400 rounded-full';
+                statusIndicator.className = 'w-2.5 h-2.5 bg-red-400 rounded-full';
+                statusIndicator.className = 'w-2.5 h-2.5 bg-red-400 rounded-full';
                 statusText.textContent = 'Offline';
             }
         }
@@ -145,65 +229,88 @@
             errorText.textContent = message;
             lastFailedMessage = retryMessage;
             errorMessage.classList.remove('hidden');
-
-            if (retryMessage) {
-                retryBtn.classList.remove('hidden');
-            } else {
-                retryBtn.classList.add('hidden');
-            }
+            if (retryMessage) retryBtn.classList.remove('hidden');
+            else retryBtn.classList.add('hidden');
         }
 
         function hideError() {
             errorMessage.classList.add('hidden');
         }
 
-        function addMessage(content, isUser = false, isError = false) {
-            console.log('Adding message:', content, 'isUser:', isUser, 'isError:', isError);
+        function formatBot(content) {
+            let html = (content ?? '').toString().replace(/\n/g, '<br>');
+            html = html
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/`(.*?)`/g, '<code class="px-1.5 py-0.5 rounded bg-white/10 border border-white/10">$1</code>');
+            return html;
+        }
 
-            // Remove initial message on first user message
-            if (isUser && initialMessageShown) {
-                chatMessages.innerHTML = '';
+        function renderMessage(content, role = 'assistant', isError = false) {
+            const row = document.createElement('div');
+            row.className = role === 'user' ?
+                'rounded-2xl border border-white/10 bg-white/5 p-4' :
+                isError ?
+                'rounded-2xl border border-red-500/30 bg-red-500/10 p-4' :
+                'rounded-2xl border border-white/10 bg-black/40 p-4';
+
+            const header = document.createElement('div');
+            header.className = 'flex items-center gap-3 mb-2';
+
+            const avatar = document.createElement('div');
+            avatar.className = 'w-8 h-8 rounded-full flex items-center justify-center ' + (role === 'user' ?
+                'bg-white/10 text-white/80' :
+                'bg-[var(--color-green)] text-black font-bold');
+            avatar.textContent = role === 'user' ? 'Ty' : 'VK';
+
+            const name = document.createElement('div');
+            name.className = 'text-sm font-semibold text-white';
+            name.textContent = role === 'user' ? 'Ty' : 'Vlastimil';
+
+            header.appendChild(avatar);
+            header.appendChild(name);
+
+            const body = document.createElement('div');
+            body.className = role === 'user' ?
+                'text-white whitespace-pre-wrap' :
+                isError ? 'text-red-100 whitespace-pre-wrap' : 'text-white/90 leading-relaxed';
+
+            if (role === 'user') body.textContent = content;
+            else body.innerHTML = formatBot(content);
+
+            row.appendChild(header);
+            row.appendChild(body);
+
+            chatMessages.appendChild(row);
+        }
+
+        function addMessage(content, role = 'assistant', isError = false) {
+            const stick = role === 'user' || isNearBottom(chatScroll);
+
+            // při první user zprávě smaž intro box
+            if (role === 'user' && initialMessageShown) {
+                const initial = document.getElementById('initial-message');
+                if (initial) initial.remove();
                 initialMessageShown = false;
             }
 
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`;
+            renderMessage(content, role, isError);
 
-            const bubble = document.createElement('div');
-            let bubbleClass = `max-w-xs lg:max-2xl px-4 py-3 rounded-2xl ${
-        isUser 
-            ? 'bg-blue-600 text-white rounded-br-md' 
-            : isError
-                ? 'bg-red-100 text-red-800 border border-red-300 rounded-bl-md'
-                : 'bg-white text-gray-800 shadow-md rounded-bl-md border'
-        }`;
-            bubble.className = bubbleClass;
+            // ulož do historie
+            history.push({
+                role,
+                content,
+                isError: !!isError,
+                ts: Date.now()
+            });
+            saveHistory(history);
 
-            if (isUser) {
-                bubble.textContent = content;
-            } else {
-                // Format bot response with line breaks and basic markdown
-                let formattedContent = content.replace(/\n/g, '<br>');
-
-                // Simple markdown formatting
-                formattedContent = formattedContent
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                    .replace(/`(.*?)`/g, '<code class="bg-gray-100 px-1 rounded">$1</code>');
-
-                bubble.innerHTML = formattedContent;
-            }
-
-            messageDiv.appendChild(bubble);
-            chatMessages.appendChild(messageDiv);
-
-            // Scroll to bottom
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            if (stick) scrollToBottom(chatScroll);
         }
 
         function showTyping() {
             typingIndicator.classList.remove('hidden');
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            if (isNearBottom(chatScroll)) scrollToBottom(chatScroll);
         }
 
         function hideTyping() {
@@ -229,16 +336,18 @@
             const messageText = question || chatInput.value.trim();
             if (!messageText) return;
 
-            console.log('Sending message:', messageText);
             hideError();
+            addMessage(messageText, 'user');
 
-            // Add user message
-            addMessage(messageText, true);
-            if (!question) chatInput.value = '';
+            if (!question) {
+                chatInput.value = '';
+                autoResizeTextarea(chatInput);
+            }
+
             setLoading(true);
 
             try {
-                const response = await fetch('/__Framework/1_v0/public/api/v1/chat', {
+                const resp = await fetch(CHAT_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -248,87 +357,89 @@
                     })
                 });
 
-                console.log('Response status:', response.status);
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-
-                const data = await response.json();
-                console.log('Full response:', data);
-
-                // BaseApiController wraps response in success/data structure
+                const data = await resp.json();
                 const apiData = data.success ? data.data : data;
-                console.log('Parsed chat data:', apiData);
 
                 if (apiData.response) {
-                    addMessage(apiData.response);
-                    setStatus('online');
+                    addMessage(apiData.response, 'assistant', false);
+                    setStatus('online', apiData.provider ?? null);
                 } else if (apiData.error || data.error) {
-                    const errorMsg = apiData.error || data.error;
-                    console.error('API Error:', errorMsg);
-                    throw new Error(errorMsg);
+                    throw new Error(apiData.error || data.error);
                 } else {
-                    console.error('Unexpected response structure:', data);
                     throw new Error('Neočekávaná odpověď ze serveru');
                 }
 
             } catch (error) {
-                console.error('Chat error:', error);
                 setStatus('offline');
 
-                let errorMsg = 'Omlouvám se, došlo k chybě při zpracování.';
+                let msg = 'Omlouvám se, došlo k chybě při zpracování.';
+                const m = (error.message || '');
 
-                if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                    errorMsg = 'Problém s připojením k serveru.';
-                } else if (error.message.includes('timeout')) {
-                    errorMsg = 'Vypršel časový limit požadavku.';
-                } else if (error.message.includes('HTTP 429')) {
-                    errorMsg = 'Příliš mnoho požadavků. Zkuste to za chvíli.';
-                } else if (error.message.includes('HTTP 401')) {
-                    errorMsg = 'Problém s autentizací API.';
-                } else if (error.message) {
-                    errorMsg = error.message;
-                }
+                if (error.name === 'TypeError' && m.includes('fetch')) msg = 'Problém s připojením k serveru.';
+                else if (m.includes('timeout')) msg = 'Vypršel časový limit požadavku.';
+                else if (m.includes('HTTP 429')) msg = 'Příliš mnoho požadavků. Zkuste to za chvíli.';
+                else if (m.includes('HTTP 401')) msg = 'Problém s autentizací API.';
+                else if (m) msg = m;
 
-                addMessage(errorMsg, false, true);
-                showError(errorMsg, messageText);
+                addMessage(msg, 'assistant', true);
+                showError(msg, messageText);
 
             } finally {
                 setLoading(false);
+                setTimeout(() => {
+                    chatInput.focus();
+                }, 50);
             }
+        }
+
+        // --- INIT: načti historii a vykresli ---
+        history = loadHistory();
+
+        if (history.length > 0) {
+            const initial = document.getElementById('initial-message');
+            if (initial) initial.remove();
+            initialMessageShown = false;
+
+            history.forEach(m => renderMessage(m.content, m.role, !!m.isError));
+
+            // jump (bez smooth) po načtení, ať to nebliká
+            setTimeout(() => {
+                chatScroll.scrollTop = chatScroll.scrollHeight;
+            }, 0);
         }
 
         // Event listeners
         sendBtn.addEventListener('click', () => sendMessage());
 
-        chatInput.addEventListener('keypress', function(e) {
+        chatInput.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + L = clear chat (volitelné)
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'l') {
+                e.preventDefault();
+                clearHistory();
+                return;
+            }
+
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage();
             }
         });
 
-        // Retry button
         if (retryBtn) {
-            retryBtn.addEventListener('click', function() {
-                if (lastFailedMessage) {
-                    sendMessage(lastFailedMessage);
-                }
+            retryBtn.addEventListener('click', () => {
+                if (lastFailedMessage) sendMessage(lastFailedMessage);
             });
         }
 
-        // Suggestion buttons
         suggestionBtns.forEach(btn => {
             btn.addEventListener('click', function() {
-                sendMessage(this.textContent);
+                sendMessage(this.textContent.trim());
             });
         });
 
-        // Focus input on load
         chatInput.focus();
-
-        // Periodic status check
-        setInterval(checkApiStatus, 60000); // Check every minute
+        setInterval(checkApiStatus, 60000);
     });
 </script>

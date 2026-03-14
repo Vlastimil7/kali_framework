@@ -1,64 +1,222 @@
 {
-  "personal": {
-    "name": "Vlastimil Kalášek",
-    "role": "MES System Support Specialist & Developer", 
-    "location": "Hradec Králové, Czech Republic",
-    "motto": "Life is a bug, and you're the debugger",
-    "philosophy": "Approaching every challenge as a problem to be systematically solved"
-  },
-  "education": {
-    "secondary": "SOS a SOU André Citroëna - Electronics and Computer Systems",
-    "university": "University of Pardubice - Informatics (ongoing)"
-  },
-  "experience": [
-    {
-      "position": "MES System Support Specialist",
-      "company": "APAGCoSyst Electronic Control Systems",
-      "period": "2024-present",
-      "description": "Ensuring smooth operation of Manufacturing Execution Systems, combining industrial experience with advanced technical expertise"
+  "brand": {
+    "name": "VK-DEV",
+    "person": "Vlastimil Kalášek",
+    "language_default": "cs",
+    "founded_date": "2025-01-13",
+    "ico": "22461311",
+    "count_employees": 1,
+    "expertise_years": 6,
+    "tone": {
+      "cs": "přátelský, stručný, věcný",
+      "en": "friendly, concise, and to the point"
     },
-    {
-      "position": "Application Administrator", 
-      "company": "Technistone, s.r.o.",
-      "period": "2021-2024",
-      "description": "Managing critical business applications, bridging gap between technical systems and business needs"
-    },
-    {
-      "position": "Process Engineer",
-      "company": "HARTMANN GROUP", 
-      "period": "2018-2021",
-      "description": "Process optimization and system efficiency"
-    },
-    {
-      "position": "Manufacturing Engineer",
-      "company": "Milacron",
-      "period": "2014-2018", 
-      "description": "Industrial processes and technical problem-solving"
+    "positioning": {
+      "cs": "Digitální řešení pro váš byznys – moderní weby, e-shopy a webové aplikace na míru.",
+      "en": "Digital solutions for your business – modern websites, e-shops, and custom web applications."
     }
-  ],
-  "skills": {
-    "backend": ["PHP", "MySQL"],
-    "frontend": ["JavaScript", "jQuery", "HTML", "CSS", "Tailwind CSS", "React"],
-    "industrial": ["Manufacturing Execution Systems (MES)", "Process optimization", "Industrial digitalization"],
-    "tools": ["Git", "Composer", "NPM", "Manufacturing systems"]
   },
-  "specialties": [
-    "Industrial digitalization projects",
-    "Smart manufacturing initiatives", 
-    "Bridge between traditional industry and modern digital solutions",
-    "Enterprise application management",
-    "Manufacturing process troubleshooting"
-  ],
-  "projects": [
-    {
-      "name": "Kali Framework",
-      "description": "Custom MVC framework in PHP for web applications",
-      "technologies": ["PHP", "JavaScript", "Tailwind CSS"],
-      "github": "https://github.com/Vlastimil7/kali_framework.git"
+  "offer": {
+    "core_services": [
+      {
+        "name": { "cs": "Webové stránky", "en": "Websites" },
+        "desc": {
+          "cs": "Prezentační weby na míru s důrazem na výkon, UX a konverze.",
+          "en": "Custom presentation websites with a focus on performance, UX, and conversions."
+        },
+        "includes": {
+          "cs": ["Responzivní design", "Základní SEO", "Kontaktní formulář", "Analytika (GA)"],
+          "en": ["Responsive design", "Basic SEO", "Contact form", "Analytics (GA)"]
+        }
+      },
+      {
+        "name": { "cs": "E-shopy", "en": "E-shops" },
+        "desc": {
+          "cs": "E-commerce řešení na míru včetně správy produktů, objednávek, slev a integrací.",
+          "en": "Custom e-commerce solutions including product management, orders, discounts, and integrations."
+        },
+        "includes": {
+          "cs": ["Platební brány", "Doprava", "Slevové kupóny", "Integrace na externí systémy"],
+          "en": ["Payment gateways", "Shipping", "Discount coupons", "External system integrations"]
+        }
+      },
+      {
+        "name": { "cs": "Webové aplikace & API", "en": "Web Applications & API" },
+        "desc": {
+          "cs": "Webové aplikace a REST API pro automatizaci procesů a propojení systémů.",
+          "en": "Web applications and REST APIs for process automation and system integration."
+        },
+        "includes": {
+          "cs": ["React", "PHP backend", "REST API", "Optimalizace výkonu"],
+          "en": ["React", "PHP backend", "REST API", "Performance optimization"]
+        }
+      },
+      {
+        "name": { "cs": "Firemní systémy & Databáze", "en": "Company Systems & Databases" },
+        "desc": {
+          "cs": "Systémy pro správu dat, reporting a analýzu s důrazem na bezpečnost a výkon.",
+          "en": "Systems for data management, reporting, and analytics with a focus on security and performance."
+        },
+        "includes": {
+          "cs": ["Datové modely", "Reporty", "Zálohy", "Bezpečnost"],
+          "en": ["Data models", "Reports", "Backups", "Security"]
+        }
+      },
+      {
+        "name": { "cs": "Integrace systémů", "en": "System Integrations" },
+        "desc": {
+          "cs": "Propojení aplikací a systémů pro hladký tok dat (API integrace, automatizace).",
+          "en": "Connecting apps and systems for smooth data flow (API integrations, automation)."
+        },
+        "includes": {
+          "cs": ["REST integrace", "Automatizace", "Napojení na externí služby"],
+          "en": ["REST integrations", "Automation", "Third-party service connections"]
+        }
+      },
+      {
+        "name": { "cs": "Údržba a podpora", "en": "Maintenance & Support" },
+        "desc": {
+          "cs": "Dlouhodobá údržba, aktualizace a podpora pro bezproblémový provoz.",
+          "en": "Long-term maintenance, updates, and support to keep everything running smoothly."
+        },
+        "includes": {
+          "cs": ["Monitoring", "Aktualizace", "Rychlé opravy", "SLA dle domluvy"],
+          "en": ["Monitoring", "Updates", "Quick fixes", "SLA as agreed"]
+        }
+      },
+      {
+        "name": { "cs": "Bezpečnost a optimalizace", "en": "Security & Optimization" },
+        "desc": {
+          "cs": "Zabezpečení a ladění výkonu, implementace osvědčených praktik.",
+          "en": "Security hardening and performance tuning using proven best practices."
+        },
+        "includes": {
+          "cs": ["Ochrana proti XSS/CSRF", "Bezpečné přihlašování", "Výkon", "Hardening"],
+          "en": ["XSS/CSRF protection", "Secure authentication", "Performance", "Hardening"]
+        }
+      }
+    ],
+    "technologies": [
+      "React",
+      "JavaScript",
+      "Tailwind CSS",
+      "PHP",
+      "REST API",
+      "MySQL/PostgreSQL/MongoDB (dle projektu / depending on the project)"
+    ]
+  },
+  "process": {
+    "steps": [
+      {
+        "title": { "cs": "Konzultace a analýza", "en": "Consultation & Analysis" },
+        "points": {
+          "cs": ["Průzkum potřeb", "Technická konzultace", "Definice rozsahu a ceny"],
+          "en": ["Requirements discovery", "Technical consultation", "Scope and pricing definition"]
+        }
+      },
+      {
+        "title": { "cs": "Návrh a prototypování", "en": "Design & Prototyping" },
+        "points": {
+          "cs": ["Wireframy", "UI design", "Prototypy"],
+          "en": ["Wireframes", "UI design", "Prototypes"]
+        }
+      },
+      {
+        "title": { "cs": "Vývoj a testování", "en": "Development & Testing" },
+        "points": {
+          "cs": ["Agilní postup", "Průběžné konzultace", "Testování"],
+          "en": ["Agile approach", "Regular check-ins", "Testing"]
+        }
+      },
+      {
+        "title": { "cs": "Nasazení a dlouhodobá spolupráce", "en": "Launch & Long-Term Support" },
+        "points": {
+          "cs": ["Nasazení", "Zaškolení a dokumentace", "Podpora"],
+          "en": ["Deployment", "Training and documentation", "Support"]
+        }
+      }
+    ]
+  },
+  "pricing": {
+    "packages": [
+      {
+        "name": { "cs": "Webová prezentace", "en": "Basic Website" },
+        "from": 25000,
+        "currency": "CZK",
+        "includes": {
+          "cs": ["Až 5 podstránek", "Responzivní design", "Základní SEO", "Formulář", "Google Analytics"],
+          "en": ["Up to 5 pages", "Responsive design", "Basic SEO", "Form", "Google Analytics"]
+        }
+      },
+      {
+        "name": { "cs": "Firemní web", "en": "Company Website" },
+        "from": 45000,
+        "currency": "CZK",
+        "includes": {
+          "cs": ["Až 15 podstránek", "Design na míru", "Pokročilé SEO", "Blog/CMS", "Analytika a reporting"],
+          "en": ["Up to 15 pages", "Custom design", "Advanced SEO", "Blog/CMS", "Analytics & reporting"]
+        }
+      },
+      {
+        "name": { "cs": "E-shop", "en": "E-shop" },
+        "from": 65000,
+        "currency": "CZK",
+        "includes": {
+          "cs": ["Produkty/kategorie", "Objednávky", "Platební brány", "Doprava", "Slevy", "Integrace"],
+          "en": ["Products/categories", "Orders", "Payment gateways", "Shipping", "Discounts", "Integrations"]
+        }
+      }
+    ],
+    "hourly_rate": {
+      "from": 900,
+      "to": 1300,
+      "currency": "CZK",
+      "unit": { "cs": "hod", "en": "hour" }
+    },
+    "notes": {
+      "cs": ["Ceny bez DPH", "Konečná cena dle analýzy a rozsahu"],
+      "en": ["Prices exclude VAT", "Final price depends on scope and analysis"]
     }
-  ],
+  },
+  "faq_scope": {
+    "allowed_topics": {
+      "cs": ["služby", "ceník", "technologie", "proces spolupráce", "časový odhad", "podpora/údržba", "bezpečnost", "integrace", "poptávka"],
+      "en": ["services", "pricing", "technologies", "process", "time estimate", "maintenance/support", "security", "integrations", "inquiry"]
+    },
+    "disallowed_topics": {
+      "cs": ["osobní život", "politika", "zdravotní rady", "právní rady", "investice", "návody na hacking", "cokoliv mimo služby VK-DEV"],
+      "en": ["personal life", "politics", "medical advice", "legal advice", "investments", "hacking instructions", "anything outside VK-DEV services"]
+    }
+  },
   "contact": {
-    "github": "https://github.com/Vlastimil7",
-    "location": "Hradec Králové, Czech Republic"
+    "cta": {
+      "cs": "Napište mi pár informací o projektu (co potřebujete, termín, rozpočet) a já se ozvu s návrhem řešení.",
+      "en": "Send me a few details about your project (what you need, timeline, budget) and I’ll get back to you with a proposal."
+    },
+    "email": "25kali25@gmail.com",
+    "phone": "+420 604158245",
+    "linkedin": "www.linkedin.com/in/vlastimil-kalášek-b26744148",
+    "website": "www.vk-dev.cz",
+    "website_contact_url": "www.vk-dev.cz/contact",
+    "aderess": {
+      "street": "Dobrosvkého 718/6",
+      "city": "Hradec Králové",
+      "zip": "500 02",
+      "country": "Česká republika"
+    }
+  },
+  "limitations": {
+    "not_provided": [
+    ".NET development",
+    "desktop applications",
+    "WPF / WinForms",
+    "native mobile apps",
+    "game development"
+  ]
+  } ,
+  "stack": {
+  "primary": ["PHP", "React", "JavaScript", "REST API", "MySQL"],
+  "not_offered": [".NET", "WPF", "WinForms", "desktop applications", "mobile native apps"]
   }
+
 }

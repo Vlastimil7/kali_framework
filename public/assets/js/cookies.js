@@ -6,10 +6,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // --- Helpers: čtení a evaluace souhlasu ---
   function getConsentFromCookie() {
-    // Bezpečné dekódování s podporou + => mezera a opakovaným decode
     function safeDecode(str) {
       if (!str) return "";
-      // Některé servery zapisují mezery jako '+'
+
       let out = str.replace(/\+/g, "%20");
       try {
         out = decodeURIComponent(out);
@@ -17,7 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return out;
     }
 
-    // Zkus JSON.parse; když to spadne, zkus znovu po extra decode
     function tryParse(jsonLike) {
       try {
         return JSON.parse(jsonLike);
@@ -37,10 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
       let raw = row.split("=")[1];
       if (!raw) return {};
 
-      // 1) první decode
       let decoded = safeDecode(raw);
 
-      // Pokud je to ještě v uvozovkách (např. "\"%7B%22...%7D\""), sundej je
       if (
         decoded.length >= 2 &&
         decoded[0] === '"' &&
@@ -49,18 +45,13 @@ document.addEventListener("DOMContentLoaded", function () {
         decoded = decoded.slice(1, -1);
       }
 
-      // 2) zkus rovnou parse
       let parsed = tryParse(decoded);
       if (!parsed) {
-        // 3) někdy pomůže ještě jednou decode (double-encoding)
         decoded = safeDecode(decoded);
         parsed = tryParse(decoded);
       }
       if (!parsed || typeof parsed !== "object") return {};
 
-      // Podporuj oba formáty:
-      // a) starý: přímo {analytics:..., marketing:...}
-      // b) nový podepsaný: { v: '{"analytics":...}', s: '...'}
       if (parsed.v) {
         const inner = tryParse(parsed.v) || {};
         return inner;
@@ -137,17 +128,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (cb.checked) {
         const s = cb.nextElementSibling;
-        s.style.backgroundColor = "var(--color-indigo)";
+        s.classList.add("bg-gradient-main");
         s.classList.remove("bg-gray-200");
       }
       cb.addEventListener("change", function () {
         const s = this.nextElementSibling;
         if (!s) return;
         if (this.checked) {
-          s.style.backgroundColor = "var(--color-indigo)";
+          s.classList.add("bg-gradient-main");
           s.classList.remove("bg-gray-200");
         } else {
-          s.style.backgroundColor = "";
+          s.classList.remove("bg-gradient-main");
           s.classList.add("bg-gray-200");
         }
       });
@@ -162,13 +153,27 @@ document.addEventListener("DOMContentLoaded", function () {
         const type = tag.getAttribute("data-consent");
         if (!consent[type]) return;
 
+        if (tag.dataset.enabled === "1") return;
+        tag.dataset.enabled = "1";
+
         if (tag.hasAttribute("data-src")) {
+          const src = tag.getAttribute("data-src");
+
+          if (
+            document.querySelector(
+              `script[data-loaded-src="${CSS.escape(src)}"]`,
+            )
+          )
+            return;
+
           const s = document.createElement("script");
-          s.async = true;
-          s.src = tag.getAttribute("data-src");
+          s.async = false;
+          s.src = src;
+          s.dataset.loadedSrc = src;
           document.head.appendChild(s);
         } else if (tag.textContent.trim()) {
           const s = document.createElement("script");
+          s.async = false;
           s.text = tag.textContent;
           document.head.appendChild(s);
         }

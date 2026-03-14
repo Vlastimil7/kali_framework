@@ -54,3 +54,9 @@ $router->post('admin/translations/add/process', 'Admin\\LanguageController@admin
 $router->get('admin/translations/import', 'Admin\\LanguageController@adminImportTranslations');
 $router->post('admin/translations/import/process', 'Admin\\LanguageController@adminProcessImportTranslations');
 $router->get('admin/translations/export', 'Admin\\LanguageController@adminExportTranslations');
+
+// Telemetry cesty
+$router->get('admin/telemetry', 'Admin\\TelemetryController@dashboard');
+$router->get('admin/telemetry/online', 'Admin\\TelemetryController@online');
+$router->get('admin/telemetry/events', 'Admin\\TelemetryController@events');
+$router->get('admin/telemetry/session/{sessionId}', 'Admin\\TelemetryController@session');

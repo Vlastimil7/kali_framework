@@ -305,7 +305,7 @@ class Router
 
             $response = [
                 'success' => false,
-                'message' => 'Stránka nebo endpoint nebyl nalezen',
+                'message' => __('error_404_text', [], 'error'),
                 'statusCode' => 404
             ];
 
@@ -319,7 +319,7 @@ class Router
 
             // Data pro layout
             $data = [
-                'title' => 'Stránka nenalezena | Midobarbershop.cz',
+                'title' => __('error_404_headline', [], 'error') . ' | VK-DEV.cz',
                 'content' => $content
             ];
 

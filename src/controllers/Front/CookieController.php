@@ -1,18 +1,33 @@
 <?php
+
 namespace Controllers\Front;
 
 use Core\Controller;
 
-class CookieController extends Controller {
+class CookieController extends Controller
+{
+
+
+    public function index()
+    {
+        $data = [
+            'title' => __('cookies_consent_title', [], 'cookies'),
+        ];
+
+        $this->view('cookie/index', $data);
+    }
+
+
     /**
      * Zobrazí nastavení cookies
      */
-    public function showSettings() {
+    public function showSettings()
+    {
         // Získat aktuální nastavení cookies, pokud existuje
         $cookieConsent = isset($_COOKIE['cookie_consent']) ? json_decode($_COOKIE['cookie_consent'], true) : null;
-        
+
         $data = [
-            'title' => 'Nastavení cookies',
+            'title' => '' . __('cookies_settings_title', [], 'cookies') . ' | VK-DEV.cz',
             'preferences' => $cookieConsent ?? [
                 'necessary' => true,
                 'analytics' => false,
@@ -20,19 +35,20 @@ class CookieController extends Controller {
                 'preferences' => false
             ]
         ];
-        
+
         $this->view('cookie/settings', $data);
     }
-    
+
     /**
      * Uloží nastavení cookies podle preferencí uživatele
      */
-    public function saveConsent() {
+    public function saveConsent()
+    {
         $necessary = true; // Vždy povoleno
         $analytics = isset($_POST['analytics']) ? true : false;
         $marketing = isset($_POST['marketing']) ? true : false;
         $preferences = isset($_POST['preferences']) ? true : false;
-        
+
         // Vytvoření pole preferencí
         $cookiePreferences = [
             'necessary' => $necessary,
@@ -41,20 +57,21 @@ class CookieController extends Controller {
             'preferences' => $preferences,
             'timestamp' => time()
         ];
-        
+
         // Uložení do cookie na 1 rok
         $this->setCookie('cookie_consent', json_encode($cookiePreferences), 365);
-        
+
         // Přesměrování zpět na stránku, odkud byl požadavek odeslán
         $referer = $_SERVER['HTTP_REFERER'] ?? BASE_URL;
         header('Location: ' . $referer);
         exit;
     }
-    
+
     /**
      * Přijme všechny cookies
      */
-    public function acceptAll() {
+    public function acceptAll()
+    {
         $cookiePreferences = [
             'necessary' => true,
             'analytics' => true,
@@ -62,20 +79,21 @@ class CookieController extends Controller {
             'preferences' => true,
             'timestamp' => time()
         ];
-        
+
         // Uložení do cookie na 1 rok
         $this->setCookie('cookie_consent', json_encode($cookiePreferences), 365);
-        
+
         // Přesměrování zpět na stránku, odkud byl požadavek odeslán
         $referer = $_SERVER['HTTP_REFERER'] ?? BASE_URL;
         header('Location: ' . $referer);
         exit;
     }
-    
+
     /**
      * Odmítne všechny volitelné cookies
      */
-    public function rejectAll() {
+    public function rejectAll()
+    {
         $cookiePreferences = [
             'necessary' => true,
             'analytics' => false,
@@ -83,20 +101,21 @@ class CookieController extends Controller {
             'preferences' => false,
             'timestamp' => time()
         ];
-        
+
         // Uložení do cookie na 1 rok
         $this->setCookie('cookie_consent', json_encode($cookiePreferences), 365);
-        
+
         // Přesměrování zpět na stránku, odkud byl požadavek odeslán
         $referer = $_SERVER['HTTP_REFERER'] ?? BASE_URL;
         header('Location: ' . $referer);
         exit;
     }
-    
+
     /**
      * Pomocná metoda pro nastavení cookie
      */
-    private function setCookie($name, $value, $days = 30) {
+    private function setCookie($name, $value, $days = 30)
+    {
         $expiry = time() + ($days * 86400); // 86400 = 1 den v sekundách
         setcookie($name, $value, [
             'expires' => $expiry,

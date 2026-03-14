@@ -3,28 +3,14 @@
         <div class="flex justify-between items-center h-20">
             <!-- Logo + info -->
             <div class="flex items-center gap-3">
-
                 <!--      Logo -->
-                <a href="<?= BASE_URL ?>/" class="block">
-                    <img src="<?= BASE_URL ?>/assets/images/logo/mido_barbershop_logo.png"
-                        alt="Logo"
-                        class="h-14 w-auto ">
+                <a href="<?= BASE_URL ?>/" class="block text-gradient font-bold text-2xl" data-track="callToActionClick" data-track-meta='{"location":"header","label":"logo-click"}'>
+                    Vlastimil Kalášek
                 </a>
-
             </div>
 
-            <!-- Přepínač jazyků -->
-            <!-- <div class="language-switcher flex space-x-2">
-                <?php /* foreach (lang()->getSupportedLanguages() as $lang): ?>
-                    <a href="<?= BASE_URL ?>/language/change/<?= $lang ?>"
-                        class="<?= lang()->getCurrentLanguage() === $lang ? 'font-bold text-blue-600' : 'text-gray-600' ?>">
-                        <?= strtoupper($lang) ?>
-                    </a>
-                <?php endforeach; */ ?>
-            </div> -->
-
             <!-- Hamburger menu button (mobil + tablet, desktop až od xl) -->
-            <button id="menu-toggle" class="xl:hidden text-gray-600 hover:text-blue-600 focus:outline-none cursor-pointer">
+            <button id="menu-toggle" class="xl:hidden text-gray-600 hover:text-blue-600 focus:outline-none cursor-pointer" data-track="callToActionClick" data-track-meta='{"location":"header","label":"menu-toggle"}'>
                 <svg id="menu-icon" class="w-8 h-8 transition-transform duration-300 ease-in-out" fill="none"
                     stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -39,82 +25,145 @@
 
             <?php
             /**
+             * Social ikony – generují se z jednoho místa
+             * $variant: 'desktop' / 'mobile'
+             */
+            function renderSocialIcons(string $variant = 'desktop'): void
+            {
+                $isMobile = ($variant === 'mobile');
+
+                $wrapClass = $isMobile
+                    ? 'flex items-center gap-3 mt-4'
+                    : 'flex items-center gap-3';
+
+                // sjednocené velikosti
+                $btnClass = 'w-10 h-10 rounded-full bg-gradient-main flex items-center justify-center hover-glow';
+                $iconClass = 'w-4 h-4 text-white';
+
+            ?>
+                <div class="<?= $wrapClass ?>">
+                    <a href="https://www.facebook.com/profile.php?id=61586776062120" target="_blank" rel="noopener noreferrer"
+                        class="<?= $btnClass ?>" title="Facebook" data-track="callToActionClick" data-track-meta='{"location":"header","label":"facebook-link"}'>
+                        <svg class="<?= $iconClass ?>" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                        </svg>
+                    </a>
+
+                    <a href="https://www.instagram.com/_vk_dev/" target="_blank" rel="noopener noreferrer"
+                        class="<?= $btnClass ?>" title="Instagram" data-track="callToActionClick" data-track-meta='{"location":"header","label":"instagram-link"}'>
+                        <svg class="<?= $iconClass ?>" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 2C4.239 2 2 4.239 2 7v10c0 2.761 2.239 5 5 5h10c2.761 0 5-2.239 5-5V7c0-2.761-2.239-5-5-5H7zm10 2c1.654 0 3 1.346 3 3v10c0 1.654-1.346 3-3 3H7c-1.654 0-3-1.346-3-3V7c0-1.654 1.346-3 3-3h10zm-5 3a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6zm4.75-.5a1.25 1.25 0 11-2.5 0 1.25 1.25 0 012.5 0z" />
+                        </svg>
+                    </a>
+
+                    <a href="mailto:kalasekvyvoj@gmail.com"
+                        class="<?= $btnClass ?>" title="Email" data-track="callToActionClick" data-track-meta='{"location":"header","label":"email-link"}'>
+                        <svg class="<?= $iconClass ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </a>
+
+                    <a href="https://wa.me/420604158245" target="_blank" rel="noopener noreferrer"
+                        class="<?= $btnClass ?>" title="WhatsApp" data-track="callToActionClick" data-track-meta='{"location":"header","label":"whatsapp-link"}'>
+                        <svg class="<?= $iconClass ?>" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20.52 3.48A11.8 11.8 0 0012.06 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.16 1.6 5.98L0 24l6.3-1.65a11.86 11.86 0 005.76 1.47h.01c6.56 0 11.9-5.34 11.9-11.9a11.8 11.8 0 00-3.45-8.44zM12.07 21.4a9.4 9.4 0 01-4.78-1.3l-.34-.2-3.74.98 1-3.64-.22-.37a9.36 9.36 0 01-1.44-5c0-5.17 4.2-9.38 9.38-9.38a9.32 9.32 0 016.64 2.75 9.3 9.3 0 012.74 6.63c0 5.17-4.2 9.38-9.37 9.38zm5.14-7.03c-.28-.14-1.66-.82-1.92-.91-.26-.1-.45-.14-.64.14-.19.28-.73.9-.9 1.08-.16.19-.33.21-.61.07-.28-.14-1.2-.44-2.28-1.4-.84-.75-1.4-1.67-1.57-1.95-.16-.28-.02-.43.12-.57.12-.12.28-.33.42-.5.14-.16.19-.28.28-.47.1-.19.05-.35-.02-.5-.07-.14-.64-1.54-.88-2.11-.23-.55-.47-.48-.64-.49l-.55-.01c-.19 0-.5.07-.76.35-.26.28-1 1-1 2.44 0 1.44 1.03 2.83 1.18 3.02.14.19 2.03 3.1 4.92 4.35.69.3 1.23.48 1.65.62.69.22 1.32.19 1.81.12.55-.08 1.66-.68 1.9-1.34.24-.66.24-1.23.16-1.34-.07-.12-.26-.19-.55-.33z" />
+                        </svg>
+                    </a>
+                </div>
+            <?php
+            }
+
+            /**
              * Jedna funkcionalita pro generování menu – variant 'desktop' / 'mobile'
              */
             function renderMainNav(string $variant = 'desktop'): void
             {
                 $isMobile = $variant === 'mobile';
 
-                $linkBaseClasses = 'nav-item text-gray-700 hover:text-blue-600 font-medium cursor-pointer';
-                $linkClasses = $isMobile
-                    ? $linkBaseClasses . ' block'
-                    : $linkBaseClasses;
+                $linkBaseClasses = 'nav-item text-gray-700 hover:text-white font-medium cursor-pointer';
+                $linkClasses = $isMobile ? $linkBaseClasses . ' block' : $linkBaseClasses;
             ?>
 
-                <a href="<?= BASE_URL ?>/vouchers" class="<?= $linkClasses ?>">Vouchery</a>
-
-                <!-- Košík -->
-                <a href="<?= BASE_URL ?>/cart" class="relative text-gray-600 hover:text-blue-600 cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    <?php if (isset($_SESSION['cart']) && !empty($_SESSION['cart']['count'])): ?>
-                        <span class="absolute -top-2 -right-2 bg-green-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                            <?= $_SESSION['cart']['count'] ?>
-                        </span>
-                    <?php endif; ?>
+                <a href="<?= BASE_URL ?>/" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"home-link"}'>
+                    <?= __('header_nav_home', [], 'header') ?>
                 </a>
 
+                <a href="<?= BASE_URL ?>/#services" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"services-link"}'>
+                    <?= __('header_nav_services', [], 'header') ?>
+                </a>
+
+                <a href="<?= BASE_URL ?>/#pricing" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"pricing-link"}'>
+                    <?= __('header_nav_pricing', [], 'header') ?>
+                </a>
+
+                <a href="<?= BASE_URL ?>/#references" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"references-link"}'>
+                    <?= __('header_nav_references', [], 'header') ?>
+                </a>
+
+                <a href="<?= BASE_URL ?>/faq" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"faq-link"}'>
+                    <?= __('header_nav_faq', [], 'header') ?>
+                </a>
+
+                <a href="<?= BASE_URL ?>/contact" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"contact-link"}'>
+                    <?= __('header_nav_contact', [], 'header') ?>
+                </a>
 
                 <?php if (isset($_SESSION['user_id'])): ?>
 
-                    <!-- Přihlášený uživatel -->
-                    <a href="<?= BASE_URL ?>/profile" class="<?= $linkClasses ?>">Profil</a>
+                    <a href="<?= BASE_URL ?>/profile" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"profile-link"}'>
+                        <?= __('header_nav_profile', [], 'header') ?>
+                    </a>
 
                     <?php if (!empty($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
-                        <a href="<?= BASE_URL ?>/admin/dashboard" class="<?= $linkClasses ?>">Admin</a>
+                        <a href="<?= BASE_URL ?>/admin/dashboard" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"admin-link"}'>
+                            <?= __('header_nav_admin', [], 'header') ?>
+                        </a>
+                       
                     <?php endif; ?>
 
-                    <!-- Odhlášení -->
-                    <a href="<?= BASE_URL ?>/logout" class="<?= $linkClasses ?>">Odhlásit se</a>
+                    <a href="<?= BASE_URL ?>/logout" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"logout-link"}'>
+                        <?= __('header_nav_logout', [], 'header') ?>
+                    </a>
 
                 <?php else: ?>
 
-                    <?php if ($isMobile): ?>
-                        <!-- MOBILE: "Informace" jako rozbalovací akordeon -->
+                    <form action="<?= BASE_URL ?>/ai-mode/toggle" method="POST" class="inline-flex items-center me-5 cursor-pointer text-white">
+                        <label class="inline-flex items-center me-5 cursor-pointer text-white">
+                            <input type="hidden" name="enabled" value="0">
+                            <input type="checkbox" id="ai-toggle" name="enabled" value="1"
+                                class="sr-only peer" <?= !empty($_SESSION['ai_mode']) ? 'checked' : '' ?>
+                                onchange="this.form.submit()"
+                                data-track="aiToggle" data-track-meta='{"location":"header","label":"ai-<?= !empty($_SESSION['ai_mode']) ? 'disabled' : 'enabled' ?>-toggle"}'>
 
+                            <div class="relative w-9 h-5 bg-neutral-quaternary rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600 dark:peer-checked:bg-green-600"></div>
 
+                            <span class="select-none ms-3 text-sm font-medium text-heading">
+                                <?= __('header_ai_mode_label', [], 'header') ?>
+                            </span>
+                        </label>
+                    </form>
 
-
-                    <?php else: ?>
-                        <!-- DESKTOP: dropdown "Informace" -->
-
-                    <?php endif; ?>
-
-                    <!-- Zbytek odkazů je stejný pro mobil i desktop -->
-
-                    <a href="<?= BASE_URL ?>/login" class="<?= $linkClasses ?>">Přihlásit</a>
+                    <!-- Přepínač jazyků -->
+                    <div class="language-switcher flex space-x-2">
+                        <?php foreach (lang()->getSupportedLanguages() as $lang): ?>
+                            <a href="<?= BASE_URL ?>/language/change/<?= $lang ?>"
+                                class="<?= lang()->getCurrentLanguage() === $lang ? 'font-bold text-pink-500' : 'text-gray-600' ?>"
+                                data-track="languageSwitch" data-track-meta='{"location":"header","label":"<?= $lang ?>-switch"}'>
+                                <?= strtoupper($lang) ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
 
             <?php endif;
             }
+
             ?>
 
             <!-- Desktop menu – zobrazí se až od xl -->
             <div class="hidden xl:flex items-center space-x-6">
                 <?php renderMainNav('desktop'); ?>
-
-                <!-- FB ikona vpravo v menu -->
-                <a href="https://www.facebook.com/profile.php?id=100063520150213"
-                    target="_blank" rel="noopener noreferrer"
-                    class="inline-flex items-center justify-center rounded-full border border-blue-500 text-blue-500 hover:bg-blue-50 px-3 py-1.5 text-sm font-medium transition">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4 mr-1.5 fill-current"
-                        viewBox="0 0 24 24">
-                        <path
-                            d="M22 12.06C22 6.51 17.52 2 12 2S2 6.51 2 12.06C2 17.08 5.66 21.22 10.44 22v-6.9H7.9v-3.03h2.54V9.74c0-2.5 1.48-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 3.03h-2.34V22C18.34 21.22 22 17.08 22 12.06Z" />
-                    </svg>
-                    <span>Facebook</span>
-                </a>
+                <?php renderSocialIcons('desktop'); ?>
             </div>
         </div>
 
@@ -122,28 +171,7 @@
         <div id="mobile-menu"
             class="hidden xl:hidden flex flex-col space-y-2 mt-4 px-0 pb-4 transition-all duration-300 ease-in-out">
             <?php renderMainNav('mobile'); ?>
-
-            <!-- FB sekce v mobilním menu -->
-            <div class="mt-4 pt-4 border-t border-slate-200">
-                <p class="px-2 mb-4 text-[0.75rem] font-semibold tracking-wide text-slate-500 uppercase">
-                    Sledujte nás
-                </p>
-
-                <a href="https://www.facebook.com/profile.php?id=100063520150213"
-                    target="_blank" rel="noopener noreferrer"
-                    class="mx-2 inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 transition">
-
-                    <!-- FB ikona -->
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4 fill-current"
-                        viewBox="0 0 24 24">
-                        <path
-                            d="M22 12.06C22 6.51 17.52 2 12 2S2 6.51 2 12.06C2 17.08 5.66 21.22 10.44 22v-6.9H7.9v-3.03h2.54V9.74c0-2.5 3.77-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 3.03h-2.34V22C18.34 21.22 22 17.08 22 12.06Z" />
-                    </svg>
-
-                    <span>Facebook profil</span>
-                </a>
-            </div>
+            <?php renderSocialIcons('mobile'); ?>
         </div>
     </div>
 </nav>
@@ -161,7 +189,6 @@
         closeIcon.classList.toggle('hidden');
     });
 
-    // 🔽 Mobilní akordeon "Informace"
     const mobileInfoToggle = document.getElementById('mobile-info-toggle');
     const mobileInfoMenu = document.getElementById('mobile-info-menu');
     const mobileInfoIcon = document.getElementById('mobile-info-icon');

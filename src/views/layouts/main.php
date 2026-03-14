@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="<?= BASE_URL ?>/assets/images/logo/favicon.ico">
+    <link rel="shortcut icon" href="<?= BASE_URL ?>/assets/images/logo/fav/vk-dev.ico">
     <?php
     header("Cache-Control: no-cache, no-store, must-revalidate");
     header("Pragma: no-cache");
@@ -14,14 +14,13 @@
     $ownStylePath  = __DIR__ . '/../../public/assets/css/ownStyles.css';
     $styleVersion    = file_exists($stylePath) ? filemtime($stylePath) : time();
     $ownStyleVersion = file_exists($ownStylePath) ? filemtime($ownStylePath) : time();
-    $hideSidebar = $data['show_sidebar'] ?? false;
     $currentUrl = rtrim(SITE_URL, '/') . ($_SERVER['REQUEST_URI'] ?? '');
 
     // SEO defaulty
-    $seoTitle = $data['title'] ?? 'MUDr. Ziad Albahri, Ph.D. – Midobarbershop.cztr Jaroměř';
-    $seoDesc  = $data['description'] ?? 'Praktický lékař pro děti a dorost – ordinace Midobarbershop.cz s.r.o. a Midobarbershop.cz AZ s.r.o. v Jaroměři (okolí Náchoda).';
-    $seoKw    = $data['keywords'] ?? 'Midobarbershop.cztr Jaroměř, Midobarbershop.cztr Náchod, dětský lékař Jaroměř, praktický lékař pro děti a dorost, MUDr. Ziad Albahri, Midobarbershop.cz s.r.o., Midobarbershop.cz AZ s.r.o., očkování, preventivní prohlídky';
-    $ogImage  = $data['og_image'] ?? (rtrim(SITE_URL, '/') . '/assets/images/logo/mido_barbershop_logo.png'); // dej si tam reálný obrázek 1200x630
+    $seoTitle = $data['title'] ?? '';
+    $seoDesc  = $data['description'] ?? '';
+    $seoKw    = $data['keywords'] ?? 'vývoj webových aplikací, tvorba webových stránek, web na míru, firemní weby, vývoj informačních systémů, PHP vývojář, fullstack developer, REST API vývoj, systémové integrace, digitální řešení pro firmy, web developer Hradec Králové, programátor na míru, zakázkový software, vývoj e-commerce, webové portály, agilní vývoj, moderní webové technologie, optimalizace výkonu, bezpečnost webu, UX/UI design, správa a údržba webů';
+    $ogImage  = $data['og_image'] ?? (rtrim(SITE_URL, '/') . '/assets/images/logo/vk-dev.png');
     ?>
     <title><?= htmlspecialchars($seoTitle, ENT_QUOTES) ?></title>
     <meta name="description" content="<?= htmlspecialchars($seoDesc, ENT_QUOTES) ?>">
@@ -32,7 +31,7 @@
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="MUDr. Ziad Albahri – Midobarbershop.cztr">
+    <meta property="og:site_name" content="">
     <meta property="og:title" content="<?= htmlspecialchars($seoTitle, ENT_QUOTES) ?>">
     <meta property="og:description" content="<?= htmlspecialchars($seoDesc, ENT_QUOTES) ?>">
     <meta property="og:url" content="<?= htmlspecialchars($currentUrl, ENT_QUOTES) ?>">
@@ -48,26 +47,36 @@
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
-            "@type": "MedicalOrganization",
-            "name": "MUDr. Ziad Albahri – Midobarbershop.cztr",
-            "medicalSpecialty": "Midobarbershop.cztrics",
+            "@type": "SoftwareApplication",
+            "name": "",
+            "medicalSpecialty": "",
             "url": "<?= SITE_URL ?>",
-            "logo": "<?= SITE_URL ?>/assets/images/logo/logo.png",
+            "logo": "<?= SITE_URL ?>/assets/images/logo/logo.jpeg",
             "address": {
                 "@type": "PostalAddress",
-                "streetAddress": "Kostelní 39",
-                "addressLocality": "Jaroměř",
-                "postalCode": "55101",
+                "streetAddress": "Dobrovského 718/6",
+                "addressLocality": "Hradec Králové",
+                "postalCode": "50002",
                 "addressCountry": "CZ"
             },
-            "areaServed": ["Jaroměř", "Náchod"]
+            "areaServed": ["Hradec Králové"]
         }
     </script>
 
 
     <script>
-        const BASE_URL = "<?= BASE_URL ?>";
+        const BASE_URL = "<?= rtrim(BASE_URL, '/') ?>";
+        const API_BASE = BASE_URL + "/api/v1/chat";
+        const STATUS_URL = API_BASE + "/status";
+        const CHAT_URL = API_BASE;
     </script>
+
+
+    <script>
+        window.APP_BASE_URL = "<?= rtrim(BASE_URL, '/') ?>";
+        window.RECAPTCHA_SITE_KEY = '<?= RECAPTCHA_SITE_KEY ?>';
+    </script>
+
 
     <!-- Consent Mode v2: default deny + helpery -->
     <script>
@@ -96,107 +105,66 @@
                 });
             } catch (e) {}
         }
-
-        function getConsentFromCookie() {
-            try {
-                const row = document.cookie.split('; ').find(r => r.startsWith('cookie_consent='));
-                if (!row) return {};
-                const raw = decodeURIComponent(row.split('=')[1]);
-                let parsed = JSON.parse(raw);
-                if (parsed && typeof parsed === 'object' && parsed.v) {
-                    parsed = JSON.parse(parsed.v);
-                }
-                return parsed || {};
-            } catch (e) {
-                return {};
-            }
-        }
-
-        function enableConsentTaggedItems(consent) {
-            document.querySelectorAll('script[type="text/plain"][data-consent]').forEach(tag => {
-                const type = tag.getAttribute('data-consent');
-                if (!consent[type]) return;
-
-                if (tag.hasAttribute('data-src')) {
-                    const s = document.createElement('script');
-                    s.async = true;
-                    s.src = tag.getAttribute('data-src');
-                    document.head.appendChild(s);
-                } else if (tag.textContent.trim()) {
-                    const s = document.createElement('script');
-                    s.text = tag.textContent;
-                    document.head.appendChild(s);
-                }
-            });
-
-            document.querySelectorAll('iframe[data-consent][data-src]').forEach(ifr => {
-                const type = ifr.getAttribute('data-consent');
-                if (consent[type]) {
-                    ifr.setAttribute('src', ifr.getAttribute('data-src'));
-                    ifr.removeAttribute('data-src');
-                }
-            });
-        }
-
-        // Globální hook pro FE i server (použij po uložení souhlasu)
-        window.__applyConsentEverywhere = function(newConsent) {
-            applyGtagConsent(newConsent);
-            enableConsentTaggedItems(newConsent);
-        };
     </script>
 
     <!-- GA připravené, ale neaktivní do souhlasu -->
-    <script type="text/plain" data-consent="analytics" data-src="https://www.googletagmanager.com/gtag/js?id=G-M95Q53XWQX"></script>
+    <script type="text/plain" data-consent="analytics" data-src="https://www.googletagmanager.com/gtag/js?id=G-EYVRF9F1NZ"></script>
     <script type="text/plain" data-consent="analytics">
         gtag('js', new Date());
-      gtag('config', 'G-M95Q53XWQX');
+      gtag('config', 'G-EYVRF9F1NZ');
     </script>
+
+    <!--- Telemetry JS --->
+    <script type="text/plain" data-consent="analytics" data-src="<?= BASE_URL ?>/assets/js/telemetry/telemetry.js"></script>
+    <script type="text/plain" data-consent="analytics" data-src="<?= BASE_URL ?>/assets/js/telemetry/plugins/clicks.js"></script>
+    <script type="text/plain" data-consent="analytics" data-src="<?= BASE_URL ?>/assets/js/telemetry/plugins/scroll.js"></script>
+    <script type="text/plain" data-consent="analytics" data-src="<?= BASE_URL ?>/assets/js/telemetry/plugins/visibility.js"></script>
+    <script type="text/plain" data-consent="analytics" data-src="<?= BASE_URL ?>/assets/js/telemetry/plugins/section-dwell.js"></script>
+    <script type="text/plain" data-consent="analytics" data-src="<?= BASE_URL ?>/assets/js/telemetry/plugins/activity-ping.js"></script>
+    <script type="text/plain" data-consent="analytics" data-src="<?= BASE_URL ?>/assets/js/telemetry/init.js"></script>
+
+
 </head>
 
-<body class="bg-[#ffffff0d] min-h-screen flex flex-col">
+<body class="bg-black min-h-screen flex flex-col">
     <?php include "../src/views/partials/header.php"; ?>
 
     <!-- Main content -->
-    <div
-        class="relative flex-grow px-4 lg:px-8 py-16 lg:py-20
-         flex justify-center gap-8
-        ">
-         <!-- bg-center bg-cover bg-no-repeat"
-        style="background-image: url('https://www.midobarbershop.com/wp-content/uploads/2019/08/Beard-Trimming.jpg'); -->
-
-        <!-- overlay -->
-        <!-- <div class="absolute inset-0 bg-black/20 pointer-events-none"></div> -->
-
-        <!-- Sidebar (mobil + desktop) -->
-        <?php if ($hideSidebar): ?>
-            <?php include "../src/views/partials/sidebar.php"; ?>
-        <?php endif; ?>
+    <div class="relative flex-grow flex justify-center gap-8">
 
         <!-- Hlavní obsah, vždy max-width 7xl -->
-        <main class="w-full max-w-7xl">
+        <main class="w-full">
             <?= $data['content'] ?? '' ?>
         </main>
+
+
     </div>
-
-
+    <!-- Footer -->
 
     <?php include "../src/views/partials/footer.php"; ?>
     <?php include "../src/views/cookie/banner.php"; ?>
 
     <!-- Tvůj JS -->
-    <script src="<?= BASE_URL ?>/assets/js/cookies.js"></script>
+    <script src="<?= BASE_URL ?>/assets/js/cookies.js" defer></script>
+    <script src="<?= BASE_URL ?>/assets/js/ui/toast.js" defer></script>
+    <script src="<?= BASE_URL ?>/assets/js/recaptcha.js" defer></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=<?= RECAPTCHA_SITE_KEY ?>" async defer></script>
 
-    <!-- Inicializace po načtení: promítni souhlas a aktivuj značky -->
-    <script>
-        (function() {
-            const consent = getConsentFromCookie();
-            if (typeof applyGtagConsent === 'function') applyGtagConsent(consent);
-            // Když je prázdný objekt (třeba po chybě), loader nic neaktivuje => bezpečné
-            if (consent && typeof consent === 'object') {
-                if (typeof enableConsentTaggedItems === 'function') enableConsentTaggedItems(consent);
-            }
-        })();
-    </script>
+
+
+    <?php
+
+    use Helpers\Flash;
+
+    $toast = Flash::get('toast');
+    ?>
+    <?php if ($toast): ?>
+        <script>
+            window.__toastQueue = window.__toastQueue || [];
+            window.__toastQueue.push(<?= json_encode($toast) ?>);
+        </script>
+    <?php endif; ?>
+
 </body>
 
 </html>

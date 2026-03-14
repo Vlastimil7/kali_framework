@@ -40,6 +40,19 @@ define('MAIL_FROM_NAME', env('MAIL_FROM_NAME'));
 define('RECAPTCHA_SITE_KEY', env('RECAPTCHA_SITE_KEY'));
 define('RECAPTCHA_SECRET_KEY', env('RECAPTCHA_SECRET_KEY'));
 
+define('AI_PROVIDER', env('AI_PROVIDER', 'openai'));
+
+//GEMINI_API
+define('GEMINI_API_KEY', env('GEMINI_API_KEY'));
+
+//OPEN AI_API
+define('OPENAI_API_KEY', env('OPENAI_API_KEY'));
+
+//ANTHROPIC_API
+define('ANTHROPIC_API_KEY', env('ANTHROPIC_API_KEY'));
+define('APP_TIMEZONE', 'Europe/Prague');
+
+
 // Comgate config
 define('COMGATE_MERCHANT', env('COMGATE_MERCHANT'));
 define('COMGATE_SECRET', env('COMGATE_SECRET'));
