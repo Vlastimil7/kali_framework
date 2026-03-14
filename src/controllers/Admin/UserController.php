@@ -4,7 +4,7 @@ namespace Controllers\Admin;
 
 use Models\User;
 
-class UsersController extends BaseAdminController
+class UserController extends BaseAdminController
 {
     private User $userModel;
 
@@ -19,17 +19,17 @@ class UsersController extends BaseAdminController
         $users = $this->userModel->getAllUsers();
 
         $this->view('admin/users/index', [
-            'title' => 'Správa uživatelů | Midobarbershop.cz',
+            'title' => 'Správa uživatelů | VK-DEV.cz',
             'users' => $users,
-            'show_sidebar' => false,
+
         ]);
     }
 
     public function create()
     {
         $this->view('admin/users/create', [
-            'title' => 'Přidat uživatele | Midobarbershop.cz',
-            'show_sidebar' => false,
+            'title' => 'Přidat uživatele | VK-DEV.cz',
+
         ]);
     }
 
@@ -72,9 +72,9 @@ class UsersController extends BaseAdminController
         }
 
         $this->view('admin/users/edit', [
-            'title' => 'Úprava uživatele | Midobarbershop.cz',
+            'title' => 'Úprava uživatele | VK-DEV.cz',
             'user' => $user,
-            'show_sidebar' => false,
+
         ]);
     }
 

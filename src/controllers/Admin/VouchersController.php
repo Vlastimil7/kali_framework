@@ -21,7 +21,7 @@ class VouchersController extends BaseAdminController
         $this->view('admin/vouchers/index', [
             'title' => 'Vouchery | Admin',
             'vouchers' => $vouchers,
-            'show_sidebar' => false,
+
         ]);
     }
 
@@ -40,7 +40,7 @@ class VouchersController extends BaseAdminController
     {
         $this->view('admin/vouchers/create', [
             'title' => 'Nový voucher | Admin',
-            'show_sidebar' => false,
+
         ]);
     }
 
@@ -145,7 +145,7 @@ class VouchersController extends BaseAdminController
         if (!$res['success']) {
             $_SESSION['_flash_error'] = $res['message'] ?? 'Chyba při ukládání voucheru.';
             $_SESSION['_old'] = $_POST;
-            header('Location: ' . BASE_URL . '/admin/vouchers/edit/' . (int)$id );
+            header('Location: ' . BASE_URL . '/admin/vouchers/edit/' . (int)$id);
             exit;
         }
 

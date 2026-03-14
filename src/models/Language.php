@@ -9,7 +9,7 @@ class Language
     private $db;
     private $currentLang;
     private $translations = [];
-    private $supportedLanguages = ['cs', 'en', 'de', 'fr'];
+    private $supportedLanguages = ['cs', 'en'];
     private $defaultLanguage = 'cs';
 
     public function __construct()
@@ -29,28 +29,28 @@ class Language
         if (!is_array($categories)) {
             $categories = [$categories];
         }
-        
+
         // Vždy přidáme obecnou kategorii, pokud tam není
         if (!in_array('general', $categories)) {
             $categories[] = 'general';
         }
-        
+
         // Vytvoření otazníků pro prepared statement
         $placeholders = implode(',', array_fill(0, count($categories), '?'));
-        
+
         $sql = "SELECT translation_key, translation_value, category 
                 FROM translations 
                 WHERE language_code = ? 
                 AND category IN ($placeholders)";
-        
+
         $params = array_merge([$this->currentLang], $categories);
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
-        
+
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $this->translations[$row['category']][$row['translation_key']] = $row['translation_value'];
         }
-        
+
         return true;
     }
 
@@ -68,7 +68,7 @@ class Language
         if (!isset($this->translations[$category])) {
             $this->loadTranslations($category);
         }
-        
+
         // Pokud klíč existuje v dané kategorii
         if (isset($this->translations[$category][$key])) {
             $translation = $this->translations[$category][$key];
@@ -81,14 +81,14 @@ class Language
         else {
             return $key;
         }
-        
+
         // Nahrazení parametrů
         if (!empty($params)) {
             foreach ($params as $param => $value) {
                 $translation = str_replace('{' . $param . '}', $value, $translation);
             }
         }
-        
+
         return $translation;
     }
 
@@ -160,7 +160,7 @@ class Language
                     AND category = ?";
             $stmt = $this->db->prepare($sql);
             $stmt->execute([$langCode, $key, $category]);
-            
+
             if ($stmt->rowCount() > 0) {
                 // Aktualizace existujícího překladu
                 $sql = "UPDATE translations 
@@ -178,7 +178,7 @@ class Language
                 $stmt = $this->db->prepare($sql);
                 $stmt->execute([$langCode, $key, $value, $category]);
             }
-            
+
             return [
                 'success' => true,
                 'message' => 'Překlad byl úspěšně uložen'
@@ -202,15 +202,15 @@ class Language
     {
         $sql = "SELECT translation_key, translation_value, category FROM translations WHERE language_code = ?";
         $params = [$langCode];
-        
+
         if ($category) {
             $sql .= " AND category = ?";
             $params[] = $category;
         }
-        
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
-        
+
         $translations = [];
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             if (!isset($translations[$row['category']])) {
@@ -218,7 +218,7 @@ class Language
             }
             $translations[$row['category']][$row['translation_key']] = $row['translation_value'];
         }
-        
+
         return $translations;
     }
 
@@ -232,17 +232,17 @@ class Language
     {
         $sql = "SELECT DISTINCT translation_key, category FROM translations";
         $params = [];
-        
+
         if ($category) {
             $sql .= " WHERE category = ?";
             $params[] = $category;
         }
-        
+
         $sql .= " ORDER BY category, translation_key";
-        
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
-        
+
         $keys = [];
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             if (!isset($keys[$row['category']])) {
@@ -250,7 +250,7 @@ class Language
             }
             $keys[$row['category']][] = $row['translation_key'];
         }
-        
+
         return $keys;
     }
 
@@ -264,7 +264,7 @@ class Language
     {
         try {
             $this->db->beginTransaction();
-            
+
             foreach ($translations as $langCode => $categories) {
                 foreach ($categories as $category => $items) {
                     foreach ($items as $key => $value) {
@@ -272,16 +272,16 @@ class Language
                     }
                 }
             }
-            
+
             $this->db->commit();
-            
+
             return [
                 'success' => true,
                 'message' => 'Překlady byly úspěšně importovány'
             ];
         } catch (\PDOException $e) {
             $this->db->rollBack();
-            
+
             return [
                 'success' => false,
                 'message' => 'Chyba při importu překladů: ' . $e->getMessage()

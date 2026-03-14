@@ -55,7 +55,7 @@ class OrdersController extends BaseAdminController
         $this->view('admin/orders/index', [
             'title' => 'Objednávky | Admin',
             'orders' => $orders,
-            'show_sidebar' => false,
+
         ]);
     }
 
@@ -72,7 +72,7 @@ class OrdersController extends BaseAdminController
             'order' => $order,
             'items' => $items,
             'codes' => $codes,
-            'show_sidebar' => false,
+
         ]);
     }
 
@@ -132,7 +132,7 @@ class OrdersController extends BaseAdminController
         $this->view('admin/orders/edit', [
             'title' => 'Editace objednávky | Admin',
             'order' => $order,
-            'show_sidebar' => false,
+
         ]);
     }
 
@@ -308,5 +308,4 @@ class OrdersController extends BaseAdminController
         $_SESSION['_flash_success'] = 'Objednávka refundována a platba vrácena přes Comgate.';
         $this->redirect('/admin/orders/' . $id);
     }
-
 }

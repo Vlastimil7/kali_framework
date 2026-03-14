@@ -70,9 +70,9 @@ class Controller
     protected function show404()
     {
         $data = [
-            'title' => __('page_not_found') . ' | Midobarbershop.cz',
+            'title' => __('page_not_found') . ' | VK-DEV.cz',
             'content' => $this->renderView('errors/404'),
-            'show_sidebar' => false,
+
         ];
 
         require_once "../src/views/layouts/main.php";

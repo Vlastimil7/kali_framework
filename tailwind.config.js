@@ -10,6 +10,8 @@ module.exports = {
         indigo: "var(--color-indigo)",
         "gray-light": "var(--color-gray-light)",
         "gray-medium": "var(--color-gray-medium)",
+        red: "var(--color-red)",
+        gradient: "var(--gradient)",
       },
     },
   },

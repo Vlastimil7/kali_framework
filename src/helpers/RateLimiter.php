@@ -14,7 +14,9 @@ class RateLimiter
     private $limits = [
         'password_reset_request' => ['count' => 5, 'period' => 3600], // 5 pokusů za hodinu
         'password_reset_confirm' => ['count' => 10, 'period' => 3600], // 10 pokusů za hodinu
-        'login' => ['count' => 10, 'period' => 3600] // 10 pokusů za hodinu
+        'login' => ['count' => 10, 'period' => 3600], // 10 pokusů za hodinu
+        'contact_form' => ['count' => 5, 'period' => 3600], // 5 pokusů za hodinu
+        'lead_form' => ['count' => 5, 'period' => 3600], // 5 pokusů za hodinu
     ];
     
     public function __construct($action)

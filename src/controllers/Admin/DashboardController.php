@@ -14,14 +14,14 @@ class DashboardController extends BaseAdminController
         $this->userModel = new User();
     }
 
-    public function dashboard()
+    public function index()
     {
         $userCount = $this->userModel->getUserCount();
 
         $this->view('admin/dashboard', [
-            'title' => 'Admin Dashboard | Midobarbershop.cz',
+            'title' => 'Admin Dashboard | VK-DEV.cz',
             'userCount' => $userCount,
-            'show_sidebar' => false,
+
         ]);
     }
 }

@@ -9,9 +9,11 @@ class ReCaptcha
     private string $secretKey;
 
     private array $allowedHostnames = [
-        'leanitnow.cz',
-        'www.leanitnow.cz',
         'web.kalasekvyvoj.cz',
+        'localhost',
+        'ziad',
+        'vk-dev.cz',
+        'www.vk-dev.cz',
     ];
 
     public function __construct(string $secretKey)
