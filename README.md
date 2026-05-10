@@ -151,12 +151,14 @@ project/
 │ ├── index.php # Entry point
 │ └── assets/ # Compiled assets
 ├── src/ # Application source
+│ ├── API/ # Custom API for anything e.g chat bot
 │ ├── config/ # Configuration files
 │ ├── controllers/ # MVC Controllers
 │ ├── models/ # MVC Models  
 │ ├── views/ # MVC Views
 │ ├── helpers/ # Helper functions
 │ └── routes/ # Route definitions
+│ └── services/ # Service efinitions
 ├── storage/ # App storage
 │ ├── cache/ # Cache files
 │ ├── logs/ # Log files

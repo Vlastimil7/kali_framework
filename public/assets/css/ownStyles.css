@@ -1,234 +1,174 @@
-/* ownStyles.css - doplňující styly k Tailwind CSS s bílým pozadím */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap");
 
-/* Definice barev */
 :root {
-  --color-gold: #d4af37;
-  --color-black: #000000;
-  --color-white: #ffffff;
-  --color-gray-light: #f5f5f5;
-  --color-gray-medium: #e0e0e0;
-  --color-indigo: #667eea;
+  --cyan: #36eaea;
+  --pink: #ff2a93;
+  --purple: #8a2be2;
+  --dark-purple: #1e0b2f;
+  --darker-purple: #120619;
+  --gradient: linear-gradient(90deg, var(--cyan), var(--pink));
 }
 
-html {
-  scroll-behavior: smooth; /* Pro plynulé scrollování */
+* {
+  font-family: "Montserrat", sans-serif;
 }
 
-/* Offsety pro sekce */
-section[id],
-div[id] {
-  scroll-margin-top: 100px;
+.bg-gradient-radial {
+  background: radial-gradient(
+    circle,
+    var(--dark-purple) 0%,
+    var(--darker-purple) 100%
+  );
 }
 
-/* Základní styly pro bílé pozadí */
-body {
-  background-color: var(--color-black);
-  color: #333333;
+.bg-gradient-main {
+  background: linear-gradient(135deg, var(--cyan), var(--purple), var(--pink));
 }
 
-/* Průhledné menu s hover efektem */
-.header-transparent {
-  background-color: transparent;
-}
-
-.header-transparent:hover {
-  background-color: var(--color-black);
-}
-
-.header-transparent:hover .nav-link {
-  color: var(--color-white); /* nebo tvoje barva textu pro tmavý text */
-}
-
-/* Pro sticky pozadí při scrollování */
-.header-scrolled {
-  background-color: var(--color-black);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.header-scrolled .nav-link {
-  color: var(--color-white); /* nebo tvoje barva textu */
-}
-
-/* Výrazný kontaktní button v desktopovém menu */
-.header-scrolled .btn-primary {
-  background-color: var(--color-gold);
-  color: var(--color-white);
-}
-
-/* Oprava mobilního menu při scrollování */
-.header-scrolled #mobile-menu-button {
-  color: var(--color-white);
-  border-color: var(--color-white);
-}
-
-.mobile-menu-button {
-  cursor: pointer;
-}
-
-/* Zajištění visibility hamburger menu na bílém pozadí */
-.header-transparent:hover .mobile-menu-button {
-  color: var(--color-white);
-  border-color: var(--color-white);
-}
-
-.header-transparent:hover .mobile-menu-button:hover {
-  color: var(--color-white);
-  border-color: var(--color-white);
-}
-
-/* Logo pro desktop a mobilní menu */
-.logo {
-  height: auto;
-  width: 150px;
-}
-
-/* Text - zlatá barva */
-.text-gold {
-  color: var(--color-gold);
-}
-
-/* Pozadí - zlatá barva */
-.bg-gold {
-  background-color: var(--color-gold);
-}
-
-/* Text - gradientní */
 .text-gradient {
-  background: linear-gradient(135deg, #333333 0%, #d4af37 100%);
+  background: linear-gradient(90deg, var(--cyan), var(--pink));
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-fill-color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
-/* Hlavní sekce stránky */
-.section-white {
-  background-color: var(--color-white);
-}
-.section-light {
-  background-color: var(--color-gray-light);
-}
-
-/* Pozadi na sldiery */
-.black-blend-50 {
-  background-color: color-mix(in oklab, black 50%, #00000082);
-  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), transparent);
+.border-gradient {
+  border: 2px solid transparent;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  background-image:
+    linear-gradient(to right, var(--darker-purple), var(--darker-purple)),
+    linear-gradient(90deg, var(--cyan), var(--pink));
 }
 
-/* Karty */
-.card {
-  background-color: var(--color-white);
-  border: 1px solid var(--color-gray-medium);
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+.btn-gradient {
+  background: linear-gradient(90deg, var(--cyan), var(--pink));
   transition: all 0.3s ease;
 }
-.card:hover {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+
+.btn-gradient:hover {
+  background: linear-gradient(90deg, var(--pink), var(--cyan));
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.card-gradient {
+  background: rgba(30, 11, 47, 0.7);
+  border: 1px solid rgba(54, 234, 234, 0.2);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.card-gradient:hover {
+  border-color: rgba(255, 42, 147, 0.5);
   transform: translateY(-5px);
 }
 
-/* Stylové bordery */
-.border-gold {
-  border-color: var(--color-gold);
+.step-circle {
+  background: linear-gradient(135deg, var(--cyan), var(--pink));
 }
 
-.elegant-border {
-  border: 1px solid var(--color-gray-medium);
-  transition: border-color 0.3s ease;
-}
-.elegant-border:hover {
-  border-color: var(--color-gold);
-}
-
-/* Tlačítka */
-.btn-primary {
-  background-color: var(--color-indigo);
-  color: var(--color-white);
-  padding: 10px 20px;
-  border-radius: 30px;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  border: 2px solid var(--color-indigo);
-}
-.btn-primary:hover {
-  background-color: transparent;
-  color: var(--color-indigo);
-  box-shadow: 0 5px 15px rgba(52, 69, 219, 0.3);
+@keyframes moveBackground {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-.btn-secondary {
-  background-color: transparent;
-  color: #333333;
-  padding: 10px 20px;
-  border-radius: 30px;
-  font-weight: bold;
-  border: 2px solid var(--color-indigo);
-  transition: all 0.3s ease;
-}
-.btn-secondary:hover {
-  background-color: #333333;
-  color: var(--indigo-white);
-  box-shadow: 0 5px 15px rgba(52, 69, 219, 0.3);
+.glow {
+  box-shadow:
+    0 0 15px rgba(54, 234, 234, 0.5),
+    0 0 30px rgba(255, 42, 147, 0.3);
 }
 
-.btn-outline {
-  background-color: transparent;
-  color: var(--color-indigo);
-  padding: 10px 20px;
-  border-radius: 30px;
-  font-weight: bold;
-  border: 2px solid var(--color-indigo);
-  transition: all 0.3s ease;
-}
-.btn-outline:hover {
-  background-color: var(--color-indigo);
-  color: var(--color-white);
-  box-shadow: 0 5px 15px rgba(52, 69, 219, 0.3);
+.hover-glow:hover {
+  box-shadow:
+    0 0 15px rgba(54, 234, 234, 0.5),
+    0 0 30px rgba(255, 42, 147, 0.3);
 }
 
-/* Hovery pro odkazy */
-.nav-link {
+.futuristic-border {
   position: relative;
-  color: var(--color-white);
-  text-decoration: none;
-  padding-bottom: 5px;
-  transition: color 0.3s ease;
 }
-.nav-link::after {
+
+.futuristic-border::after {
   content: "";
   position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: 0;
-  left: 0;
-  background-color: var(--color-gold);
-  transition: width 0.3s ease;
+  top: -2px;
+  left: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  background: linear-gradient(
+    90deg,
+    var(--cyan),
+    var(--pink),
+    var(--purple),
+    var(--cyan)
+  );
+  background-size: 300% 300%;
+  animation: borderAnimation 4s ease infinite;
+  z-index: -1;
+  border-radius: inherit;
 }
-.nav-link:hover {
-  color: var(--color-gold);
-}
-.nav-link:hover::after {
-  width: 100%;
+
+@keyframes borderAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .nav-item {
   position: relative;
-  transition: all 0.3s ease;
 }
 
 .nav-item::after {
   content: "";
   position: absolute;
+  bottom: -5px;
+  left: 0;
   width: 0;
   height: 2px;
-  bottom: -5px;
-  left: 50%;
-  background-color: #667eea;
-  transition: all 0.3s ease;
+  background: linear-gradient(90deg, var(--cyan), var(--pink));
+  transition: width 0.3s;
 }
 
 .nav-item:hover::after {
   width: 100%;
-  left: 0;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes toastOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(6px) scale(0.99);
+  }
 }

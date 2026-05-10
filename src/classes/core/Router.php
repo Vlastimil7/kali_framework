@@ -314,7 +314,7 @@ class Router
         } else {
             // Pro webovou route použijeme HTML layout
             ob_start();
-            include "../src/views/errors/404.php";
+            include  ROOT_PATH . "../src/views/errors/404.php";
             $content = ob_get_clean();
 
             // Data pro layout
@@ -324,7 +324,7 @@ class Router
             ];
 
             // Načtení layoutu
-            include "../src/views/layouts/main.php";
+            include  ROOT_PATH . "../src/views/layouts/main.php";
             exit();
         }
     }

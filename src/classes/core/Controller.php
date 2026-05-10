@@ -49,11 +49,11 @@ class Controller
 
         // Načtení view do content
         ob_start();
-        include "../src/views/{$view}.php";
+        include  ROOT_PATH . "../src/views/{$view}.php";
         $data['content'] = ob_get_clean();
 
         // Načtení layoutu
-        include "../src/views/layouts/main.php";
+        include ROOT_PATH . "../src/views/layouts/main.php";
     }
 
     protected function renderView($view, $data = [])
@@ -63,7 +63,7 @@ class Controller
 
         extract($data);
         ob_start();
-        require_once "../src/views/{$view}.php";
+        require_once ROOT_PATH . "../src/views/{$view}.php";
         return ob_get_clean();
     }
 
@@ -75,7 +75,7 @@ class Controller
 
         ];
 
-        require_once "../src/views/layouts/main.php";
+        require_once ROOT_PATH . "../src/views/layouts/main.php";
         exit();
     }
 }

@@ -34,7 +34,8 @@ spl_autoload_register(function ($className) {
         'Core\\' => 'classes/core/',
         'Controllers\\' => 'controllers/',
         'Models\\' => 'models/',
-        'Helpers\\' => 'helpers/'
+        'Helpers\\' => 'helpers/',
+        'Services\\' => 'services/'
     ];
 
     foreach ($namespaceMap as $namespace => $path) {
@@ -144,6 +145,7 @@ if ($aiMode && !$isAsset) {
         exit;
     }
 }
+
 
 // Zpracování požadavku
 $router->dispatch($url);
