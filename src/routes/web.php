@@ -66,4 +66,9 @@ $router->get('terms', 'Front\\TermsController@show');
 $router->get('terms/shipping-payment', 'Front\\TermsController@showShippingPayment');
 
 // Chat
-$router->get('chat', 'Front\\ChatController@index');
+//$router->get('chat', 'Front\\ChatController@index');
+//$router->post('ai-mode/toggle', 'Front\\AiModeController@toggle');
+
+// Google OAuth
+$router->get('auth/google/redirect', 'Front\\AuthController@redirectToGoogle');
+$router->get('auth/google/callback', 'Front\\AuthController@handleGoogleCallback');

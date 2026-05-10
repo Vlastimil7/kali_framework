@@ -477,4 +477,55 @@ class User
             ];
         }
     }
+
+    // Vytvoření uživatele z Google účtu
+    public function createGoogleUser(array $googleUser): array
+    {
+        $email = trim((string)($googleUser['email'] ?? ''));
+        $name = trim((string)($googleUser['given_name'] ?? ''));
+        $surname = trim((string)($googleUser['family_name'] ?? ''));
+        $picture = trim((string)($googleUser['picture'] ?? ''));
+
+        if ($email === '') {
+            return [
+                'success' => false,
+                'message' => 'Google účet nevrátil email.'
+            ];
+        }
+
+        if ($this->emailExists($email)) {
+            return [
+                'success' => false,
+                'message' => 'Uživatel s tímto emailem už existuje.'
+            ];
+        }
+
+        $randomPasswordHash = password_hash(bin2hex(random_bytes(16)), PASSWORD_DEFAULT);
+
+        try {
+            $sql = "INSERT INTO users (email, password, name, surname, phone, role, created_at)
+                VALUES (:email, :password, :name, :surname, :phone, :role, NOW())";
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                ':email' => $email,
+                ':password' => $randomPasswordHash,
+                ':name' => $name !== '' ? $name : 'Google',
+                ':surname' => $surname !== '' ? $surname : 'User',
+                ':phone' => '',
+                ':role' => 'user',
+            ]);
+
+            return [
+                'success' => true,
+                'message' => 'Google uživatel byl vytvořen.',
+                'user_id' => (int)$this->db->lastInsertId(),
+            ];
+        } catch (\PDOException $e) {
+            return [
+                'success' => false,
+                'message' => 'Chyba databáze: ' . $e->getMessage(),
+            ];
+        }
+    }
 }

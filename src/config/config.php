@@ -24,8 +24,8 @@ if (APP_ENV === 'production') {
     define('BASE_URL', env('BASE_URL', ''));
     define('SITE_URL', env('SITE_URL', 'https://web.kalasekvyvoj.cz'));
 } else {
-    define('BASE_URL', env('BASE_URL_DEV', '/08a_midovouchers/public'));
-    define('SITE_URL', env('SITE_URL_DEV', 'http://localhost/08a_midovouchers/public/'));
+    define('BASE_URL', env('BASE_URL_DEV', '/__Framework/1_v0/public'));
+    define('SITE_URL', env('SITE_URL_DEV', 'http://localhost/__Framework/1_v0/public/'));
 }
 
 // SMTP nastavení
@@ -68,6 +68,12 @@ define('COMGATE_NOTIFY_URL',  env('COMGATE_NOTIFY_URL', SITE_URL . '/payment/com
 
 // Prefix pro kódy voucherů (např. MIDO → 2025MIDO00001)
 define('VOUCHER_CODE_PREFIX', env('VOUCHER_CODE_PREFIX', 'MIDO'));
+
+// Google OAuth
+define('GOOGLE_OAUTH_CLIENT_ID', env('GOOGLE_OAUTH_CLIENT_ID'));
+define('GOOGLE_OAUTH_CLIENT_SECRET', env('GOOGLE_OAUTH_CLIENT_SECRET'));
+define('GOOGLE_OAUTH_REDIRECT_URI', env('GOOGLE_OAUTH_REDIRECT_URI'));
+
 
 // Error reporting
 if (APP_ENV === 'production') {

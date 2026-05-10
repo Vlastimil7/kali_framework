@@ -127,7 +127,7 @@
 </head>
 
 <body class="bg-black min-h-screen flex flex-col">
-    <?php include "../src/views/partials/header.php"; ?>
+    <?php include  ROOT_PATH . "../src/views/partials/header.php"; ?>
 
     <!-- Main content -->
     <div class="relative flex-grow flex justify-center gap-8">
@@ -141,8 +141,8 @@
     </div>
     <!-- Footer -->
 
-    <?php include "../src/views/partials/footer.php"; ?>
-    <?php include "../src/views/cookie/banner.php"; ?>
+    <?php include  ROOT_PATH . "../src/views/partials/footer.php"; ?>
+    <?php include  ROOT_PATH . "../src/views/cookie/banner.php"; ?>
 
     <!-- Tvůj JS -->
     <script src="<?= BASE_URL ?>/assets/js/cookies.js" defer></script>
