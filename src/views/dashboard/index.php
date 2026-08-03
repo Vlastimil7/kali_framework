@@ -2,11 +2,6 @@
 // src/views/dashboard/index.php
 // Přehledová stránka pro běžného uživatele po přihlášení
 
-// Zajištění, že uživatel je přihlášen
-if (!isset($_SESSION['user_id'])) {
-    header('Location: ' . locale_url('login'));
-    exit;
-}
 ?>
 
 <div class="max-w-full mx-auto">

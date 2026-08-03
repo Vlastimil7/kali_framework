@@ -8,6 +8,13 @@ class Router
 {
     // Uchovává všechny definované routes
     private array $routes = [];
+    private array $groupOptions = [];
+    private ?array $lastRoute = null;
+
+    private array $middlewareAliases = [
+        'auth' => \Middleware\AuthMiddleware::class,
+        'admin' => \Middleware\AdminMiddleware::class,
+    ];
 
     // Výchozí namespace pro kontrolery
     private array $namespaces = [
@@ -20,9 +27,10 @@ class Router
      * Konstruktor umožňující rozšíření výchozích namespace
      * @param array $additionalNamespaces Další namespace pro routing
      */
-    public function __construct(array $additionalNamespaces = [])
+    public function __construct(array $additionalNamespaces = [], array $middlewareAliases = [])
     {
         $this->namespaces = array_merge($this->namespaces, $additionalNamespaces);
+        $this->middlewareAliases = array_merge($this->middlewareAliases, $middlewareAliases);
     }
 
     /**
@@ -35,10 +43,55 @@ class Router
      */
     public function addRoute(string $method, string $route, string $handler, array $options = []): self
     {
+        $method = strtoupper($method);
+        $options = $this->mergeOptions($this->currentGroupOptions(), $options);
         $this->routes[$method][$route] = [
             'handler' => $handler,
             'options' => $options
         ];
+        $this->lastRoute = [$method, $route];
+        return $this;
+    }
+
+    /**
+     * Přidá middleware k naposledy zaregistrované routě.
+     */
+    public function middleware(string|array $middleware): self
+    {
+        if ($this->lastRoute === null) {
+            throw new \LogicException('Middleware nelze přiřadit před registrací routy.');
+        }
+
+        [$method, $route] = $this->lastRoute;
+        $current = $this->routes[$method][$route]['options']['middleware'] ?? [];
+        $this->routes[$method][$route]['options']['middleware'] = array_values(array_unique([
+            ...$this->normalizeMiddleware($current),
+            ...$this->normalizeMiddleware($middleware),
+        ]));
+
+        return $this;
+    }
+
+    /**
+     * Seskupí routy pod společné options, typicky middleware.
+     */
+    public function group(array $options, callable $routes): self
+    {
+        $this->groupOptions[] = $options;
+
+        try {
+            $routes($this);
+        } finally {
+            array_pop($this->groupOptions);
+        }
+
+        return $this;
+    }
+
+    public function aliasMiddleware(string $alias, string $middlewareClass): self
+    {
+        $this->middlewareAliases[$alias] = $middlewareClass;
+
         return $this;
     }
 
@@ -180,7 +233,10 @@ class Router
         $controller = $this->resolveControllerNamespace($url, $controllerName);
 
         // Vyvolání metody kontroleru
-        return $this->invokeControllerMethod($controller, $action);
+        return $this->runMiddleware(
+            $routeData['options']['middleware'] ?? [],
+            fn () => $this->invokeControllerMethod($controller, $action)
+        );
     }
 
     /**
@@ -201,7 +257,73 @@ class Router
         $controller = $this->resolveControllerNamespace($route, $controllerName);
 
         // Vyvolání metody kontroleru s parametry
-        return $this->invokeControllerMethod($controller, $action, array_values($params));
+        return $this->runMiddleware(
+            $routeData['options']['middleware'] ?? [],
+            fn () => $this->invokeControllerMethod($controller, $action, array_values($params))
+        );
+    }
+
+    private function runMiddleware(string|array $middleware, callable $destination)
+    {
+        $pipeline = array_reduce(
+            array_reverse($this->normalizeMiddleware($middleware)),
+            function (callable $next, string $name): callable {
+                return function () use ($name, $next) {
+                    $class = $this->middlewareAliases[$name] ?? $name;
+
+                    if (!class_exists($class)) {
+                        throw new \RuntimeException("Middleware {$name} nebyl nalezen.");
+                    }
+
+                    $middleware = new $class();
+                    if (!$middleware instanceof MiddlewareInterface) {
+                        throw new \RuntimeException("Middleware {$class} musí implementovat " . MiddlewareInterface::class . '.');
+                    }
+
+                    return $middleware->handle($next);
+                };
+            },
+            $destination
+        );
+
+        return $pipeline();
+    }
+
+    private function currentGroupOptions(): array
+    {
+        $options = [];
+        foreach ($this->groupOptions as $groupOptions) {
+            $options = $this->mergeOptions($options, $groupOptions);
+        }
+
+        return $options;
+    }
+
+    private function mergeOptions(array $base, array $override): array
+    {
+        $middleware = [
+            ...$this->normalizeMiddleware($base['middleware'] ?? []),
+            ...$this->normalizeMiddleware($override['middleware'] ?? []),
+        ];
+
+        $options = array_merge($base, $override);
+        if ($middleware !== []) {
+            $options['middleware'] = array_values(array_unique($middleware));
+        }
+
+        return $options;
+    }
+
+    private function normalizeMiddleware(string|array $middleware): array
+    {
+        if (is_string($middleware)) {
+            $middleware = [$middleware];
+        }
+
+        return array_values(array_filter(
+            array_map(static fn ($name): string => trim((string)$name), $middleware),
+            static fn (string $name): bool => $name !== ''
+        ));
     }
 
     /**

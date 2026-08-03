@@ -5,6 +5,7 @@
     "Models\\": "src/models/",
     "Core\\": "src/classes/core/",
     "Helpers\\": "src/helpers/",
+    "Middleware\\": "src/middleware/",
     "Services\\": "src/services/",
     "Api\\": "src/Api/"
   }

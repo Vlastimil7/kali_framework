@@ -33,6 +33,26 @@ foreach ($routes as $method => $methodRoutes) {
     }
 }
 
+foreach ($routes as $method => $methodRoutes) {
+    foreach ($methodRoutes as $path => $route) {
+        $middleware = $route['options']['middleware'] ?? [];
+
+        if (str_starts_with($path, 'admin/') || $path === 'admin') {
+            if (!in_array('auth', $middleware, true) || !in_array('admin', $middleware, true)) {
+                $failures[] = "$method $path: missing auth/admin middleware";
+            }
+        }
+    }
+}
+
+foreach (['profile', 'profile/update'] as $protectedPath) {
+    $method = $protectedPath === 'profile' ? 'GET' : 'POST';
+    $middleware = $routes[$method][$protectedPath]['options']['middleware'] ?? [];
+    if (!in_array('auth', $middleware, true)) {
+        $failures[] = "$method $protectedPath: missing auth middleware";
+    }
+}
+
 if ($failures !== []) {
     fwrite(STDERR, implode(PHP_EOL, $failures) . PHP_EOL);
     exit(1);

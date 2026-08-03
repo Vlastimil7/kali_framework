@@ -157,6 +157,7 @@ project/
 │ ├── models/ # MVC Models  
 │ ├── views/ # MVC Views
 │ ├── helpers/ # Helper functions
+│ ├── middleware/ # Route middleware (auth, admin, ...)
 │ └── routes/ # Route definitions
 │ └── services/ # Service efinitions
 ├── storage/ # App storage
@@ -164,6 +165,30 @@ project/
 │ ├── logs/ # Log files
 │ └── uploads/ # File uploads
 └── vendor/ # Composer dependencies (ignored by git)
+
+### Route middleware
+
+Protect one route with the fluent API:
+
+```php
+$router->get('profile', 'Front\\UserController@showProfile')
+    ->middleware('auth');
+```
+
+Protect a whole route group:
+
+```php
+$router->group(['middleware' => ['auth', 'admin']], function (Core\Router $router): void {
+    $router->get('admin/dashboard', 'Admin\\DashboardController@index');
+    $router->get('admin/users', 'Admin\\UserController@index');
+});
+```
+
+Custom middleware must implement `Core\MiddlewareInterface`. Register an alias with:
+
+```php
+$router->aliasMiddleware('verified', Middleware\VerifiedUserMiddleware::class);
+```
 
 ## LOGGER
 
