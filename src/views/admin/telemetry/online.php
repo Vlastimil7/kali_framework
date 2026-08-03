@@ -13,8 +13,8 @@
       </div>
 
       <div class="flex items-center gap-2">
-        <a href="<?= BASE_URL ?>/admin/telemetry" class="px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:bg-gray-50 text-sm font-semibold">Dashboard</a>
-        <a href="<?= BASE_URL ?>/admin/telemetry/events?app=<?= urlencode($app) ?>" class="px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:bg-gray-50 text-sm font-semibold">Historie</a>
+        <a href="<?= config('app.base_url', '') ?>/admin/telemetry" class="px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:bg-gray-50 text-sm font-semibold">Dashboard</a>
+        <a href="<?= config('app.base_url', '') ?>/admin/telemetry/events?app=<?= urlencode($app) ?>" class="px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:bg-gray-50 text-sm font-semibold">Historie</a>
       </div>
     </div>
 
@@ -27,7 +27,7 @@
       </select>
       <button class="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-semibold cursor-pointer">Filtrovat</button>
 
-      <a href="<?= BASE_URL ?>/admin/telemetry/online?app=<?= urlencode($app) ?>&window=<?= (int)$window ?>"
+      <a href="<?= config('app.base_url', '') ?>/admin/telemetry/online?app=<?= urlencode($app) ?>&window=<?= (int)$window ?>"
         class="px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:bg-gray-50 text-sm font-semibold">
         Obnovit
       </a>
@@ -65,7 +65,7 @@
                   <td class="px-4 py-3 font-mono text-xs text-gray-800"><?= htmlspecialchars($r['page_path'] ?? '-') ?></td>
                   <td class="px-4 py-3">
                     <a class="inline-flex font-mono text-xs px-2 py-1 rounded-lg bg-gray-50 border-2 border-gray-200 text-gray-700 hover:bg-white"
-                      href="<?= BASE_URL ?>/admin/telemetry/session/<?= urlencode($r['session_id']) ?>?app=<?= urlencode($app) ?>">
+                      href="<?= config('app.base_url', '') ?>/admin/telemetry/session/<?= urlencode($r['session_id']) ?>?app=<?= urlencode($app) ?>">
                       <?= htmlspecialchars($r['session_id'] ?? '-') ?>
                     </a>
                   </td>

@@ -67,7 +67,7 @@ require_once ROOT_PATH . '/src/helpers/csrf_helper.php';
 $requestedRoute = trim((string) ($_GET['url'] ?? ''), '/');
 if ($requestedRoute === '') {
     $requestPath = (string) (parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/');
-    $basePath = trim((string) (parse_url(BASE_URL, PHP_URL_PATH) ?? ''), '/');
+    $basePath = trim((string) (parse_url(config('app.base_url', ''), PHP_URL_PATH) ?? ''), '/');
     $requestPath = trim($requestPath, '/');
     if ($basePath !== '' && ($requestPath === $basePath || str_starts_with($requestPath, $basePath . '/'))) {
         $requestPath = ltrim(substr($requestPath, strlen($basePath)), '/');
@@ -81,7 +81,7 @@ $url = initialize_localized_request($requestedRoute);
 // Načtení konfiguračního souboru
 use Core\Database;
 
-Database::setConfig($config);
+Database::setConfig((array)config('database'));
 
 use Core\Router;
 

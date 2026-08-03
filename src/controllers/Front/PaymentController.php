@@ -50,7 +50,7 @@ class PaymentController extends Controller
 
     public function comgateNotify(Request $request)
     {
-        file_put_contents(BASE_PATH.'/storage/logs/notify.log', date('c')." HIT\n".print_r($request->post(), true)."\n\n", FILE_APPEND);
+        file_put_contents(config('app.base_path') . '/storage/logs/notify.log', date('c')." HIT\n".print_r($request->post(), true)."\n\n", FILE_APPEND);
 
         $post = $request->post();
         Logger::info("Comgate NOTIFY hit", ['post' => $post]);

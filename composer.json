@@ -1,7 +1,8 @@
 {
 "autoload": {
   "files": [
-    "src/helpers/csrf_helper.php"
+    "src/helpers/csrf_helper.php",
+    "src/helpers/config_helper.php"
   ],
   "psr-4": {
     "Controllers\\": "src/controllers/",

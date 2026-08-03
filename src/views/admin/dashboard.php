@@ -34,7 +34,7 @@
         </div>
 
         <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <a href="<?= BASE_URL ?>/admin/orders"
+            <a href="<?= config('app.base_url', '') ?>/admin/orders"
                 class="group flex items-center justify-between rounded-xl px-4 py-3 bg-zinc-50 ring-1 ring-zinc-200
                       hover:bg-white hover:shadow-sm transition">
                 <div class="flex items-center gap-3">
@@ -47,7 +47,7 @@
                 <span class="text-zinc-400 group-hover:text-zinc-900 transition">→</span>
             </a>
 
-            <a href="<?= BASE_URL ?>/admin/vouchers"
+            <a href="<?= config('app.base_url', '') ?>/admin/vouchers"
                 class="group flex items-center justify-between rounded-xl px-4 py-3 bg-zinc-50 ring-1 ring-zinc-200
                       hover:bg-white hover:shadow-sm transition">
                 <div class="flex items-center gap-3">
@@ -60,7 +60,7 @@
                 <span class="text-zinc-400 group-hover:text-zinc-900 transition">→</span>
             </a>
 
-            <a href="<?= BASE_URL ?>/admin/voucher-codes/verify"
+            <a href="<?= config('app.base_url', '') ?>/admin/voucher-codes/verify"
                 class="group flex items-center justify-between rounded-xl px-4 py-3 bg-zinc-50 ring-1 ring-zinc-200
                       hover:bg-white hover:shadow-sm transition">
                 <div class="flex items-center gap-3">
@@ -73,7 +73,7 @@
                 <span class="text-zinc-400 group-hover:text-zinc-900 transition">→</span>
             </a>
 
-            <a href="<?= BASE_URL ?>/admin/users"
+            <a href="<?= config('app.base_url', '') ?>/admin/users"
                 class="group flex items-center justify-between rounded-xl px-4 py-3 bg-zinc-50 ring-1 ring-zinc-200
                       hover:bg-white hover:shadow-sm transition">
                 <div class="flex items-center gap-3">

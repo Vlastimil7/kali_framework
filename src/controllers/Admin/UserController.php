@@ -76,7 +76,7 @@ class UserController extends BaseAdminController
         ]);
         if ($validator->fails()) {
             $validator->flash('admin_user', $request->post());
-            header('Location: ' . BASE_URL . '/admin/users/create');
+            header('Location: ' . config('app.base_url', '') . '/admin/users/create');
             exit;
         }
 
@@ -84,13 +84,13 @@ class UserController extends BaseAdminController
 
         if ($result['success']) {
             Toast::success('Uživatel byl úspěšně vytvořen');
-            header('Location: ' . BASE_URL . '/admin/users');
+            header('Location: ' . config('app.base_url', '') . '/admin/users');
             exit;
         }
 
         Toast::error($result['message']);
         Flash::withInput('admin_user', $userData);
-        header('Location: ' . BASE_URL . '/admin/users/create');
+        header('Location: ' . config('app.base_url', '') . '/admin/users/create');
         exit;
     }
 
@@ -150,7 +150,7 @@ class UserController extends BaseAdminController
         ]);
         if ($validator->fails()) {
             $validator->flash('admin_user', $request->post());
-            header('Location: ' . BASE_URL . '/admin/users/edit/' . $id);
+            header('Location: ' . config('app.base_url', '') . '/admin/users/edit/' . $id);
             exit;
         }
 
@@ -162,7 +162,7 @@ class UserController extends BaseAdminController
             Toast::error($result['message'] ?? 'Chyba při aktualizaci');
         }
 
-        header('Location: ' . BASE_URL . '/admin/users/edit/' . $id);
+        header('Location: ' . config('app.base_url', '') . '/admin/users/edit/' . $id);
         exit;
     }
 
@@ -180,7 +180,7 @@ class UserController extends BaseAdminController
             Toast::error($result['message'] ?? 'Chyba při mazání');
         }
 
-        header('Location: ' . BASE_URL . '/admin/users');
+        header('Location: ' . config('app.base_url', '') . '/admin/users');
         exit;
     }
 }

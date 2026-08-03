@@ -32,7 +32,7 @@ $badge = function (int $active): string {
             <div class="flex items-center gap-2">
                 <div class="text-sm text-gray-500 mr-2">Celkem: <?= (int)count($vouchers) ?></div>
 
-                <a href="<?= BASE_URL ?>/admin/vouchers/create"
+                <a href="<?= config('app.base_url', '') ?>/admin/vouchers/create"
                     class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-gray-900 text-white hover:bg-black text-sm font-semibold
                   focus:ring-2 focus:ring-gray-900/30">
                     + Nový voucher
@@ -90,12 +90,12 @@ $badge = function (int $active): string {
 
                                     <td class="px-4 py-3 text-right space-x-2 whitespace-nowrap">
                                         <a class="inline-flex items-center justify-center px-3 py-1.5 rounded-lg bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-sm font-semibold text-gray-800"
-                                            href="<?= BASE_URL ?>/admin/vouchers/<?= (int)$v['id'] ?>">
+                                            href="<?= config('app.base_url', '') ?>/admin/vouchers/<?= (int)$v['id'] ?>">
                                             Detail →
                                         </a>
 
                                         <a class="inline-flex items-center justify-center px-3 py-1.5 rounded-lg bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-sm font-semibold text-gray-800"
-                                            href="<?= BASE_URL ?>/admin/vouchers/edit/<?= (int)$v['id'] ?>">
+                                            href="<?= config('app.base_url', '') ?>/admin/vouchers/edit/<?= (int)$v['id'] ?>">
                                             Upravit
                                         </a>
                                     </td>
@@ -114,5 +114,5 @@ $badge = function (int $active): string {
 
 <!-- Zpět na dashboard -->
 <div class="mt-8 text-xs text-slate-500">
-    <a href="<?= BASE_URL ?>/admin/dashboard" class="hover:text-white">← Zpět na dashboard </a>
+    <a href="<?= config('app.base_url', '') ?>/admin/dashboard" class="hover:text-white">← Zpět na dashboard </a>
 </div>

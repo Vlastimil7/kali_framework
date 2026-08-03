@@ -75,7 +75,7 @@
 </div>
 
 <!-- Google reCAPTCHA v3 -->
-<script src="https://www.google.com/recaptcha/api.js?render=<?= RECAPTCHA_SITE_KEY ?>"></script>
+<script src="https://www.google.com/recaptcha/api.js?render=<?= config('recaptcha.site_key', '') ?>"></script>
 <script>
     function validateForm() {
         event.preventDefault(); // Zastaví výchozí akci formuláře
@@ -97,7 +97,7 @@
         
         // Získání reCAPTCHA tokenu
         grecaptcha.ready(function() {
-            grecaptcha.execute('<?= RECAPTCHA_SITE_KEY ?>', {action: 'password_reset_confirm'}).then(function(token) {
+            grecaptcha.execute('<?= config('recaptcha.site_key', '') ?>', {action: 'password_reset_confirm'}).then(function(token) {
                 document.getElementById('recaptcha-token').value = token;
                 document.getElementById('reset-form').submit();
             });

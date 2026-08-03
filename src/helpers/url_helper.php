@@ -57,7 +57,7 @@ function redirect_legacy_url(string $rawPath): void
         return;
     }
 
-    $target = rtrim(BASE_URL, '/') . ($targetPath !== '' ? '/' . $targetPath : '');
+    $target = rtrim(config('app.base_url', ''), '/') . ($targetPath !== '' ? '/' . $targetPath : '');
     if ($target === '') {
         $target = '/';
     }
@@ -93,7 +93,7 @@ function is_localized_public_request(): bool
 function locale_base_url(?string $language = null): string
 {
     $language ??= lang()->getCurrentLanguage();
-    $baseUrl = rtrim(BASE_URL, '/');
+    $baseUrl = rtrim(config('app.base_url', ''), '/');
     return $language === lang()->getDefaultLanguage()
         ? $baseUrl
         : $baseUrl . '/' . rawurlencode($language);
@@ -118,7 +118,7 @@ function locale_url(string $path = '', ?string $language = null, array $query = 
     if (!$isTechnical) {
         $routePath = unprefixed_route_path($routePath);
     }
-    $base = $isTechnical ? rtrim(BASE_URL, '/') : locale_base_url($language);
+    $base = $isTechnical ? rtrim(config('app.base_url', ''), '/') : locale_base_url($language);
     $url = $base . ($routePath !== '' ? '/' . $routePath : '');
     if ($url === '') {
         $url = '/';
@@ -159,7 +159,7 @@ function locale_site_url(string $path = '', ?string $language = null, array $que
     if (!$isTechnical) {
         $routePath = unprefixed_route_path($routePath);
     }
-    $base = rtrim(SITE_URL, '/');
+    $base = rtrim(config('app.site_url', ''), '/');
     if (!$isTechnical && $language !== lang()->getDefaultLanguage()) {
         $base .= '/' . rawurlencode($language);
     }

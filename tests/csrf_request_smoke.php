@@ -3,10 +3,9 @@
 declare(strict_types=1);
 
 define('ROOT_PATH', dirname(__DIR__));
-define('BASE_URL', '');
-define('SITE_URL', 'https://example.test');
 
 require ROOT_PATH . '/vendor/autoload.php';
+Core\Config::set('app', ['base_url' => '', 'site_url' => 'https://example.test']);
 require ROOT_PATH . '/src/helpers/language_helper.php';
 require ROOT_PATH . '/src/helpers/url_helper.php';
 require ROOT_PATH . '/src/helpers/csrf_helper.php';

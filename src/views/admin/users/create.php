@@ -14,7 +14,7 @@ $formData = Flash::old('admin_user');
         </div>
         
         <div class="p-6">
-            <form action="<?= BASE_URL ?>/admin/users/store" method="post" class="space-y-6">
+            <form action="<?= config('app.base_url', '') ?>/admin/users/store" method="post" class="space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Jméno</label>
@@ -70,7 +70,7 @@ $formData = Flash::old('admin_user');
 
                 
                 <div class="flex justify-between mt-8">
-                    <a href="<?= BASE_URL ?>/admin/users" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <a href="<?= config('app.base_url', '') ?>/admin/users" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         Zpět na seznam
                     </a>
 

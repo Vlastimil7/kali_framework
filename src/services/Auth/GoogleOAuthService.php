@@ -13,9 +13,9 @@ class GoogleOAuthService
     {
         $this->client = new Client();
 
-        $this->client->setClientId($_ENV['GOOGLE_OAUTH_CLIENT_ID'] ?? GOOGLE_OAUTH_CLIENT_ID ?? '');
-        $this->client->setClientSecret($_ENV['GOOGLE_OAUTH_CLIENT_SECRET'] ?? GOOGLE_OAUTH_CLIENT_SECRET ?? '');
-        $this->client->setRedirectUri($_ENV['GOOGLE_OAUTH_REDIRECT_URI'] ?? GOOGLE_OAUTH_REDIRECT_URI ?? '');
+        $this->client->setClientId((string)config('oauth.google.client_id', ''));
+        $this->client->setClientSecret((string)config('oauth.google.client_secret', ''));
+        $this->client->setRedirectUri((string)config('oauth.google.redirect_uri', ''));
 
         $this->client->setAccessType('online');
         $this->client->setPrompt('select_account');

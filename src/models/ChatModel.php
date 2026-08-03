@@ -16,7 +16,7 @@ class ChatModel
 
     public function __construct()
     {
-        $this->geminiApiKey = $_ENV['GEMINI_API_KEY'] ?? '';
+        $this->geminiApiKey = (string)config('ai.providers.gemini.api_key', '');
         $this->pdfParser = new Parser();
         $this->documentsPath = __DIR__ . '/../data/documents/';
         $this->loadPersonalData();

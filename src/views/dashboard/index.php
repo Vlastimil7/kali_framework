@@ -105,7 +105,7 @@
                                                     <div class="flex items-center">
                                                         <?php if (!empty($item['image_path'])): ?>
                                                             <div class="flex-shrink-0 h-10 w-10 mr-3">
-                                                                <img class="h-10 w-10 rounded-full object-cover" src="<?= BASE_URL . $item['image_path'] ?>" alt="<?= htmlspecialchars($item['meal_name']) ?>">
+                                                                <img class="h-10 w-10 rounded-full object-cover" src="<?= config('app.base_url', '') . $item['image_path'] ?>" alt="<?= htmlspecialchars($item['meal_name']) ?>">
                                                             </div>
                                                         <?php endif; ?>
                                                         <div class="text-sm font-medium text-gray-900">

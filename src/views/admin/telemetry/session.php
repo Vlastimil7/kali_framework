@@ -21,11 +21,11 @@ $device = trim(($dh['deviceCategory'] ?? '') . ' ' . ($dh['viewportWidth'] ?? ''
             </div>
 
             <div class="flex items-center gap-2">
-                <a href="<?= BASE_URL ?>/admin/telemetry/online?app=<?= urlencode($app) ?>"
+                <a href="<?= config('app.base_url', '') ?>/admin/telemetry/online?app=<?= urlencode($app) ?>"
                     class="px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:bg-gray-50 text-sm font-semibold">Online</a>
-                <a href="<?= BASE_URL ?>/admin/telemetry/events?app=<?= urlencode($app) ?>"
+                <a href="<?= config('app.base_url', '') ?>/admin/telemetry/events?app=<?= urlencode($app) ?>"
                     class="px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:bg-gray-50 text-sm font-semibold">Historie</a>
-                <a href="<?= BASE_URL ?>/admin/telemetry?app=<?= urlencode($app) ?>"
+                <a href="<?= config('app.base_url', '') ?>/admin/telemetry?app=<?= urlencode($app) ?>"
                     class="px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:bg-gray-50 text-sm font-semibold">Dashboard</a>
             </div>
         </div>
@@ -101,7 +101,7 @@ $device = trim(($dh['deviceCategory'] ?? '') . ' ' . ($dh['viewportWidth'] ?? ''
         </div>
 
         <div class="mt-8 text-xs text-slate-500">
-            <a href="<?= BASE_URL ?>/admin/dashboard" class="hover:text-white">← Zpět na dashboard</a>
+            <a href="<?= config('app.base_url', '') ?>/admin/dashboard" class="hover:text-white">← Zpět na dashboard</a>
         </div>
 
     </div>

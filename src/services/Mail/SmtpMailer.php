@@ -82,18 +82,22 @@ final class SmtpMailer
     {
         $mailer = new PHPMailer(true);
         $mailer->isSMTP();
-        $mailer->Host = (string) SMTP_HOST;
+        $mailer->Host = (string)config('mail.smtp.host', 'smtp.gmail.com');
         $mailer->SMTPAuth = true;
-        $mailer->Username = (string) SMTP_USERNAME;
-        $mailer->Password = (string) SMTP_PASSWORD;
-        $mailer->Port = (int) SMTP_PORT;
-        $mailer->SMTPSecure = $mailer->Port === 465
+        $mailer->Username = (string)config('mail.smtp.username', '');
+        $mailer->Password = (string)config('mail.smtp.password', '');
+        $mailer->Port = (int)config('mail.smtp.port', 587);
+        $encryption = strtolower((string)config('mail.smtp.encryption', 'tls'));
+        $mailer->SMTPSecure = $encryption === 'ssl' || $encryption === 'smtps'
             ? PHPMailer::ENCRYPTION_SMTPS
             : PHPMailer::ENCRYPTION_STARTTLS;
-        $mailer->Timeout = 15;
+        $mailer->Timeout = (int)config('mail.smtp.timeout', 15);
         $mailer->CharSet = 'UTF-8';
         $mailer->Encoding = 'base64';
-        $mailer->setFrom((string) MAIL_FROM_ADDRESS, (string) MAIL_FROM_NAME);
+        $mailer->setFrom(
+            (string)config('mail.from.address', ''),
+            (string)config('mail.from.name', '')
+        );
         return $mailer;
     }
 

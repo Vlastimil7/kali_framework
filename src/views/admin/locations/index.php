@@ -8,10 +8,10 @@
         <div class="bg-blue-600 px-6 py-4 flex justify-between items-center mb-6 rounded-t-lg">
             <h1 class="text-2xl font-bold text-white">Správa míst doručení</h1>
             <div class="flex space-x-2">
-                <a href="<?= BASE_URL ?>/admin/dashboard" class="bg-white text-blue-600 px-4 py-2 rounded shadow-sm hover:bg-blue-50 transition-colors">
+                <a href="<?= config('app.base_url', '') ?>/admin/dashboard" class="bg-white text-blue-600 px-4 py-2 rounded shadow-sm hover:bg-blue-50 transition-colors">
                     Zpět na dashboard
                 </a>
-                <a href="<?= BASE_URL ?>/admin/locations/add" class="bg-green-500 text-white px-4 py-2 rounded shadow-sm hover:bg-green-600 transition-colors">
+                <a href="<?= config('app.base_url', '') ?>/admin/locations/add" class="bg-green-500 text-white px-4 py-2 rounded shadow-sm hover:bg-green-600 transition-colors">
                     Přidat nové místo
                 </a>
             </div>
@@ -51,8 +51,8 @@
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <a href="<?= BASE_URL ?>/admin/locations/edit/<?= $location['id'] ?>" class="text-blue-600 hover:text-blue-900 mr-4">Upravit</a>
-                                        <form action="<?= BASE_URL ?>/admin/locations/delete/<?= $location['id'] ?>" method="post" class="inline" onsubmit="return confirm('Opravdu chcete odstranit toto místo doručení?');">
+                                        <a href="<?= config('app.base_url', '') ?>/admin/locations/edit/<?= $location['id'] ?>" class="text-blue-600 hover:text-blue-900 mr-4">Upravit</a>
+                                        <form action="<?= config('app.base_url', '') ?>/admin/locations/delete/<?= $location['id'] ?>" method="post" class="inline" onsubmit="return confirm('Opravdu chcete odstranit toto místo doručení?');">
                                             <button type="submit" class="text-red-600 hover:text-red-900">Odstranit</button>
                                         </form>
                                     </td>

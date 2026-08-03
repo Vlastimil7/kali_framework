@@ -60,7 +60,7 @@ $disabledCls = 'opacity-50 cursor-not-allowed';
     <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div>
         <div class="text-sm text-gray-500">
-          <a class="hover:text-gray-900 hover:underline" href="<?= BASE_URL ?>/admin/orders">Objednávky</a>
+          <a class="hover:text-gray-900 hover:underline" href="<?= config('app.base_url', '') ?>/admin/orders">Objednávky</a>
           <span class="mx-2">/</span>
           <span class="text-gray-700">Detail</span>
         </div>
@@ -82,14 +82,14 @@ $disabledCls = 'opacity-50 cursor-not-allowed';
       </div>
 
       <div class="flex flex-wrap gap-2">
-        <a href="<?= BASE_URL ?>/admin/orders/edit/<?= (int)$order['id'] ?>"
+        <a href="<?= config('app.base_url', '') ?>/admin/orders/edit/<?= (int)$order['id'] ?>"
           class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-gray-900 text-white hover:bg-black text-sm font-semibold
                   focus:ring-2 focus:ring-gray-900/30">
           Upravit
         </a>
 
         <?php if ($canMarkPaid($status)): ?>
-          <form action="<?= BASE_URL ?>/admin/orders/<?= (int)$order['id'] ?>/mark-paid" method="post">
+          <form action="<?= config('app.base_url', '') ?>/admin/orders/<?= (int)$order['id'] ?>/mark-paid" method="post">
             <button class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white text-sm font-semibold
                            focus:ring-2 focus:ring-green-600/30 cursor-pointer">
               Označit jako zaplaceno
@@ -97,7 +97,7 @@ $disabledCls = 'opacity-50 cursor-not-allowed';
           </form>
         <?php endif; ?>
 
-        <a href="<?= BASE_URL ?>/admin/orders"
+        <a href="<?= config('app.base_url', '') ?>/admin/orders"
           class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50
                   text-sm font-semibold text-gray-800">
           Zpět na seznam
@@ -127,7 +127,7 @@ $disabledCls = 'opacity-50 cursor-not-allowed';
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
 
           <!-- Mark paid -->
-          <form method="post" action="<?= BASE_URL ?>/admin/orders/<?= (int)$order['id'] ?>/mark-paid"
+          <form method="post" action="<?= config('app.base_url', '') ?>/admin/orders/<?= (int)$order['id'] ?>/mark-paid"
             class="w-full"
             onsubmit="this.note.value = document.getElementById('orderActionNote').value;">
             <input type="hidden" name="note" value="">
@@ -143,7 +143,7 @@ $disabledCls = 'opacity-50 cursor-not-allowed';
           </form>
 
           <!-- Cancel -->
-          <form method="post" action="<?= BASE_URL ?>/admin/orders/<?= (int)$order['id'] ?>/cancel"
+          <form method="post" action="<?= config('app.base_url', '') ?>/admin/orders/<?= (int)$order['id'] ?>/cancel"
             class="w-full"
             onsubmit="this.note.value = document.getElementById('orderActionNote').value;">
             <input type="hidden" name="note" value="">
@@ -159,7 +159,7 @@ $disabledCls = 'opacity-50 cursor-not-allowed';
           </form>
 
           <!-- Refund -->
-          <form method="post" action="<?= BASE_URL ?>/admin/orders/<?= (int)$order['id'] ?>/refund"
+          <form method="post" action="<?= config('app.base_url', '') ?>/admin/orders/<?= (int)$order['id'] ?>/refund"
             class="w-full"
             onsubmit="this.note.value = document.getElementById('orderActionNote').value;">
             <input type="hidden" name="note" value="">
@@ -175,7 +175,7 @@ $disabledCls = 'opacity-50 cursor-not-allowed';
           </form>
 
           <!-- Expire -->
-          <form method="post" action="<?= BASE_URL ?>/admin/orders/<?= (int)$order['id'] ?>/expire"
+          <form method="post" action="<?= config('app.base_url', '') ?>/admin/orders/<?= (int)$order['id'] ?>/expire"
             class="w-full"
             onsubmit="this.note.value = document.getElementById('orderActionNote').value;">
             <input type="hidden" name="note" value="">

@@ -13,7 +13,7 @@ $val = function (string $k, $fallback = '') use ($old) {
     <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-6">
       <div>
         <div class="text-sm text-gray-500">
-          <a href="<?= BASE_URL ?>/admin/vouchers" class="hover:text-gray-900 hover:underline">Vouchery</a>
+          <a href="<?= config('app.base_url', '') ?>/admin/vouchers" class="hover:text-gray-900 hover:underline">Vouchery</a>
           <span class="mx-2">/</span>
           <span class="text-gray-700">Nový voucher</span>
         </div>
@@ -23,7 +23,7 @@ $val = function (string $k, $fallback = '') use ($old) {
       </div>
 
       <div class="flex gap-2">
-        <a href="<?= BASE_URL ?>/admin/vouchers"
+        <a href="<?= config('app.base_url', '') ?>/admin/vouchers"
           class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-sm font-semibold text-gray-800">
           Zpět
         </a>
@@ -34,7 +34,7 @@ $val = function (string $k, $fallback = '') use ($old) {
 
       <!-- Main form -->
       <div class="lg:col-span-2">
-        <form action="<?= BASE_URL ?>/admin/vouchers/store" method="post"
+        <form action="<?= config('app.base_url', '') ?>/admin/vouchers/store" method="post"
           class="bg-white rounded-2xl shadow-sm border-2 border-gray-200 overflow-hidden">
 
           <!-- Section: Basic -->
@@ -160,7 +160,7 @@ $val = function (string $k, $fallback = '') use ($old) {
                 Uložit voucher
               </button>
 
-              <a href="<?= BASE_URL ?>/admin/vouchers"
+              <a href="<?= config('app.base_url', '') ?>/admin/vouchers"
                 class="px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50
                         text-sm font-semibold text-gray-800">
                 Zpět

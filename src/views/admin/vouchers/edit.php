@@ -22,21 +22,21 @@ $val = function (string $k, $fallback = '') use ($old) {
     <div class="flex items-start justify-between gap-4 mb-6">
       <div>
         <div class="text-sm text-gray-500">
-          <a class="hover:underline" href="<?= BASE_URL ?>/admin/vouchers">Vouchery</a>
+          <a class="hover:underline" href="<?= config('app.base_url', '') ?>/admin/vouchers">Vouchery</a>
           <span class="mx-2">/</span>
           <span class="text-gray-700">Editace</span>
         </div>
         <h1 class="text-2xl font-bold text-gray-900 mt-1"><?= htmlspecialchars($voucher['name'] ?? '-') ?></h1>
       </div>
 
-      <a href="<?= BASE_URL ?>/admin/vouchers/<?= (int)$voucher['id'] ?>"
+      <a href="<?= config('app.base_url', '') ?>/admin/vouchers/<?= (int)$voucher['id'] ?>"
         class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-sm font-semibold text-gray-800">
         Zpět
       </a>
     </div>
 
     <!-- FIX: action musí být /admin/vouchers/update/{id} -->
-    <form action="<?= BASE_URL ?>/admin/vouchers/update/<?= (int)$voucher['id'] ?>" method="post"
+    <form action="<?= config('app.base_url', '') ?>/admin/vouchers/update/<?= (int)$voucher['id'] ?>" method="post"
       class="bg-white rounded-2xl shadow-sm border-2 border-gray-200 overflow-hidden">
 
       <div class="p-6 border-b border-gray-200">
@@ -96,7 +96,7 @@ $val = function (string $k, $fallback = '') use ($old) {
         <button class="px-4 py-2 rounded-lg bg-gray-900 hover:bg-black text-white text-sm font-semibold focus:ring-2 focus:ring-gray-900/30">
           Uložit změny
         </button>
-        <a href="<?= BASE_URL ?>/admin/vouchers/<?= (int)$voucher['id'] ?>"
+        <a href="<?= config('app.base_url', '') ?>/admin/vouchers/<?= (int)$voucher['id'] ?>"
           class="px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-sm font-semibold text-gray-800">
           Zrušit
         </a>

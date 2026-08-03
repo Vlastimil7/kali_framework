@@ -96,7 +96,7 @@ $oldValue = static fn (string $key, string $default = ''): string => htmlspecial
                     <P class="block text-center">Po vytvoření objednávky budete přesměrováni na platební bránu Comgate.</P>
                     <a href="<?= locale_url('terms/shipping-payment') ?>" target="_blank" rel="noopener noreferrer">
                         <img
-                            src="<?= BASE_URL ?>/assets/images/comgate/comgate_footer_white.png"
+                            src="<?= config('app.base_url', '') ?>/assets/images/comgate/comgate_footer_white.png"
                             alt="Platebni podminky Comgate"
                             title="Platebni podminky Comgate"
                             class="mt-6 mb-6 h-8 w-auto block mx-auto"

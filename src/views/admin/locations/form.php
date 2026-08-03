@@ -8,17 +8,17 @@
         <div class="bg-blue-600 px-6 py-4 flex justify-between items-center mb-6 rounded-t-lg">
             <h1 class="text-2xl font-bold text-white"><?= $action === 'add' ? 'Přidat nové místo doručení' : 'Upravit místo doručení' ?></h1>
             <div class="flex space-x-2">
-                <a href="<?= BASE_URL ?>/admin/dashboard" class="bg-white text-blue-600 px-4 py-2 rounded shadow-sm hover:bg-blue-50 transition-colors">
+                <a href="<?= config('app.base_url', '') ?>/admin/dashboard" class="bg-white text-blue-600 px-4 py-2 rounded shadow-sm hover:bg-blue-50 transition-colors">
                     Zpět na dashboard
                 </a>
-                <a href="<?= BASE_URL ?>/admin/locations" class="bg-gray-200 text-gray-700 px-4 py-2 rounded shadow-sm hover:bg-gray-300 transition-colors">
+                <a href="<?= config('app.base_url', '') ?>/admin/locations" class="bg-gray-200 text-gray-700 px-4 py-2 rounded shadow-sm hover:bg-gray-300 transition-colors">
                     Zpět na seznam
                 </a>
             </div>
         </div>
 
         <div class="p-6">
-            <form action="<?= BASE_URL ?>/admin/locations/<?= $action === 'add' ? 'create' : 'update/' . $location['id'] ?>" method="post" class="space-y-6">
+            <form action="<?= config('app.base_url', '') ?>/admin/locations/<?= $action === 'add' ? 'create' : 'update/' . $location['id'] ?>" method="post" class="space-y-6">
                 <!-- Název místa -->
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Název místa *</label>
@@ -53,7 +53,7 @@
                 
                 <!-- Tlačítka -->
                 <div class="flex justify-end space-x-3 pt-4">
-                    <a href="<?= BASE_URL ?>/admin/locations" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                    <a href="<?= config('app.base_url', '') ?>/admin/locations" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
                         Zrušit
                     </a>
                     <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">

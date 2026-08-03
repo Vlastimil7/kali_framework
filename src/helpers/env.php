@@ -26,5 +26,11 @@ function loadEnv($path) {
 }
 
 function env($key, $default = null) {
-    return $_ENV[$key] ?? getenv($key) ?: $default;
+    if (array_key_exists($key, $_ENV)) {
+        return $_ENV[$key];
+    }
+
+    $value = getenv($key);
+
+    return $value === false ? $default : $value;
 }

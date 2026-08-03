@@ -33,9 +33,9 @@ $totalPages = (int)ceil(($total ?? 0) / max(1, (int)$limit));
             </div>
 
             <div class="flex items-center gap-2">
-                <a href="<?= BASE_URL ?>/admin/telemetry?<?= $qsBase([]) ?>"
+                <a href="<?= config('app.base_url', '') ?>/admin/telemetry?<?= $qsBase([]) ?>"
                     class="px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:bg-gray-50 text-sm font-semibold">Dashboard</a>
-                <a href="<?= BASE_URL ?>/admin/telemetry/online?app=<?= urlencode($app) ?>"
+                <a href="<?= config('app.base_url', '') ?>/admin/telemetry/online?app=<?= urlencode($app) ?>"
                     class="px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:bg-gray-50 text-sm font-semibold">Online</a>
             </div>
         </div>
@@ -82,7 +82,7 @@ $totalPages = (int)ceil(($total ?? 0) / max(1, (int)$limit));
                 <input type="hidden" name="app" value="<?= htmlspecialchars($app) ?>">
                 <button class="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-semibold">Filtrovat</button>
 
-                <a href="<?= BASE_URL ?>/admin/telemetry/events?app=<?= urlencode($app) ?>&range=<?= urlencode($range) ?>"
+                <a href="<?= config('app.base_url', '') ?>/admin/telemetry/events?app=<?= urlencode($app) ?>&range=<?= urlencode($range) ?>"
                     class="px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:bg-gray-50 text-sm font-semibold">
                     Reset
                 </a>
@@ -131,7 +131,7 @@ $totalPages = (int)ceil(($total ?? 0) / max(1, (int)$limit));
 
                                     <td class="px-4 py-3">
                                         <a class="inline-flex font-mono text-xs px-2 py-1 rounded-lg bg-white border-2 border-gray-200 hover:bg-gray-50 text-gray-700"
-                                            href="<?= BASE_URL ?>/admin/telemetry/session/<?= urlencode($r['session_id'] ?? '') ?>?app=<?= urlencode($app) ?>">
+                                            href="<?= config('app.base_url', '') ?>/admin/telemetry/session/<?= urlencode($r['session_id'] ?? '') ?>?app=<?= urlencode($app) ?>">
                                             <?= htmlspecialchars($r['session_id'] ?? '-') ?>
                                         </a>
                                     </td>
@@ -162,19 +162,19 @@ $totalPages = (int)ceil(($total ?? 0) / max(1, (int)$limit));
                 <div class="flex items-center gap-2">
                     <?php if ($page > 1): ?>
                         <a class="px-3 py-2 rounded-lg bg-white border-2 border-gray-200 hover:bg-gray-50 font-semibold"
-                            href="<?= BASE_URL ?>/admin/telemetry/events?<?= $qsBase(['page' => $page - 1]) ?>">← Předchozí</a>
+                            href="<?= config('app.base_url', '') ?>/admin/telemetry/events?<?= $qsBase(['page' => $page - 1]) ?>">← Předchozí</a>
                     <?php endif; ?>
 
                     <?php if ($page < $totalPages): ?>
                         <a class="px-3 py-2 rounded-lg bg-white border-2 border-gray-200 hover:bg-gray-50 font-semibold"
-                            href="<?= BASE_URL ?>/admin/telemetry/events?<?= $qsBase(['page' => $page + 1]) ?>">Další →</a>
+                            href="<?= config('app.base_url', '') ?>/admin/telemetry/events?<?= $qsBase(['page' => $page + 1]) ?>">Další →</a>
                     <?php endif; ?>
                 </div>
             </div>
         <?php endif; ?>
 
         <div class="mt-8 text-xs text-slate-500">
-            <a href="<?= BASE_URL ?>/admin/dashboard" class="hover:text-white">← Zpět na dashboard</a>
+            <a href="<?= config('app.base_url', '') ?>/admin/dashboard" class="hover:text-white">← Zpět na dashboard</a>
         </div>
 
     </div>

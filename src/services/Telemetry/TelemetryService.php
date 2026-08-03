@@ -336,7 +336,7 @@ class TelemetryService
     {
         $maximumRequestsPerMinute = 300;
 
-        $storageDirectory = BASE_PATH . '/storage/cache/telemetry_rate_limit';
+        $storageDirectory = config('app.base_path') . '/storage/cache/telemetry_rate_limit';
         if (!is_dir($storageDirectory) && !mkdir($storageDirectory, 0775, true)) {
             Logger::error('Cannot create telemetry rate limit directory');
             return true; // fail-open
