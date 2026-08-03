@@ -60,7 +60,7 @@ $navAmbulance = [
     <div class="flex items-center justify-between px-4 py-3 ">
         <div class="flex items-center gap-2 text-sm font-semibold text-slate-800">
             <!--      Logo -->
-            <a href="<?= BASE_URL ?>/" class="block">
+            <a href="<?= locale_url() ?>" class="block">
                 <img src="<?= BASE_URL ?>/assets/images/logo/mido_barbershop_logo.png"
                     alt="Logo"
                     class="h-20 w-auto  rounded-[100px] ">
@@ -84,7 +84,7 @@ $navAmbulance = [
 
         <nav class="space-y-1 mb-4">
             <?php foreach ($navMain as $item): ?>
-                <a href="<?= BASE_URL . $item['url'] ?>"
+                <a href="<?= locale_url($item['url']) ?>"
                     class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 font-medium text-slate-800  cursor-pointer">
                     <span><?= $item['icon'] ?></span>
                     <span><?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?></span>
@@ -97,7 +97,7 @@ $navAmbulance = [
         </p>
         <nav class="space-y-1">
             <?php foreach ($navAmbulance as $item): ?>
-                <a href="<?= BASE_URL . $item['url'] ?>"
+                <a href="<?= locale_url($item['url']) ?>"
                     class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 font-medium text-slate-800 cursor-pointer">
                     <span><?= $item['icon'] ?></span>
                     <span><?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?></span>
@@ -127,7 +127,7 @@ $navAmbulance = [
 <aside
     class="hidden lg:block w-60 shrink-0 sticky top-20 self-start bg-[#d9deff] border-blue-200 backdrop-blur  rounded-2xl p-4 text-sm shadow-sm">
     <!--      Logo -->
-    <a href="<?= BASE_URL ?>/" class="block pb-5">
+    <a href="<?= locale_url() ?>" class="block pb-5">
         <img src="<?= BASE_URL ?>/assets/images/logo/mido_barbershop_logo.png"
             alt="Logo"
             class="h-18 w-auto  rounded-[50px] ">
@@ -138,7 +138,7 @@ $navAmbulance = [
 
     <nav class="space-y-1 mb-4">
         <?php foreach ($navMain as $item): ?>
-            <a href="<?= BASE_URL . $item['url'] ?>"
+            <a href="<?= locale_url($item['url']) ?>"
                 class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 font-medium text-slate-800 cursor-pointer">
                 <span><?= $item['icon'] ?></span>
                 <span><?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?></span>
@@ -151,7 +151,7 @@ $navAmbulance = [
     </p>
     <nav class="space-y-1">
         <?php foreach ($navAmbulance as $item): ?>
-            <a href="<?= BASE_URL . $item['url'] ?>"
+            <a href="<?= locale_url($item['url']) ?>"
                 class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 font-medium text-slate-800 cursor-pointer">
                 <span><?= $item['icon'] ?></span>
                 <span><?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?></span>

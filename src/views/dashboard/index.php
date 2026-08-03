@@ -4,7 +4,7 @@
 
 // Zajištění, že uživatel je přihlášen
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ' . BASE_URL . '/login');
+    header('Location: ' . locale_url('login'));
     exit;
 }
 ?>
@@ -52,7 +52,7 @@ if (!isset($_SESSION['user_id'])) {
                             <p class="text-sm opacity-80"><?= htmlspecialchars($user['name'] . ' ' . $user['surname']) ?></p>
                         </div>
                         <div>
-                            <a href="<?= BASE_URL ?>/credit/add" class="px-4 py-2 bg-white text-blue-600 rounded-md hover:bg-opacity-90 transition-colors font-medium text-sm">Dobít kredit</a>
+                            <a href="<?= locale_url('credit/add') ?>" class="px-4 py-2 bg-white text-blue-600 rounded-md hover:bg-opacity-90 transition-colors font-medium text-sm">Dobít kredit</a>
                         </div>
                     </div>
                 </div>
@@ -63,7 +63,7 @@ if (!isset($_SESSION['user_id'])) {
                     <div class="space-y-3">
 
 
-                        <a href="<?= BASE_URL ?>/menu" class="flex items-center p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors group">
+                        <a href="<?= locale_url('menu') ?>" class="flex items-center p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors group">
                             <div class="p-2 bg-blue-500 rounded-full mr-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -72,7 +72,7 @@ if (!isset($_SESSION['user_id'])) {
                             <span class="font-medium text-gray-700 group-hover:text-gray-900">Prohlížet menu</span>
                         </a>
 
-                        <a href="<?= BASE_URL ?>/profile" class="flex items-center p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors group">
+                        <a href="<?= locale_url('profile') ?>" class="flex items-center p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors group">
                             <div class="p-2 bg-purple-500 rounded-full mr-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -89,7 +89,7 @@ if (!isset($_SESSION['user_id'])) {
             <div>
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-semibold text-gray-800">Aktuální menu</h3>
-                    <a href="<?= BASE_URL ?>/menu" class="text-blue-600 hover:text-blue-800 font-medium text-sm">Zobrazit celé menu →</a>
+                    <a href="<?= locale_url('menu') ?>" class="text-blue-600 hover:text-blue-800 font-medium text-sm">Zobrazit celé menu →</a>
                 </div>
 
                 <?php if (isset($categories) && isset($menuItems) && !empty($categories)): ?>
@@ -124,7 +124,7 @@ if (!isset($_SESSION['user_id'])) {
                                                             </div>
                                                         <?php endif; ?>
                                                         <div class="text-sm font-medium text-gray-900">
-                                                            <a href="<?= BASE_URL ?>/menu/detail/<?= $item['id'] ?>" class="hover:text-green-600">
+                                                            <a href="<?= locale_url('menu/detail/' . $item['id']) ?>" class="hover:text-green-600">
                                                                 <?= htmlspecialchars($item['meal_name']) ?>
                                                             </a>
                                                         </div>
@@ -146,11 +146,11 @@ if (!isset($_SESSION['user_id'])) {
                                                     </div>
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                    <a href="<?= BASE_URL ?>/menu/detail/<?= $item['id'] ?>?source=dashboard" class="text-blue-600 hover:text-blue-900 mr-3">
+                                                    <a href="<?= locale_url('menu/detail/' . $item['id'], null, ['source' => 'dashboard']) ?>" class="text-blue-600 hover:text-blue-900 mr-3">
                                                         Detail
                                                     </a>
                                                     <!-- Rychlé přidání do košíku -->
-                                                    <form action="<?= BASE_URL ?>/cart/add" method="post" class="inline-block">
+                                                    <form action="<?= locale_url('cart/add') ?>" method="post" class="inline-block">
                                                         <input type="hidden" name="meal_id" value="<?= $item['meal_id'] ?>">
                                                         <?php if (isset($mealSizes) && !empty($mealSizes)): ?>
                                                             <input type="hidden" name="size_id" value="<?= $mealSizes[0]['id'] ?>">
@@ -177,7 +177,7 @@ if (!isset($_SESSION['user_id'])) {
                 <?php else: ?>
                     <div class="bg-gray-50 p-4 rounded-lg text-center">
                         <p class="text-gray-700">Menu není momentálně k dispozici.</p>
-                        <a href="<?= BASE_URL ?>/menu" class="mt-2 inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                        <a href="<?= locale_url('menu') ?>" class="mt-2 inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
                             Prohlédnout nabídku
                         </a>
                     </div>

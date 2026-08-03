@@ -19,7 +19,7 @@
             </div>
             <h2 class="text-xl font-semibold text-gray-700 mb-4">Váš košík je prázdný</h2>
             <p class="text-gray-600 mb-6">Vyberte si dárkový voucher a přidejte ho do košíku.</p>
-            <a href="<?= BASE_URL ?>/vouchers" class="inline-block bg-gray-900 hover:bg-gray-800 text-white font-medium py-3 px-6 rounded-lg transition duration-200">
+            <a href="<?= locale_url('vouchers') ?>" class="inline-block bg-gray-900 hover:bg-gray-800 text-white font-medium py-3 px-6 rounded-lg transition duration-200">
                 Zobrazit vouchery
             </a>
         </div>
@@ -52,7 +52,7 @@
 
                                 <div class="sm:w-1/4 mt-4 sm:mt-0 flex flex-col items-end justify-between">
                                     <!-- Aktualizace množství -->
-                                    <form action="<?= BASE_URL ?>/cart/update" method="post" class="flex items-center mb-4">
+                                    <form action="<?= locale_url('cart/update') ?>" method="post" class="flex items-center mb-4">
                                         <input type="hidden" name="item_key" value="<?= htmlspecialchars($key) ?>">
 
                                         <div class="flex border border-gray-300 rounded-md">
@@ -74,7 +74,7 @@
                                     </form>
 
                                     <!-- Odstranění -->
-                                    <form action="<?= BASE_URL ?>/cart/remove" method="post">
+                                    <form action="<?= locale_url('cart/remove') ?>" method="post">
                                         <input type="hidden" name="item_key" value="<?= htmlspecialchars($key) ?>">
                                         <button type="submit" class="text-sm text-red-600 hover:text-red-800 cursor-pointer">
                                             Odstranit
@@ -86,7 +86,7 @@
                     </div>
 
                     <div class="p-6 bg-gray-50 border-t">
-                        <form action="<?= BASE_URL ?>/cart/clear" method="post" class="text-right">
+                        <form action="<?= locale_url('cart/clear') ?>" method="post" class="text-right">
                             <button type="submit" class="text-sm text-gray-600 hover:text-gray-800 cursor-pointer">
                                 Vyprázdnit košík
                             </button>
@@ -120,7 +120,7 @@
                                 </span>
                             </div>
 
-                            <a href="<?= BASE_URL ?>/cart/checkout"
+                            <a href="<?= locale_url('cart/checkout') ?>"
                                 class="block w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg text-center transition duration-200">
                                 Pokračovat k pokladně
                             </a>
@@ -128,9 +128,9 @@
                                 <!-- <div class="mt-4 text-center">
                                     <p class="text-sm text-gray-600">
                                         Pro dokončení objednávky se prosím
-                                        <a href="<?= BASE_URL ?>/login" class="text-blue-600 hover:underline">přihlaste</a>
+                                        <a href="<?= locale_url('login') ?>" class="text-blue-600 hover:underline">přihlaste</a>
                                         nebo
-                                        <a href="<?= BASE_URL ?>/register" class="text-blue-600 hover:underline">zaregistrujte</a>.
+                                        <a href="<?= locale_url('register') ?>" class="text-blue-600 hover:underline">zaregistrujte</a>.
                                     </p>
                                 </div> -->
                            
@@ -139,7 +139,7 @@
                 </div>
 
                 <div class="mt-6">
-                    <a href="<?= BASE_URL ?>/vouchers" class="text-blue-600 hover:text-blue-800 flex items-center">
+                    <a href="<?= locale_url('vouchers') ?>" class="text-blue-600 hover:text-blue-800 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>

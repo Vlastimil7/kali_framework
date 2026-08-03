@@ -58,12 +58,12 @@
             </div>
 
             <div class="flex flex-col sm:flex-row gap-3 pt-4">
-                <a href="<?= BASE_URL ?>/order/success?order=<?= urlencode($order['order_number']) ?>"
+                <a href="<?= locale_url('order/success', null, ['order' => $order['order_number']]) ?>"
                     class="inline-flex justify-center px-5 py-3 rounded-lg bg-gray-900 text-white hover:bg-gray-800">
                     Zobrazit stránku objednávky
                 </a>
 
-                <a href="<?= BASE_URL ?>/vouchers"
+                <a href="<?= locale_url('vouchers') ?>"
                     class="inline-flex justify-center px-5 py-3 rounded-lg bg-gray-100 hover:bg-gray-200">
                     Zpět na vouchery
                 </a>

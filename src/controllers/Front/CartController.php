@@ -46,7 +46,7 @@ class CartController extends Controller
     public function addVoucher()
     {
         if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
-            header('Location: ' . BASE_URL . '/vouchers');
+            header('Location: ' . locale_url('vouchers'));
             exit;
         }
 
@@ -58,7 +58,7 @@ class CartController extends Controller
         $_SESSION['flash_message'] = $result['message'] ?? '';
         $_SESSION['flash_type'] = !empty($result['success']) ? 'success' : 'error';
 
-        header('Location: ' . BASE_URL . '/cart');
+        header('Location: ' . locale_url('cart'));
         exit;
     }
 
@@ -68,7 +68,7 @@ class CartController extends Controller
     public function updateItem()
     {
         if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
-            header('Location: ' . BASE_URL . '/cart');
+            header('Location: ' . locale_url('cart'));
             exit;
         }
 
@@ -78,7 +78,7 @@ class CartController extends Controller
         if ($itemKey === '') {
             $_SESSION['flash_message'] = 'Položka nebyla nalezena';
             $_SESSION['flash_type'] = 'error';
-            header('Location: ' . BASE_URL . '/cart');
+            header('Location: ' . locale_url('cart'));
             exit;
         }
 
@@ -87,7 +87,7 @@ class CartController extends Controller
         $_SESSION['flash_message'] = $result['message'] ?? '';
         $_SESSION['flash_type'] = !empty($result['success']) ? 'success' : 'error';
 
-        header('Location: ' . BASE_URL . '/cart');
+        header('Location: ' . locale_url('cart'));
         exit;
     }
 
@@ -97,7 +97,7 @@ class CartController extends Controller
     public function removeItem()
     {
         if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
-            header('Location: ' . BASE_URL . '/cart');
+            header('Location: ' . locale_url('cart'));
             exit;
         }
 
@@ -106,7 +106,7 @@ class CartController extends Controller
         if ($itemKey === '') {
             $_SESSION['flash_message'] = 'Položka nebyla nalezena';
             $_SESSION['flash_type'] = 'error';
-            header('Location: ' . BASE_URL . '/cart');
+            header('Location: ' . locale_url('cart'));
             exit;
         }
 
@@ -115,7 +115,7 @@ class CartController extends Controller
         $_SESSION['flash_message'] = $result['message'] ?? '';
         $_SESSION['flash_type'] = !empty($result['success']) ? 'success' : 'error';
 
-        header('Location: ' . BASE_URL . '/cart');
+        header('Location: ' . locale_url('cart'));
         exit;
     }
 
@@ -125,7 +125,7 @@ class CartController extends Controller
     public function clearCart()
     {
         if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
-            header('Location: ' . BASE_URL . '/cart');
+            header('Location: ' . locale_url('cart'));
             exit;
         }
 
@@ -134,7 +134,7 @@ class CartController extends Controller
         $_SESSION['flash_message'] = $result['message'] ?? '';
         $_SESSION['flash_type'] = !empty($result['success']) ? 'success' : 'error';
 
-        header('Location: ' . BASE_URL . '/cart');
+        header('Location: ' . locale_url('cart'));
         exit;
     }
 
@@ -148,7 +148,7 @@ class CartController extends Controller
         if (empty($cart['items'])) {
             $_SESSION['flash_message'] = 'Váš košík je prázdný';
             $_SESSION['flash_type'] = 'error';
-            header('Location: ' . BASE_URL . '/cart');
+            header('Location: ' . locale_url('cart'));
             exit;
         }
 
@@ -172,7 +172,7 @@ class CartController extends Controller
 
         if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
             Logger::warning('CartController::createOrder non-POST request');
-            header('Location: ' . BASE_URL . '/cart');
+            header('Location: ' . locale_url('cart'));
             exit;
         }
 
@@ -187,7 +187,7 @@ class CartController extends Controller
             Logger::warning('Cart is empty, aborting createOrder');
             $_SESSION['flash_message'] = 'Váš košík je prázdný';
             $_SESSION['flash_type'] = 'error';
-            header('Location: ' . BASE_URL . '/cart');
+            header('Location: ' . locale_url('cart'));
             exit;
         }
 
@@ -217,7 +217,7 @@ class CartController extends Controller
                 Logger::warning('Billing validation failed - missing field', ['field' => $k]);
                 $_SESSION['flash_message'] = 'Vyplňte prosím všechna povinná pole.';
                 $_SESSION['flash_type'] = 'error';
-                header('Location: ' . BASE_URL . '/cart/checkout');
+                header('Location: ' . locale_url('cart/checkout'));
                 exit;
             }
         }
@@ -226,7 +226,7 @@ class CartController extends Controller
             Logger::warning('Billing validation failed - invalid email', ['email' => $billing['billing_email']]);
             $_SESSION['flash_message'] = 'Email není validní.';
             $_SESSION['flash_type'] = 'error';
-            header('Location: ' . BASE_URL . '/cart/checkout');
+            header('Location: ' . locale_url('cart/checkout'));
             exit;
         }
 
@@ -327,7 +327,7 @@ class CartController extends Controller
 
                 $_SESSION['flash_message'] = 'Nepodařilo se vytvořit platbu. Zkuste to prosím znovu.';
                 $_SESSION['flash_type'] = 'error';
-                header('Location: ' . BASE_URL . '/cart/checkout');
+                header('Location: ' . locale_url('cart/checkout'));
                 exit;
             }
 
@@ -359,7 +359,7 @@ class CartController extends Controller
 
                 $_SESSION['flash_message'] = 'Platba byla založena, ale chybí redirect URL. Kontaktujte správce.';
                 $_SESSION['flash_type'] = 'error';
-                header('Location: ' . BASE_URL . '/cart/checkout');
+                header('Location: ' . locale_url('cart/checkout'));
                 exit;
             }
 
@@ -378,7 +378,7 @@ class CartController extends Controller
 
             $_SESSION['flash_message'] = 'Nepodařilo se vytvořit objednávku. Zkuste to prosím znovu.';
             $_SESSION['flash_type'] = 'error';
-            header('Location: ' . BASE_URL . '/cart/checkout');
+            header('Location: ' . locale_url('cart/checkout'));
             exit;
         }
     }

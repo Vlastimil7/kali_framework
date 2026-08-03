@@ -15,7 +15,7 @@
                     <h2 class="text-xl font-semibold text-gray-800">Fakturační údaje</h2>
                 </div>
 
-                <form action="<?= BASE_URL ?>/cart/create-order" method="post" class="p-6 space-y-6">
+                <form action="<?= locale_url('cart/create-order') ?>" method="post" class="p-6 space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Jméno a příjmení *</label>
@@ -93,7 +93,7 @@
                         <?php endforeach; ?>
                     </div>
                     <P class="block text-center">Po vytvoření objednávky budete přesměrováni na platební bránu Comgate.</P>
-                    <a href="<?= BASE_URL ?>/terms/shipping-payment" target="_blank" rel="noopener noreferrer">
+                    <a href="<?= locale_url('terms/shipping-payment') ?>" target="_blank" rel="noopener noreferrer">
                         <img
                             src="<?= BASE_URL ?>/assets/images/comgate/comgate_footer_white.png"
                             alt="Platebni podminky Comgate"

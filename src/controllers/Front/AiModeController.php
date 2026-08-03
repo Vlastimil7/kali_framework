@@ -12,7 +12,7 @@ final class AiModeController extends Controller
         $_SESSION['ai_mode'] = $enabled ? 1 : 0;
 
         // kam se vrátit
-        $back = $_SERVER['HTTP_REFERER'] ?? (BASE_URL . '/');
+        $back = $_SERVER['HTTP_REFERER'] ?? locale_url();
         header('Location: ' . $back);
         exit;
     }

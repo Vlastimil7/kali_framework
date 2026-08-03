@@ -148,7 +148,7 @@
         </footer>
 
         <div>
-            <a href="<?= BASE_URL ?>/"
+            <a href="<?= locale_url() ?>"
                 class="text-xs text-slate-500 hover:text-indigo-600 hover:underline">
                 ← Zpět na hlavní stránku
             </a>

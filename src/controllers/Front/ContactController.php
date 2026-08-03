@@ -87,7 +87,7 @@ class ContactController extends Controller
     public function sendMessage()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: ' . BASE_URL . '/contact');
+            header('Location: ' . locale_url('contact'));
             exit;
         }
 
@@ -106,7 +106,7 @@ class ContactController extends Controller
             ]);
 
             $this->flash($ns, 'error', "Překročili jste maximální počet pokusů. Zkuste to znovu za {$timeRemaining} minut.");
-            header('Location: ' . BASE_URL . '/contact');
+            header('Location: ' . locale_url('contact'));
             exit;
         }
 
@@ -148,7 +148,7 @@ class ContactController extends Controller
 
             $this->flash($ns, 'error', $validationResult['message']);
             $this->setOld($ns, $formData); // ✅ uloží vyplněná pole
-            header('Location: ' . BASE_URL . '/contact');
+            header('Location: ' . locale_url('contact'));
             exit;
         }
 
@@ -167,7 +167,7 @@ class ContactController extends Controller
 
             $this->flash($ns, 'error', 'Ověření reCAPTCHA selhalo. Zkuste to prosím znovu.');
             $this->setOld($ns, $formData); // ✅ ať nemusí psát znova
-            header('Location: ' . BASE_URL . '/contact');
+            header('Location: ' . locale_url('contact'));
             exit;
         }
 
@@ -193,7 +193,7 @@ class ContactController extends Controller
             $this->setOld($ns, $formData);
         }
 
-        header('Location: ' . BASE_URL . '/contact');
+        header('Location: ' . locale_url('contact'));
         exit;
     }
 

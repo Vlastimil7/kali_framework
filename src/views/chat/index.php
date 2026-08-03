@@ -9,7 +9,7 @@
                 <div class="py-3">
                     <div class="rounded-2xl border border-white/10 bg-white/5 p-3 text-xs text-white/60">
                         <?= __('chat_disclaimer_text_before', [], 'chat') ?>
-                        <a href="<?= BASE_URL ?>/contact" class="underline hover:no-underline text-white">
+                        <a href="<?= locale_url('contact') ?>" class="underline hover:no-underline text-white">
                             <?= __('chat_disclaimer_contact_link', [], 'chat') ?>
                         </a>.
                     </div>
@@ -24,7 +24,7 @@
                         <div class="mt-3 rounded-xl border border-white/10 bg-white/5 p-3">
                             <div class="text-xs text-white/70 leading-relaxed">
                                 <?= __('chat_intro_body', [], 'chat') ?>
-                                <a href="<?= BASE_URL ?>/contact" class="underline hover:no-underline text-white">
+                                <a href="<?= locale_url('contact') ?>" class="underline hover:no-underline text-white">
                                     <?= __('chat_intro_contact_form_link', [], 'chat') ?>
                                 </a>.
                             </div>

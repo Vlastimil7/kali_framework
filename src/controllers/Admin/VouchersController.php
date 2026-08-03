@@ -153,4 +153,12 @@ class VouchersController extends BaseAdminController
         header('Location: ' . BASE_URL . '/admin/vouchers/edit/' . (int)$id);
         exit;
     }
+
+    public function deactivate(int $id)
+    {
+        $result = $this->voucherModel->deactivate($id);
+        $_SESSION[$result['success'] ? '_flash_success' : '_flash_error'] = $result['message'] ?? 'Voucher se nepodařilo deaktivovat.';
+        header('Location: ' . BASE_URL . '/admin/vouchers');
+        exit;
+    }
 }

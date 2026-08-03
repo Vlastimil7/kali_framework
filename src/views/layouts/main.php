@@ -10,11 +10,17 @@
     header("Pragma: no-cache");
     header("Expires: 0");
 
-    $stylePath     = __DIR__ . '/../../public/assets/css/style.css';
-    $ownStylePath  = __DIR__ . '/../../public/assets/css/ownStyles.css';
+    $stylePath = ROOT_PATH . '/public/assets/css/style.css';
+    $ownStylePath = ROOT_PATH . '/public/assets/css/ownStyles.css';
     $styleVersion    = file_exists($stylePath) ? filemtime($stylePath) : time();
     $ownStyleVersion = file_exists($ownStylePath) ? filemtime($ownStylePath) : time();
-    $currentUrl = rtrim(SITE_URL, '/') . ($_SERVER['REQUEST_URI'] ?? '');
+    $localizedPaths = isset($data['localizedPaths']) && is_array($data['localizedPaths'])
+        ? $data['localizedPaths']
+        : null;
+    $currentPath = $localizedPaths[lang()->getCurrentLanguage()] ?? current_route_path();
+    $pageQuery = request_query_parameters();
+    $currentUrl = locale_site_url($currentPath, lang()->getCurrentLanguage(), $pageQuery);
+    $ogLocales = ['en' => 'en_US', 'cs' => 'cs_CZ', 'de' => 'de_DE'];
 
     // SEO defaulty
     $seoTitle = $data['title'] ?? '';
@@ -25,6 +31,18 @@
     <title><?= htmlspecialchars($seoTitle, ENT_QUOTES) ?></title>
     <meta name="description" content="<?= htmlspecialchars($seoDesc, ENT_QUOTES) ?>">
     <link rel="canonical" href="<?= htmlspecialchars($currentUrl, ENT_QUOTES) ?>">
+    <?php foreach (lang()->getSupportedLanguages() as $languageCode): ?>
+        <?php
+        if ($localizedPaths !== null && !isset($localizedPaths[$languageCode])) {
+            continue;
+        }
+        $alternatePath = $localizedPaths[$languageCode] ?? current_route_path();
+        ?>
+        <link rel="alternate" hreflang="<?= htmlspecialchars($languageCode, ENT_QUOTES) ?>" href="<?= htmlspecialchars(locale_site_url($alternatePath, $languageCode, $pageQuery), ENT_QUOTES) ?>">
+    <?php endforeach; ?>
+    <?php if ($localizedPaths === null || isset($localizedPaths[lang()->getDefaultLanguage()])): ?>
+        <link rel="alternate" hreflang="x-default" href="<?= htmlspecialchars(locale_site_url($localizedPaths[lang()->getDefaultLanguage()] ?? current_route_path(), lang()->getDefaultLanguage(), $pageQuery), ENT_QUOTES) ?>">
+    <?php endif; ?>
     <meta name="robots" content="<?= !empty($data['noindex']) ? 'noindex, nofollow' : 'index, follow' ?>">
 
     <meta name="keywords" content="<?= htmlspecialchars($seoKw, ENT_QUOTES) ?>">
@@ -38,7 +56,12 @@
     <meta property="og:image" content="<?= htmlspecialchars($ogImage, ENT_QUOTES) ?>">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:locale" content="cs_CZ">
+    <meta property="og:locale" content="<?= $ogLocales[lang()->getCurrentLanguage()] ?? lang()->getCurrentLanguage() ?>">
+    <?php foreach (lang()->getSupportedLanguages() as $languageCode): ?>
+        <?php if ($languageCode !== lang()->getCurrentLanguage() && ($localizedPaths === null || isset($localizedPaths[$languageCode]))): ?>
+            <meta property="og:locale:alternate" content="<?= $ogLocales[$languageCode] ?? $languageCode ?>">
+        <?php endif; ?>
+    <?php endforeach; ?>
 
 
     <link href="<?= BASE_URL ?>/assets/css/style.css?v=<?= $styleVersion ?>" rel="stylesheet">
@@ -127,7 +150,7 @@
 </head>
 
 <body class="bg-black min-h-screen flex flex-col">
-    <?php include  ROOT_PATH . "../src/views/partials/header.php"; ?>
+    <?php include ROOT_PATH . "/src/views/partials/header.php"; ?>
 
     <!-- Main content -->
     <div class="relative flex-grow flex justify-center gap-8">
@@ -141,8 +164,8 @@
     </div>
     <!-- Footer -->
 
-    <?php include  ROOT_PATH . "../src/views/partials/footer.php"; ?>
-    <?php include  ROOT_PATH . "../src/views/cookie/banner.php"; ?>
+    <?php include ROOT_PATH . "/src/views/partials/footer.php"; ?>
+    <?php include ROOT_PATH . "/src/views/cookie/banner.php"; ?>
 
     <!-- Tvůj JS -->
     <script src="<?= BASE_URL ?>/assets/js/cookies.js" defer></script>

@@ -153,7 +153,7 @@
                     <h3 class="text-2xl font-bold mb-6 text-white"><?= __('contact_form_title', [], 'contact') ?></h3>
 
                     <form
-                        action="<?= BASE_URL ?>/contact/send"
+                        action="<?= locale_url('contact/send') ?>"
                         method="POST"
                         enctype="multipart/form-data"
                         data-contact-form>

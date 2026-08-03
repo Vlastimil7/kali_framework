@@ -22,6 +22,7 @@ class AuthController extends Controller
     {
         $state = bin2hex(random_bytes(32));
         $_SESSION['google_oauth_state'] = $state;
+        $_SESSION['google_oauth_language'] = lang()->getCurrentLanguage();
 
         $authUrl = $this->googleOAuthService->getAuthUrl($state);
 
@@ -34,6 +35,10 @@ class AuthController extends Controller
         http_response_code(200);
 
         try {
+            $returnLanguage = (string) ($_SESSION['google_oauth_language'] ?? lang()->getDefaultLanguage());
+            if (!lang()->isValidLanguage($returnLanguage)) {
+                $returnLanguage = lang()->getDefaultLanguage();
+            }
             $state = (string)($_GET['state'] ?? '');
             $code = (string)($_GET['code'] ?? '');
             $storedState = (string)($_SESSION['google_oauth_state'] ?? '');
@@ -41,16 +46,16 @@ class AuthController extends Controller
             if ($state === '' || $storedState === '' || !hash_equals($storedState, $state)) {
                 $_SESSION['flash_message'] = 'Neplatný OAuth state.';
                 $_SESSION['flash_type'] = 'error';
-                header('Location: ' . BASE_URL . '/login');
+                header('Location: ' . locale_url('login', $returnLanguage));
                 exit;
             }
 
-            unset($_SESSION['google_oauth_state']);
+            unset($_SESSION['google_oauth_state'], $_SESSION['google_oauth_language']);
 
             if ($code === '') {
                 $_SESSION['flash_message'] = 'Google nevrátil autorizační kód.';
                 $_SESSION['flash_type'] = 'error';
-                header('Location: ' . BASE_URL . '/login');
+                header('Location: ' . locale_url('login', $returnLanguage));
                 exit;
             }
 
@@ -59,7 +64,7 @@ class AuthController extends Controller
             if (!$result['success']) {
                 $_SESSION['flash_message'] = $result['message'] ?? 'Google přihlášení selhalo.';
                 $_SESSION['flash_type'] = 'error';
-                header('Location: ' . BASE_URL . '/login');
+                header('Location: ' . locale_url('login', $returnLanguage));
                 exit;
             }
 
@@ -72,7 +77,7 @@ class AuthController extends Controller
                 if (!$createResult['success']) {
                     $_SESSION['flash_message'] = $createResult['message'] ?? 'Nepodařilo se vytvořit účet přes Google.';
                     $_SESSION['flash_type'] = 'error';
-                    header('Location: ' . BASE_URL . '/login');
+                    header('Location: ' . locale_url('login', $returnLanguage));
                     exit;
                 }
 
@@ -82,7 +87,7 @@ class AuthController extends Controller
             if (!$user) {
                 $_SESSION['flash_message'] = 'Nepodařilo se načíst uživatele po přihlášení přes Google.';
                 $_SESSION['flash_type'] = 'error';
-                header('Location: ' . BASE_URL . '/login');
+                header('Location: ' . locale_url('login', $returnLanguage));
                 exit;
             }
 
@@ -95,15 +100,16 @@ class AuthController extends Controller
             $_SESSION['flash_type'] = 'success';
 
             if (($user['role'] ?? 'user') === 'admin') {
-                header('Location: ' . BASE_URL . '/admin/dashboard');
+                header('Location: ' . locale_url('admin/dashboard', $returnLanguage));
             } else {
-                header('Location: ' . BASE_URL . '/profile');
+                header('Location: ' . locale_url('profile', $returnLanguage));
             }
             exit;
         } catch (\Throwable $e) {
             $_SESSION['flash_message'] = 'Chyba při přihlášení přes Google: ' . $e->getMessage();
             $_SESSION['flash_type'] = 'error';
-            header('Location: ' . BASE_URL . '/login');
+            $returnLanguage = isset($returnLanguage) ? $returnLanguage : lang()->getDefaultLanguage();
+            header('Location: ' . locale_url('login', $returnLanguage));
             exit;
         }
     }

@@ -81,11 +81,11 @@ $total = (int)($order['total_amount_cents'] ?? 0);
             </div>
 
             <div class="flex flex-col sm:flex-row gap-3">
-                <a href="<?= BASE_URL ?>/vouchers"
+                <a href="<?= locale_url('vouchers') ?>"
                     class="inline-flex justify-center items-center px-5 py-3 rounded-lg bg-gray-900 text-white hover:bg-gray-800">
                     Zpět na vouchery
                 </a>
-                <a href="<?= BASE_URL ?>/cart"
+                <a href="<?= locale_url('cart') ?>"
                     class="inline-flex justify-center items-center px-5 py-3 rounded-lg bg-gray-100 text-gray-900 hover:bg-gray-200">
                     Košík
                 </a>

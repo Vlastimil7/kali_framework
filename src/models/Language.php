@@ -2,292 +2,168 @@
 
 namespace Models;
 
-use Core\Database;
-
-class Language
+final class Language
 {
-    private $db;
-    private $currentLang;
-    private $translations = [];
-    private $supportedLanguages = ['cs', 'en'];
-    private $defaultLanguage = 'cs';
+    private string $currentLanguage;
+    private string $defaultLanguage;
+    /** @var list<string> */
+    private array $supportedLanguages;
+    /** @var array<string, array<string, array<string, string>>> */
+    private array $translations = [];
+    /** @var array<string, bool> */
+    private array $loaded = [];
+    private string $translationRoot;
 
-    public function __construct()
+    public function __construct(?string $translationRoot = null)
     {
-        $this->db = Database::getInstance();
-        $this->currentLang = isset($_SESSION['language']) ? $_SESSION['language'] : $this->defaultLanguage;
+        $this->translationRoot = $translationRoot ?? dirname(__DIR__) . '/i18n';
+        $configFile = $this->translationRoot . '/config.php';
+        $config = is_file($configFile) ? require $configFile : [];
+
+        $default = is_array($config) ? ($config['default'] ?? 'en') : 'en';
+        $supported = is_array($config) ? ($config['supported'] ?? ['en']) : ['en'];
+        $supported = array_values(array_filter($supported, fn ($language) =>
+            is_string($language) && preg_match('/^[a-z]{2}(?:-[A-Z]{2})?$/', $language)
+        ));
+
+        if (!is_string($default) || !in_array($default, $supported, true)) {
+            $default = 'en';
+        }
+        if (!in_array($default, $supported, true)) {
+            array_unshift($supported, $default);
+        }
+
+        $this->defaultLanguage = $default;
+        $this->supportedLanguages = array_values(array_unique($supported));
+        $sessionLanguage = $_SESSION['language'] ?? null;
+        $this->currentLanguage = is_string($sessionLanguage) && $this->isValidLanguage($sessionLanguage)
+            ? $sessionLanguage
+            : $this->defaultLanguage;
     }
 
-    /**
-     * Načte překlady pro aktuální jazyk a kategorii
-     * 
-     * @param string|array $categories Kategorie nebo pole kategorií
-     * @return bool
-     */
-    public function loadTranslations($categories = ['general'])
+    public function translate(string $key, array $params = [], string $category = 'general'): string
     {
-        if (!is_array($categories)) {
-            $categories = [$categories];
+        if (!$this->isValidCategory($category)) {
+            return $this->replaceParameters($key, $params);
         }
 
-        // Vždy přidáme obecnou kategorii, pokud tam není
-        if (!in_array('general', $categories)) {
-            $categories[] = 'general';
-        }
+        $fallbacks = [
+            [$this->currentLanguage, $category],
+            [$this->currentLanguage, 'general'],
+            [$this->defaultLanguage, $category],
+            [$this->defaultLanguage, 'general'],
+        ];
 
-        // Vytvoření otazníků pro prepared statement
-        $placeholders = implode(',', array_fill(0, count($categories), '?'));
-
-        $sql = "SELECT translation_key, translation_value, category 
-                FROM translations 
-                WHERE language_code = ? 
-                AND category IN ($placeholders)";
-
-        $params = array_merge([$this->currentLang], $categories);
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($params);
-
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $this->translations[$row['category']][$row['translation_key']] = $row['translation_value'];
-        }
-
-        return true;
-    }
-
-    /**
-     * Přeloží text podle klíče
-     * 
-     * @param string $key Klíč překladu
-     * @param array $params Parametry pro nahrazení
-     * @param string $category Kategorie překladu
-     * @return string Přeložený text
-     */
-    public function translate($key, $params = [], $category = 'general')
-    {
-        // Pokud kategorie není načtena, načteme ji
-        if (!isset($this->translations[$category])) {
-            $this->loadTranslations($category);
-        }
-
-        // Pokud klíč existuje v dané kategorii
-        if (isset($this->translations[$category][$key])) {
-            $translation = $this->translations[$category][$key];
-        }
-        // Zkusit najít v obecné kategorii
-        elseif (isset($this->translations['general'][$key])) {
-            $translation = $this->translations['general'][$key];
-        }
-        // Pokud klíč nenalezen, vrátíme samotný klíč
-        else {
-            return $key;
-        }
-
-        // Nahrazení parametrů
-        if (!empty($params)) {
-            foreach ($params as $param => $value) {
-                $translation = str_replace('{' . $param . '}', $value, $translation);
+        foreach (array_unique($fallbacks, SORT_REGULAR) as [$language, $fallbackCategory]) {
+            $this->ensureLoaded($language, $fallbackCategory);
+            if (array_key_exists($key, $this->translations[$language][$fallbackCategory] ?? [])) {
+                return $this->replaceParameters($this->translations[$language][$fallbackCategory][$key], $params);
             }
         }
 
-        return $translation;
+        return $this->replaceParameters($key, $params);
     }
 
-    /**
-     * Nastaví aktuální jazyk
-     * 
-     * @param string $langCode Kód jazyka
-     * @return bool
-     */
-    public function setLanguage($langCode)
+    public function setLanguage(string $language): bool
     {
-        if ($this->isValidLanguage($langCode)) {
-            $this->currentLang = $langCode;
-            $_SESSION['language'] = $langCode;
-            // Vyčistíme načtené překlady
-            $this->translations = [];
-            return true;
+        if (!$this->isValidLanguage($language)) {
+            return false;
         }
-        return false;
+
+        $this->currentLanguage = $language;
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            $_SESSION['language'] = $language;
+        }
+        return true;
     }
 
-    /**
-     * Získá aktuální jazyk
-     * 
-     * @return string Kód jazyka
-     */
-    public function getCurrentLanguage()
+    public function getCurrentLanguage(): string
     {
-        return $this->currentLang;
+        return $this->currentLanguage;
     }
 
-    /**
-     * Zkontroluje, zda je jazyk podporovaný
-     * 
-     * @param string $langCode Kód jazyka
-     * @return bool
-     */
-    public function isValidLanguage($langCode)
+    public function getDefaultLanguage(): string
     {
-        return in_array($langCode, $this->supportedLanguages);
+        return $this->defaultLanguage;
     }
 
-    /**
-     * Získá seznam podporovaných jazyků
-     * 
-     * @return array
-     */
-    public function getSupportedLanguages()
+    /** @return list<string> */
+    public function getSupportedLanguages(): array
     {
         return $this->supportedLanguages;
     }
 
-    /**
-     * Vytvoří nebo aktualizuje překlad
-     * 
-     * @param string $langCode Kód jazyka
-     * @param string $key Klíč překladu
-     * @param string $value Přeložený text
-     * @param string $category Kategorie překladu
-     * @return array Výsledek operace
-     */
-    public function saveTranslation($langCode, $key, $value, $category = 'general')
+    public function isValidLanguage(string $language): bool
     {
-        try {
-            // Kontrola, zda překlad již existuje
-            $sql = "SELECT id FROM translations 
-                    WHERE language_code = ? 
-                    AND translation_key = ? 
-                    AND category = ?";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute([$langCode, $key, $category]);
-
-            if ($stmt->rowCount() > 0) {
-                // Aktualizace existujícího překladu
-                $sql = "UPDATE translations 
-                        SET translation_value = ?, updated_at = NOW() 
-                        WHERE language_code = ? 
-                        AND translation_key = ? 
-                        AND category = ?";
-                $stmt = $this->db->prepare($sql);
-                $stmt->execute([$value, $langCode, $key, $category]);
-            } else {
-                // Vytvoření nového překladu
-                $sql = "INSERT INTO translations 
-                        (language_code, translation_key, translation_value, category) 
-                        VALUES (?, ?, ?, ?)";
-                $stmt = $this->db->prepare($sql);
-                $stmt->execute([$langCode, $key, $value, $category]);
-            }
-
-            return [
-                'success' => true,
-                'message' => 'Překlad byl úspěšně uložen'
-            ];
-        } catch (\PDOException $e) {
-            return [
-                'success' => false,
-                'message' => 'Chyba při ukládání překladu: ' . $e->getMessage()
-            ];
-        }
+        return in_array($language, $this->supportedLanguages, true);
     }
 
     /**
-     * Získá všechny překlady pro daný jazyk a kategorii
-     * 
-     * @param string $langCode Kód jazyka
-     * @param string $category Kategorie překladu
-     * @return array
+     * @param string|list<string> $categories
      */
-    public function getTranslations($langCode, $category = null)
+    public function loadTranslations(string|array $categories = ['general'], ?string $language = null): bool
     {
-        $sql = "SELECT translation_key, translation_value, category FROM translations WHERE language_code = ?";
-        $params = [$langCode];
-
-        if ($category) {
-            $sql .= " AND category = ?";
-            $params[] = $category;
+        $language ??= $this->currentLanguage;
+        if (!$this->isValidLanguage($language)) {
+            return false;
         }
 
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($params);
-
-        $translations = [];
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            if (!isset($translations[$row['category']])) {
-                $translations[$row['category']] = [];
+        foreach ((array) $categories as $category) {
+            if (!is_string($category) || !$this->isValidCategory($category)) {
+                return false;
             }
-            $translations[$row['category']][$row['translation_key']] = $row['translation_value'];
+            $this->ensureLoaded($language, $category);
         }
-
-        return $translations;
+        return true;
     }
 
-    /**
-     * Získá všechny klíče překladů
-     * 
-     * @param string $category Kategorie překladu
-     * @return array
-     */
-    public function getAllTranslationKeys($category = null)
+    public function ensureLoaded(string $language, string $category): void
     {
-        $sql = "SELECT DISTINCT translation_key, category FROM translations";
-        $params = [];
-
-        if ($category) {
-            $sql .= " WHERE category = ?";
-            $params[] = $category;
+        if (!$this->isValidLanguage($language) || !$this->isValidCategory($category)) {
+            return;
         }
 
-        $sql .= " ORDER BY category, translation_key";
+        $cacheKey = $language . ':' . $category;
+        if (isset($this->loaded[$cacheKey])) {
+            return;
+        }
+        $this->loaded[$cacheKey] = true;
+        $this->translations[$language][$category] = [];
 
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($params);
+        $file = $this->translationRoot . '/' . $language . '/' . $category . '.php';
+        if (!is_file($file)) {
+            return;
+        }
 
-        $keys = [];
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            if (!isset($keys[$row['category']])) {
-                $keys[$row['category']] = [];
+        $items = require $file;
+        if (!is_array($items)) {
+            return;
+        }
+
+        foreach ($items as $key => $value) {
+            if (is_string($key) && is_string($value)) {
+                $this->translations[$language][$category][$key] = $value;
             }
-            $keys[$row['category']][] = $row['translation_key'];
         }
-
-        return $keys;
     }
 
-    /**
-     * Importuje překlady z pole
-     * 
-     * @param array $translations Pole překladů
-     * @return array Výsledek operace
-     */
-    public function importTranslations($translations)
+    private function isValidCategory(string $category): bool
     {
-        try {
-            $this->db->beginTransaction();
+        return (bool) preg_match('/^[a-z0-9_]+$/', $category);
+    }
 
-            foreach ($translations as $langCode => $categories) {
-                foreach ($categories as $category => $items) {
-                    foreach ($items as $key => $value) {
-                        $this->saveTranslation($langCode, $key, $value, $category);
-                    }
-                }
-            }
-
-            $this->db->commit();
-
-            return [
-                'success' => true,
-                'message' => 'Překlady byly úspěšně importovány'
-            ];
-        } catch (\PDOException $e) {
-            $this->db->rollBack();
-
-            return [
-                'success' => false,
-                'message' => 'Chyba při importu překladů: ' . $e->getMessage()
-            ];
+    private function replaceParameters(string $translation, array $params): string
+    {
+        if ($params === []) {
+            return $translation;
         }
+
+        $replace = [];
+        foreach ($params as $name => $value) {
+            if (is_string($name) && (is_scalar($value) || $value instanceof \Stringable)) {
+                $replace['{' . $name . '}'] = (string) $value;
+            }
+        }
+        return strtr($translation, $replace);
     }
 }
-
-Database::getInstance()->closeConnection();

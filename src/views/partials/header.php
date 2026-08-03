@@ -4,7 +4,7 @@
             <!-- Logo + info -->
             <div class="flex items-center gap-3">
                 <!--      Logo -->
-                <a href="<?= BASE_URL ?>/" class="block text-gradient font-bold text-2xl" data-track="callToActionClick" data-track-meta='{"location":"header","label":"logo-click"}'>
+                <a href="<?= locale_url() ?>" class="block text-gradient font-bold text-2xl" data-track="callToActionClick" data-track-meta='{"location":"header","label":"logo-click"}'>
                     Vlastimil Kalášek
                 </a>
             </div>
@@ -85,50 +85,46 @@
                 $linkClasses = $isMobile ? $linkBaseClasses . ' block' : $linkBaseClasses;
             ?>
 
-                <a href="<?= BASE_URL ?>/" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"home-link"}'>
+                <a href="<?= locale_url() ?>" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"home-link"}'>
                     <?= __('header_nav_home', [], 'header') ?>
                 </a>
 
-                <a href="<?= BASE_URL ?>/#services" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"services-link"}'>
+                <a href="<?= locale_url('#services') ?>" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"services-link"}'>
                     <?= __('header_nav_services', [], 'header') ?>
                 </a>
 
-                <a href="<?= BASE_URL ?>/#pricing" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"pricing-link"}'>
+                <a href="<?= locale_url('#pricing') ?>" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"pricing-link"}'>
                     <?= __('header_nav_pricing', [], 'header') ?>
                 </a>
 
-                <a href="<?= BASE_URL ?>/#references" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"references-link"}'>
+                <a href="<?= locale_url('#references') ?>" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"references-link"}'>
                     <?= __('header_nav_references', [], 'header') ?>
                 </a>
 
-                <a href="<?= BASE_URL ?>/faq" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"faq-link"}'>
-                    <?= __('header_nav_faq', [], 'header') ?>
-                </a>
-
-                <a href="<?= BASE_URL ?>/contact" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"contact-link"}'>
+                <a href="<?= locale_url('contact') ?>" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"contact-link"}'>
                     <?= __('header_nav_contact', [], 'header') ?>
                 </a>
 
                 <?php if (isset($_SESSION['user_id'])): ?>
 
-                    <a href="<?= BASE_URL ?>/profile" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"profile-link"}'>
+                    <a href="<?= locale_url('profile') ?>" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"profile-link"}'>
                         <?= __('header_nav_profile', [], 'header') ?>
                     </a>
 
                     <?php if (!empty($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
-                        <a href="<?= BASE_URL ?>/admin/dashboard" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"admin-link"}'>
+                        <a href="<?= locale_url('admin/dashboard') ?>" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"admin-link"}'>
                             <?= __('header_nav_admin', [], 'header') ?>
                         </a>
                        
                     <?php endif; ?>
 
-                    <a href="<?= BASE_URL ?>/logout" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"logout-link"}'>
+                    <a href="<?= locale_url('logout') ?>" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"logout-link"}'>
                         <?= __('header_nav_logout', [], 'header') ?>
                     </a>
 
                 <?php else: ?>
 
-                    <form action="<?= BASE_URL ?>/ai-mode/toggle" method="POST" class="inline-flex items-center me-5 cursor-pointer text-white">
+                    <form action="<?= locale_url('ai-mode/toggle') ?>" method="POST" class="inline-flex items-center me-5 cursor-pointer text-white">
                         <label class="inline-flex items-center me-5 cursor-pointer text-white">
                             <input type="hidden" name="enabled" value="0">
                             <input type="checkbox" id="ai-toggle" name="enabled" value="1"
@@ -144,18 +140,23 @@
                         </label>
                     </form>
 
-                    <!-- Přepínač jazyků -->
-                    <div class="language-switcher flex space-x-2">
-                        <?php foreach (lang()->getSupportedLanguages() as $lang): ?>
-                            <a href="<?= BASE_URL ?>/language/change/<?= $lang ?>"
-                                class="<?= lang()->getCurrentLanguage() === $lang ? 'font-bold text-pink-500' : 'text-gray-600' ?>"
-                                data-track="languageSwitch" data-track-meta='{"location":"header","label":"<?= $lang ?>-switch"}'>
-                                <?= strtoupper($lang) ?>
-                            </a>
-                        <?php endforeach; ?>
-                    </div>
+            <?php endif; ?>
 
-            <?php endif;
+                <!-- The public switcher changes the URL and preserves this page. -->
+                <div class="language-switcher flex space-x-2">
+                    <?php $switchPaths = isset($localizedPaths) && is_array($localizedPaths) ? $localizedPaths : null; ?>
+                    <?php foreach (lang()->getSupportedLanguages() as $languageCode): ?>
+                        <?php if ($switchPaths !== null && !isset($switchPaths[$languageCode])) continue; ?>
+                        <a href="<?= htmlspecialchars(locale_switch_url($languageCode, $switchPaths), ENT_QUOTES) ?>"
+                            hreflang="<?= htmlspecialchars($languageCode, ENT_QUOTES) ?>"
+                            class="<?= lang()->getCurrentLanguage() === $languageCode ? 'font-bold text-pink-500' : 'text-gray-600' ?>"
+                            data-track="languageSwitch" data-track-meta='{"location":"header","label":"<?= $languageCode ?>-switch"}'>
+                            <?= strtoupper($languageCode) ?>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+
+            <?php
             }
 
             ?>
