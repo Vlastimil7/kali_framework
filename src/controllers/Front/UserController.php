@@ -9,6 +9,7 @@ use Helpers\RateLimiter;
 use Helpers\ReCaptcha;
 use Helpers\Flash;
 use Helpers\Toast;
+use Helpers\Validator;
 use Services\Mail\Mail;
 use Services\Mail\Mailables\PasswordResetEmail;
 
@@ -38,6 +39,19 @@ class UserController extends Controller
         if ($request->isMethod('POST')) {
             $email = $request->string('email');
             $password = $request->string('password');
+
+            $validator = Validator::make(compact('email', 'password'), [
+                'email' => 'bail|required|email|max:254',
+                'password' => 'bail|required|string',
+            ], [], [
+                'email' => 'e-mail',
+                'password' => 'heslo',
+            ]);
+            if ($validator->fails()) {
+                $validator->flash('login', $request->post());
+                header('Location: ' . locale_url('login'));
+                exit;
+            }
 
             $result = $this->userModel->login($email, $password);
 
@@ -86,6 +100,36 @@ class UserController extends Controller
                 'phone' => $request->string('phone')
             ];
 
+            $registrationValidationData = $userData;
+            $registrationValidationData['password_confirm'] = $request->string('password_confirm');
+            $registrationValidationData['terms'] = $request->has('terms') ? 1 : 0;
+
+            $validator = Validator::make($registrationValidationData, [
+                'email' => 'bail|required|email|max:254',
+                'password' => 'bail|required|string|min:8|max:255',
+                'password_confirm' => 'bail|required|string|same:password',
+                'name' => 'bail|required|string|max:100',
+                'surname' => 'bail|required|string|max:100',
+                'phone' => ['nullable', 'regex:/^[0-9+\s\-]{6,20}$/'],
+                'terms' => 'accepted',
+            ], [
+                'password_confirm.same' => 'Hesla se neshodují.',
+                'terms.accepted' => 'Musíte souhlasit s obchodními podmínkami.',
+            ], [
+                'email' => 'e-mail',
+                'password' => 'heslo',
+                'password_confirm' => 'potvrzení hesla',
+                'name' => 'jméno',
+                'surname' => 'příjmení',
+                'phone' => 'telefon',
+                'terms' => 'obchodní podmínky',
+            ]);
+            if ($validator->fails()) {
+                $validator->flash('register', $request->post());
+                header('Location: ' . locale_url('register'));
+                exit;
+            }
+
             $result = $this->userModel->register($userData);
 
             if ($result['success']) {
@@ -133,6 +177,30 @@ class UserController extends Controller
             // Přidání hesla, pokud bylo vyplněno
             if ($request->filled('password')) {
                 $userData['password'] = $request->string('password');
+            }
+
+            $profileValidationData = $userData;
+            $profileValidationData['password_confirm'] = $request->string('password_confirm');
+
+            $validator = Validator::make($profileValidationData, [
+                'name' => 'bail|required|string|max:100',
+                'surname' => 'bail|required|string|max:100',
+                'phone' => ['nullable', 'regex:/^[0-9+\s\-]{6,20}$/'],
+                'password' => 'sometimes|nullable|string|min:8|max:255',
+                'password_confirm' => 'bail|required_with:password|nullable|string|same:password',
+            ], [
+                'password_confirm.same' => 'Hesla se neshodují.',
+            ], [
+                'name' => 'jméno',
+                'surname' => 'příjmení',
+                'phone' => 'telefon',
+                'password' => 'heslo',
+                'password_confirm' => 'potvrzení hesla',
+            ]);
+            if ($validator->fails()) {
+                $validator->flash('profile', $request->post());
+                header('Location: ' . locale_url('profile'));
+                exit;
             }
 
             $result = $this->userModel->updateProfile($userId, $userData);
@@ -193,10 +261,11 @@ class UserController extends Controller
                 exit;
             }
 
-            // Validace vstupu
-            if (empty($email)) {
-                Toast::error('Zadejte prosím emailovou adresu');
-                Flash::withInput('password_request', ['email' => $email]);
+            $validator = Validator::make(['email' => $email], [
+                'email' => 'bail|required|email|max:254',
+            ], [], ['email' => 'e-mail']);
+            if ($validator->fails()) {
+                $validator->flash('password_request', $request->post());
                 header('Location: ' . locale_url('password/reset'));
                 exit;
             }
@@ -304,21 +373,23 @@ class UserController extends Controller
                 exit;
             }
 
-            // Validace
-            if (empty($password) || empty($passwordConfirm)) {
-                Toast::error('Vyplňte prosím všechna pole');
-                header('Location: ' . locale_url('password/reset/' . $token));
-                exit;
-            }
-
-            if ($password !== $passwordConfirm) {
-                Toast::error('Hesla se neshodují');
-                header('Location: ' . locale_url('password/reset/' . $token));
-                exit;
-            }
-
-            if (strlen($password) < 6) {
-                Toast::error('Heslo musí mít alespoň 6 znaků');
+            $validator = Validator::make([
+                'token' => $token,
+                'password' => $password,
+                'password_confirm' => $passwordConfirm,
+            ], [
+                'token' => 'required|string',
+                'password' => 'bail|required|string|min:8|max:255',
+                'password_confirm' => 'bail|required|string|same:password',
+            ], [
+                'password_confirm.same' => 'Hesla se neshodují.',
+            ], [
+                'token' => 'token',
+                'password' => 'heslo',
+                'password_confirm' => 'potvrzení hesla',
+            ]);
+            if ($validator->fails()) {
+                $validator->flash('password_reset', $request->post());
                 header('Location: ' . locale_url('password/reset/' . $token));
                 exit;
             }

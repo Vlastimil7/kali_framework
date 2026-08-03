@@ -1,3 +1,11 @@
+<?php
+$old = \Helpers\Flash::old('checkout');
+$oldValue = static fn (string $key, string $default = ''): string => htmlspecialchars(
+    (string)($old[$key] ?? $default),
+    ENT_QUOTES,
+    'UTF-8'
+);
+?>
 <div class="max-w-5xl mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold text-white mb-6">Dokončení objednávky</h1>
 
@@ -12,34 +20,34 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Jméno a příjmení *</label>
-                            <input name="billing_name" required class="w-full border rounded-md px-3 py-2" />
+                            <input name="billing_name" value="<?= $oldValue('billing_name') ?>" required class="w-full border rounded-md px-3 py-2" />
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
-                            <input name="billing_email" type="email" required class="w-full border rounded-md px-3 py-2" />
+                            <input name="billing_email" value="<?= $oldValue('billing_email') ?>" type="email" required class="w-full border rounded-md px-3 py-2" />
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Telefon *</label>
-                            <input name="billing_phone" required class="w-full border rounded-md px-3 py-2" />
+                            <input name="billing_phone" value="<?= $oldValue('billing_phone') ?>" required class="w-full border rounded-md px-3 py-2" />
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Ulice *</label>
-                            <input name="billing_street" required class="w-full border rounded-md px-3 py-2" />
+                            <input name="billing_street" value="<?= $oldValue('billing_street') ?>" required class="w-full border rounded-md px-3 py-2" />
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Číslo popisné *</label>
-                            <input name="billing_house_no" required class="w-full border rounded-md px-3 py-2" />
+                            <input name="billing_house_no" value="<?= $oldValue('billing_house_no') ?>" required class="w-full border rounded-md px-3 py-2" />
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Město *</label>
-                            <input name="billing_city" required class="w-full border rounded-md px-3 py-2" />
+                            <input name="billing_city" value="<?= $oldValue('billing_city') ?>" required class="w-full border rounded-md px-3 py-2" />
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">PSČ *</label>
-                            <input name="billing_zip" required class="w-full border rounded-md px-3 py-2" />
+                            <input name="billing_zip" value="<?= $oldValue('billing_zip') ?>" required class="w-full border rounded-md px-3 py-2" />
                         </div>
                     </div>
 
@@ -48,15 +56,15 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Název firmy</label>
-                                <input name="billing_company" class="w-full border rounded-md px-3 py-2" />
+                                <input name="billing_company" value="<?= $oldValue('billing_company') ?>" class="w-full border rounded-md px-3 py-2" />
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">IČO</label>
-                                <input name="billing_ico" class="w-full border rounded-md px-3 py-2" />
+                                <input name="billing_ico" value="<?= $oldValue('billing_ico') ?>" class="w-full border rounded-md px-3 py-2" />
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">DIČ</label>
-                                <input name="billing_dic" class="w-full border rounded-md px-3 py-2" />
+                                <input name="billing_dic" value="<?= $oldValue('billing_dic') ?>" class="w-full border rounded-md px-3 py-2" />
                             </div>
                         </div>
                     </div>
@@ -75,11 +83,11 @@
                                 <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Pro koho je voucher</label>
-                                        <input name="recipient_name[<?= htmlspecialchars($key) ?>]" class="w-full border rounded-md px-3 py-2" placeholder="např. Petr Novák" />
+                                        <input name="recipient_name[<?= htmlspecialchars($key) ?>]" value="<?= htmlspecialchars((string)($old['recipient_name'][$key] ?? ''), ENT_QUOTES, 'UTF-8') ?>" class="w-full border rounded-md px-3 py-2" placeholder="např. Petr Novák" />
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Vzkaz do voucheru</label>
-                                        <input name="note[<?= htmlspecialchars($key) ?>]" class="w-full border rounded-md px-3 py-2" placeholder="např. Všechno nejlepší!" />
+                                        <input name="note[<?= htmlspecialchars($key) ?>]" value="<?= htmlspecialchars((string)($old['note'][$key] ?? ''), ENT_QUOTES, 'UTF-8') ?>" class="w-full border rounded-md px-3 py-2" placeholder="např. Všechno nejlepší!" />
                                     </div>
                                 </div>
                             </div>

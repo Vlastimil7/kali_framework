@@ -6,6 +6,7 @@ use Api\BaseApiController;
 use Api\ApiResponse;
 use Core\Request;
 use Helpers\Logger;
+use Helpers\Validator;
 use Services\Telemetry\TelemetryService;
 
 class TelemetryController extends BaseApiController
@@ -26,8 +27,15 @@ class TelemetryController extends BaseApiController
             }
 
             $requestData = $request->post();
-            if (empty($requestData)) {
-                ApiResponse::badRequest('Invalid or empty JSON payload.');
+            $validator = Validator::make(['payload' => $requestData], [
+                'payload' => 'bail|required|array|min:1',
+            ], [
+                'payload.required' => 'Invalid or empty JSON payload.',
+                'payload.array' => 'Invalid or empty JSON payload.',
+                'payload.min' => 'Invalid or empty JSON payload.',
+            ]);
+            if ($validator->fails()) {
+                ApiResponse::badRequest($validator->first() ?? 'Invalid or empty JSON payload.');
                 return;
             }
 

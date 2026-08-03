@@ -9,6 +9,7 @@ use Models\Order;
 use Services\Vouchers\OrderService;
 use Helpers\Logger;
 use Helpers\Toast;
+use Helpers\Validator;
 
 class VoucherController extends Controller
 {
@@ -96,6 +97,33 @@ class VoucherController extends Controller
             'ico'     => $request->string('ico'),
             'dic'     => $request->string('dic'),
         ];
+
+        $validator = Validator::make($form, [
+            'name' => 'bail|required|string|max:120',
+            'email' => 'bail|required|email|max:254',
+            'phone' => 'bail|required|string|max:30',
+            'street' => 'bail|required|string|max:150',
+            'city' => 'bail|required|string|max:100',
+            'zip' => ['bail', 'required', 'regex:/^[0-9A-Za-z\s-]{3,12}$/'],
+            'company' => 'nullable|string|max:150',
+            'ico' => 'nullable|string|max:20',
+            'dic' => 'nullable|string|max:20',
+        ], [], [
+            'name' => 'jméno',
+            'email' => 'e-mail',
+            'phone' => 'telefon',
+            'street' => 'ulice',
+            'city' => 'město',
+            'zip' => 'PSČ',
+            'company' => 'firma',
+            'ico' => 'IČO',
+            'dic' => 'DIČ',
+        ]);
+        if ($validator->fails()) {
+            $validator->flash('voucher_order', $request->post());
+            header('Location: ' . locale_url("voucher/{$slug}/order"));
+            exit;
+        }
 
         $result = $this->orderService->createOrderAndPayment($voucher, $form);
 

@@ -7,6 +7,7 @@ use Core\Request;
 use Services\AI\ChatService;
 use Services\AI\AiClientFactory;
 use Helpers\Logger;
+use Helpers\Validator;
 
 class ChatController extends BaseApiController
 {
@@ -59,13 +60,17 @@ class ChatController extends BaseApiController
 
             $question = $request->string('question');
 
-            if ($question === '') {
-                $this->response(['error' => 'Question is required'], 400);
-                return;
-            }
-
-            if (mb_strlen($question) > 1000) {
-                $this->response(['error' => 'Question is too long (max 1000 characters)'], 400);
+            $validator = Validator::make(['question' => $question], [
+                'question' => 'bail|required|string|max:1000',
+            ], [
+                'question.required' => 'Question is required',
+                'question.max' => 'Question is too long (max 1000 characters)',
+            ]);
+            if ($validator->fails()) {
+                $this->response([
+                    'error' => $validator->first(),
+                    'errors' => $validator->errors(),
+                ], 400);
                 return;
             }
 
@@ -185,8 +190,17 @@ class ChatController extends BaseApiController
 
             $provider = strtolower($request->string('provider'));
 
-            if (!in_array($provider, ['openai', 'gemini', 'anthropic', 'claude'], true)) {
-                $this->response(['error' => 'Invalid provider'], 400);
+            $validator = Validator::make(['provider' => $provider], [
+                'provider' => 'bail|required|in:openai,gemini,anthropic,claude',
+            ], [
+                'provider.required' => 'Provider is required',
+                'provider.in' => 'Invalid provider',
+            ]);
+            if ($validator->fails()) {
+                $this->response([
+                    'error' => $validator->first(),
+                    'errors' => $validator->errors(),
+                ], 400);
                 return;
             }
 

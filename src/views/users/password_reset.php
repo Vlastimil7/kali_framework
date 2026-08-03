@@ -24,9 +24,9 @@
                         name="password" 
                         class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
                         required
-                        minlength="6"
+                        minlength="8"
                     >
-                    <p class="text-xs text-gray-500 mt-1">Heslo musí mít alespoň 6 znaků</p>
+                    <p class="text-xs text-gray-500 mt-1">Heslo musí mít alespoň 8 znaků</p>
                 </div>
                 
                 <div>
@@ -90,8 +90,8 @@
         }
         
         // Kontrola minimální délky
-        if (password.length < 6) {
-            alert('Heslo musí mít alespoň 6 znaků!');
+        if (password.length < 8) {
+            alert('Heslo musí mít alespoň 8 znaků!');
             return false;
         }
         

@@ -6,6 +6,7 @@ use Core\Request;
 use Models\Voucher;
 use Helpers\Flash;
 use Helpers\Toast;
+use Helpers\Validator;
 
 class VouchersController extends BaseAdminController
 {
@@ -55,15 +56,35 @@ class VouchersController extends BaseAdminController
         $price = $request->string('price', $request->string('price_czk'));
         $isActive = $request->has('is_active') ? 1 : 0;
 
-        $errors = [];
-        if ($name === '') $errors[] = 'Název je povinný.';
-        if ($slug === '') $errors[] = 'Slug je povinný.';
-        if ($price === '' || !preg_match('~^\d+([.,]\d{1,2})?$~', $price)) $errors[] = 'Cena není ve správném formátu.';
-        if ($this->voucherModel->existsBySlug($slug)) $errors[] = 'Slug už existuje, zvol jiný.';
+        $validator = Validator::make([
+            'name' => $name,
+            'slug' => $slug,
+            'price' => $price,
+            'currency' => $currency,
+        ], [
+            'name' => 'bail|required|string|max:150',
+            'slug' => [
+                'bail',
+                'required',
+                'slug',
+                'max:180',
+                fn ($value) => $this->voucherModel->existsBySlug((string)$value)
+                    ? 'Slug už existuje, zvolte jiný.'
+                    : true,
+            ],
+            'price' => ['bail', 'required', 'regex:/^\d+([.,]\d{1,2})?$/'],
+            'currency' => 'bail|required|string|size:3',
+        ], [
+            'price.regex' => 'Cena není ve správném formátu.',
+        ], [
+            'name' => 'název',
+            'slug' => 'slug',
+            'price' => 'cena',
+            'currency' => 'měna',
+        ]);
 
-        if ($errors) {
-            Toast::error(implode(' ', $errors));
-            Flash::withInput('admin_voucher', $request->post());
+        if ($validator->fails()) {
+            $validator->flash('admin_voucher', $request->post());
             header('Location: ' . BASE_URL . '/admin/vouchers/create');
             exit;
         }
@@ -120,16 +141,38 @@ class VouchersController extends BaseAdminController
         $price = $request->string('price', $request->string('price_czk'));
         $isActive = $request->has('is_active') ? 1 : 0;
 
-        $errors = [];
-        if ($name === '') $errors[] = 'Název je povinný.';
-        if ($slug === '') $errors[] = 'Slug je povinný.';
-        if ($description === '') $errors[] = 'Popis je povinný.';
-        if ($price === '' || !preg_match('~^\d+([.,]\d{1,2})?$~', $price)) $errors[] = 'Cena není ve správném formátu.';
-        if ($this->voucherModel->existsBySlug($slug, $id)) $errors[] = 'Slug už existuje, zvol jiný.';
+        $validator = Validator::make([
+            'name' => $name,
+            'slug' => $slug,
+            'description' => $description,
+            'price' => $price,
+            'currency' => $currency,
+        ], [
+            'name' => 'bail|required|string|max:150',
+            'slug' => [
+                'bail',
+                'required',
+                'slug',
+                'max:180',
+                fn ($value) => $this->voucherModel->existsBySlug((string)$value, $id)
+                    ? 'Slug už existuje, zvolte jiný.'
+                    : true,
+            ],
+            'description' => 'bail|required|string|max:5000',
+            'price' => ['bail', 'required', 'regex:/^\d+([.,]\d{1,2})?$/'],
+            'currency' => 'bail|required|string|size:3',
+        ], [
+            'price.regex' => 'Cena není ve správném formátu.',
+        ], [
+            'name' => 'název',
+            'slug' => 'slug',
+            'description' => 'popis',
+            'price' => 'cena',
+            'currency' => 'měna',
+        ]);
 
-        if ($errors) {
-            Toast::error(implode(' ', $errors));
-            Flash::withInput('admin_voucher', $request->post());
+        if ($validator->fails()) {
+            $validator->flash('admin_voucher', $request->post());
             header('Location: ' . BASE_URL . '/admin/vouchers/edit/' . (int)$id);
             exit;
         }

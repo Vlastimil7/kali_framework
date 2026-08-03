@@ -1,6 +1,7 @@
 <?php
 // src/views/admin/users/edit.php
 // Editace uživatele pro admina
+$old = \Helpers\Flash::old('admin_user');
 ?>
 
 <div class="max-w-4xl mx-auto">
@@ -14,26 +15,26 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Jméno</label>
-                        <input type="text" id="name" name="name" value="<?= htmlspecialchars($user['name']) ?>" 
+                        <input type="text" id="name" name="name" value="<?= htmlspecialchars($old['name'] ?? $user['name']) ?>"
                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
                     </div>
                     
                     <div>
                         <label for="surname" class="block text-sm font-medium text-gray-700 mb-1">Příjmení</label>
-                        <input type="text" id="surname" name="surname" value="<?= htmlspecialchars($user['surname']) ?>" 
+                        <input type="text" id="surname" name="surname" value="<?= htmlspecialchars($old['surname'] ?? $user['surname']) ?>"
                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
                     </div>
                 </div>
                 
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" 
+                    <input type="email" id="email" name="email" value="<?= htmlspecialchars($old['email'] ?? $user['email']) ?>"
                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
                 </div>
                 
                 <div>
                     <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
-                    <input type="tel" id="phone" name="phone" value="<?= htmlspecialchars($user['phone']) ?>" 
+                    <input type="tel" id="phone" name="phone" value="<?= htmlspecialchars($old['phone'] ?? $user['phone']) ?>"
                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 
@@ -41,8 +42,8 @@
                     <div>
                         <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Role</label>
                         <select id="role" name="role" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            <option value="user" <?= $user['role'] === 'user' ? 'selected' : '' ?>>Uživatel</option>
-                            <option value="admin" <?= $user['role'] === 'admin' ? 'selected' : '' ?>>Admin</option>
+                            <option value="user" <?= ($old['role'] ?? $user['role']) === 'user' ? 'selected' : '' ?>>Uživatel</option>
+                            <option value="admin" <?= ($old['role'] ?? $user['role']) === 'admin' ? 'selected' : '' ?>>Admin</option>
                         </select>
                     </div>
                     

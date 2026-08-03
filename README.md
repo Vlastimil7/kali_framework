@@ -236,6 +236,36 @@ public function update(Request $request, int $id)
 
 Common methods include `input()`, `post()`, `query()`, `string()`, `int()`, `boolean()`, `has()`, `filled()`, `only()`, `except()`, `file()`, `header()`, `cookie()`, `route()`, `ip()`, `uri()`, and `isSecure()`.
 
+### Validation
+
+Create a validator from request data and declarative rules. Failed forms can store validation errors, safe old input, and an error toast in one call:
+
+```php
+use Helpers\Validator;
+
+$validator = Validator::make($request->post(), [
+    'email' => 'bail|required|email|max:254',
+    'password' => 'bail|required|string|min:8',
+    'role' => 'required|in:user,admin',
+], [
+    'email.required' => 'Zadejte e-mail.',
+], [
+    'email' => 'e-mail',
+]);
+
+if ($validator->fails()) {
+    $validator->flash('registration', $request->post());
+    header('Location: ' . locale_url('register'));
+    exit;
+}
+
+$data = $validator->validated();
+```
+
+Use `Flash::old('registration')` to refill the form and `Validator::flashedErrors('registration')` for inline errors. Passwords, tokens, and other sensitive fields are removed from old input automatically.
+
+Available rules include `required`, `required_if`, `required_with`, `accepted`, `string`, `integer`, `numeric`, `boolean`, `array`, `email`, `url`, `min`, `max`, `between`, `size`, `in`, `not_in`, `same`, `different`, `confirmed`, `regex`, `date`, `date_format`, `alpha`, `alpha_num`, and `slug`. Modifiers `bail`, `sometimes`, and `nullable` are supported. An array of rules can also contain a closure returning `true`, an error string, or `false`.
+
 ## LOGGER
 
 HOW TO USE IT IN PROJECT

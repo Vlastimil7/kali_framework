@@ -10,6 +10,7 @@ use Helpers\Logger;
 use Helpers\ContactAttachmentUpload;
 use Helpers\Flash;
 use Helpers\Toast;
+use Helpers\Validator;
 use Services\Mail\Mail;
 use Services\Mail\Mailables\ContactEmail;
 
@@ -96,17 +97,37 @@ class ContactController extends Controller
             'clinic'  => $clinic,
         ];
 
-        // Validace
-        $validationResult = $this->validateContactForm($formData);
-        if (!$validationResult['success']) {
+        $validator = Validator::make($formData, [
+            'fullName' => 'bail|required|string|max:120',
+            'email' => 'bail|required|email|max:254',
+            'phone' => ['nullable', 'regex:/^[0-9+\s\-]{6,20}$/'],
+            'subject' => 'nullable|string|max:200',
+            'message' => 'bail|required|string|max:2000',
+            'privacy' => 'accepted',
+        ], [
+            'fullName.required' => 'Prosím vyplňte své jméno a příjmení.',
+            'email.required' => 'Prosím vyplňte e-mailovou adresu.',
+            'email.email' => 'Prosím zadejte platnou e-mailovou adresu.',
+            'phone.regex' => 'Telefon má neplatný formát.',
+            'message.required' => 'Prosím napište vaši zprávu.',
+            'privacy.accepted' => 'Musíte souhlasit se zpracováním osobních údajů.',
+        ], [
+            'fullName' => 'jméno',
+            'email' => 'e-mail',
+            'phone' => 'telefon',
+            'subject' => 'předmět',
+            'message' => 'zpráva',
+            'privacy' => 'souhlas se zpracováním údajů',
+        ]);
+
+        if ($validator->fails()) {
             Logger::info('Contact form validation failed', [
-                'reason' => $validationResult['message'],
+                'reason' => $validator->first(),
                 'email'  => $formData['email'] ?? null,
                 'clinic' => $clinic ?: null,
             ]);
 
-            Toast::error($validationResult['message']);
-            Flash::withInput('contact', $request->post());
+            $validator->flash('contact', $request->post());
             header('Location: ' . locale_url('contact'));
             exit;
         }
@@ -170,45 +191,4 @@ class ContactController extends Controller
         exit;
     }
 
-    private function validateContactForm(array $data): array
-    {
-        if (trim($data['fullName'] ?? '') === '') {
-            return ['success' => false, 'message' => 'Prosím vyplňte své jméno a příjmení'];
-        }
-
-        if (empty($data['email'])) {
-            return ['success' => false, 'message' => 'Prosím vyplňte emailovou adresu'];
-        }
-
-        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            return ['success' => false, 'message' => 'Prosím zadejte platnou emailovou adresu'];
-        }
-
-        if (empty($data['message'])) {
-            return ['success' => false, 'message' => 'Prosím napište vaši zprávu'];
-        }
-
-        if (!$data['privacy']) {
-            return ['success' => false, 'message' => 'Musíte souhlasit se zpracováním osobních údajů'];
-        }
-
-        $phone = trim($data['phone'] ?? '');
-        if ($phone !== '' && !preg_match('/^[0-9+\s\-]{6,20}$/', $phone)) {
-            return ['success' => false, 'message' => 'Telefon má neplatný formát'];
-        }
-
-        if (mb_strlen($data['fullName']) > 120) {
-            return ['success' => false, 'message' => 'Jméno je příliš dlouhé'];
-        }
-
-        if (!empty($data['subject']) && mb_strlen($data['subject']) > 200) {
-            return ['success' => false, 'message' => 'Předmět může mít maximálně 200 znaků'];
-        }
-
-        if (mb_strlen($data['message']) > 2000) {
-            return ['success' => false, 'message' => 'Zpráva může mít maximálně 2000 znaků'];
-        }
-
-        return ['success' => true];
-    }
 }
