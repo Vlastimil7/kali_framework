@@ -105,12 +105,6 @@ class UserController extends Controller
     // Zobrazení profilu uživatele
     public function showProfile()
     {
-        // Kontrola, zda je uživatel přihlášen
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . locale_url('login'));
-            exit;
-        }
-
         $userId = $_SESSION['user_id'];
         $user = $this->userModel->getUserById($userId);
 
@@ -126,12 +120,6 @@ class UserController extends Controller
     public function updateProfile()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Kontrola, zda je uživatel přihlášen
-            if (!isset($_SESSION['user_id'])) {
-                header('Location: ' . locale_url('login'));
-                exit;
-            }
-
             $userId = $_SESSION['user_id'];
 
             // Získání aktualizovaných údajů

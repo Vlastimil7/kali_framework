@@ -31,8 +31,8 @@ $router->get('password/reset/{token}', 'Front\\UserController@showPasswordReset'
 $router->post('password/update', 'Front\\UserController@updatePassword');
 
 // Profile
-$router->get('profile', 'Front\\UserController@showProfile');
-$router->post('profile/update', 'Front\\UserController@updateProfile');
+$router->get('profile', 'Front\\UserController@showProfile')->middleware('auth');
+$router->post('profile/update', 'Front\\UserController@updateProfile')->middleware('auth');
 
 // Cart
 $router->get('cart', 'Front\\CartController@index');

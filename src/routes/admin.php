@@ -1,9 +1,11 @@
 <?php
 
 // ============================
-// ADMIN (chráněné BaseAdminControllerem)
+// ADMIN (chráněné middleware pipeline)
 // namespace: Controllers\Admin
 // ============================
+
+$router->group(['middleware' => ['auth', 'admin']], function (Core\Router $router): void {
 
 $router->get('admin', 'Admin\\DashboardController@index');
 $router->get('admin/dashboard', 'Admin\\DashboardController@index');
@@ -49,3 +51,4 @@ $router->get('admin/telemetry', 'Admin\\TelemetryController@dashboard');
 $router->get('admin/telemetry/online', 'Admin\\TelemetryController@online');
 $router->get('admin/telemetry/events', 'Admin\\TelemetryController@events');
 $router->get('admin/telemetry/session/{sessionId}', 'Admin\\TelemetryController@session');
+});

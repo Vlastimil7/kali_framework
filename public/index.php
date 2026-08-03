@@ -35,6 +35,7 @@ spl_autoload_register(function ($className) {
         'Controllers\\' => 'controllers/',
         'Models\\' => 'models/',
         'Helpers\\' => 'helpers/',
+        'Middleware\\' => 'middleware/',
         'Services\\' => 'services/'
     ];
 
