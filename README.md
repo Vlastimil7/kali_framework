@@ -190,6 +190,52 @@ Custom middleware must implement `Core\MiddlewareInterface`. Register an alias w
 $router->aliasMiddleware('verified', Middleware\VerifiedUserMiddleware::class);
 ```
 
+### CSRF protection
+
+Internal state-changing web routes use the `csrf` middleware:
+
+```php
+$router->post('profile/update', 'Front\\UserController@updateProfile')
+    ->middleware(['auth', 'csrf']);
+```
+
+POST forms rendered through the main layout receive a hidden `_token` field automatically. For forms outside the main content, use:
+
+```php
+<?= csrf_field() ?>
+```
+
+The current token is also available for AJAX requests:
+
+```js
+const token = document.querySelector('meta[name="csrf-token"]').content;
+
+fetch('/account/update', {
+  method: 'POST',
+  headers: { 'X-CSRF-TOKEN': token },
+});
+```
+
+External payment callbacks and stateless API endpoints should not use session CSRF middleware; they need their own signature or API-token verification.
+
+### Request object
+
+Type-hint `Core\Request` as the first controller argument. The router injects it automatically, including route parameters:
+
+```php
+use Core\Request;
+
+public function update(Request $request, int $id)
+{
+    $email = $request->string('email');
+    $page = $request->int('page', 1);
+    $enabled = $request->boolean('enabled');
+    $attachment = $request->file('attachment');
+}
+```
+
+Common methods include `input()`, `post()`, `query()`, `string()`, `int()`, `boolean()`, `has()`, `filled()`, `only()`, `except()`, `file()`, `header()`, `cookie()`, `route()`, `ip()`, `uri()`, and `isSecure()`.
+
 ## LOGGER
 
 HOW TO USE IT IN PROJECT

@@ -3,6 +3,7 @@
 namespace Controllers\Front;
 
 use Core\Controller;
+use Core\Request;
 use Models\Voucher;
 use Models\Order;
 use Services\Vouchers\OrderService;
@@ -73,9 +74,9 @@ class VoucherController extends Controller
      * POST /voucher/{slug}/order/process
      * Odeslání objednávky → vytváří order, položky, transakci + redirect na Comgate
      */
-    public function processOrder($slug)
+    public function processOrder(Request $request, $slug)
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        if (!$request->isMethod('POST')) {
             return $this->show404();
         }
 
@@ -85,15 +86,15 @@ class VoucherController extends Controller
         }
 
         $form = [
-            'name'    => trim($_POST['name'] ?? ''),
-            'email'   => trim($_POST['email'] ?? ''),
-            'phone'   => trim($_POST['phone'] ?? ''),
-            'street'  => trim($_POST['street'] ?? ''),
-            'city'    => trim($_POST['city'] ?? ''),
-            'zip'     => trim($_POST['zip'] ?? ''),
-            'company' => !empty($_POST['company']) ? trim($_POST['company']) : null,
-            'ico'     => trim($_POST['ico'] ?? ''),
-            'dic'     => trim($_POST['dic'] ?? ''),
+            'name'    => $request->string('name'),
+            'email'   => $request->string('email'),
+            'phone'   => $request->string('phone'),
+            'street'  => $request->string('street'),
+            'city'    => $request->string('city'),
+            'zip'     => $request->string('zip'),
+            'company' => $request->filled('company') ? $request->string('company') : null,
+            'ico'     => $request->string('ico'),
+            'dic'     => $request->string('dic'),
         ];
 
         $result = $this->orderService->createOrderAndPayment($voucher, $form);

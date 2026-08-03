@@ -118,13 +118,17 @@
                        
                     <?php endif; ?>
 
-                    <a href="<?= locale_url('logout') ?>" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"logout-link"}'>
-                        <?= __('header_nav_logout', [], 'header') ?>
-                    </a>
+                    <form action="<?= locale_url('logout') ?>" method="post" class="inline">
+                        <?= csrf_field() ?>
+                        <button type="submit" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"logout-link"}'>
+                            <?= __('header_nav_logout', [], 'header') ?>
+                        </button>
+                    </form>
 
                 <?php else: ?>
 
                     <form action="<?= locale_url('ai-mode/toggle') ?>" method="POST" class="inline-flex items-center me-5 cursor-pointer text-white">
+                        <?= csrf_field() ?>
                         <label class="inline-flex items-center me-5 cursor-pointer text-white">
                             <input type="hidden" name="enabled" value="0">
                             <input type="checkbox" id="ai-toggle" name="enabled" value="1"

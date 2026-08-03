@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="<?= BASE_URL ?>/assets/images/logo/fav/vk-dev.ico">
     <?php
@@ -157,7 +158,7 @@
 
         <!-- Hlavní obsah, vždy max-width 7xl -->
         <main class="w-full">
-            <?= $data['content'] ?? '' ?>
+            <?= csrf_protect_forms((string)($data['content'] ?? '')) ?>
         </main>
 
 

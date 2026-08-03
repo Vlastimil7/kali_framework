@@ -2,6 +2,7 @@
 
 namespace Controllers\Admin;
 
+use Core\Request;
 use Models\VoucherCode;
 use Helpers\Toast;
 
@@ -26,9 +27,9 @@ class VoucherCodesController extends BaseAdminController
     }
 
     // POST /admin/voucher-codes/verify
-    public function verify()
+    public function verify(Request $request)
     {
-        $code = strtoupper(trim((string)($_POST['code'] ?? '')));
+        $code = strtoupper($request->string('code'));
 
         if ($code === '') {
             Toast::error('Zadej kód voucheru.');
@@ -70,10 +71,10 @@ class VoucherCodesController extends BaseAdminController
     }
 
     // POST /admin/voucher-codes/redeem
-    public function redeem()
+    public function redeem(Request $request)
     {
-        $code = strtoupper(trim((string)($_POST['code'] ?? '')));
-        $note = trim((string)($_POST['note'] ?? ''));
+        $code = strtoupper($request->string('code'));
+        $note = $request->string('note');
 
         if ($code === '') {
             Toast::error('Zadej kód voucheru.');
@@ -97,13 +98,13 @@ class VoucherCodesController extends BaseAdminController
     }
 
     // POST /admin/voucher-codes/void  (storno/refund)
-    public function void()
+    public function void(Request $request)
     {
-        $code   = strtoupper(trim((string)($_POST['code'] ?? '')));
-        $reason = trim((string)($_POST['reason'] ?? ''));
+        $code   = strtoupper($request->string('code'));
+        $reason = $request->string('reason');
 
         // volitelně: canceled/refunded
-        $type = strtolower(trim((string)($_POST['type'] ?? 'canceled')));
+        $type = strtolower($request->string('type', 'canceled'));
         if (!in_array($type, ['canceled', 'refunded'], true)) {
             $type = 'canceled';
         }
@@ -131,10 +132,10 @@ class VoucherCodesController extends BaseAdminController
     }
 
     // POST /admin/voucher-codes/exchange
-    public function exchange()
+    public function exchange(Request $request)
     {
-        $code   = strtoupper(trim((string)($_POST['code'] ?? '')));
-        $reason = trim((string)($_POST['reason'] ?? ''));
+        $code   = strtoupper($request->string('code'));
+        $reason = $request->string('reason');
 
         if ($code === '') {
             Toast::error('Zadej kód voucheru.');

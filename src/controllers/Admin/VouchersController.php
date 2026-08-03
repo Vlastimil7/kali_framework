@@ -2,6 +2,7 @@
 
 namespace Controllers\Admin;
 
+use Core\Request;
 use Models\Voucher;
 use Helpers\Flash;
 use Helpers\Toast;
@@ -46,13 +47,13 @@ class VouchersController extends BaseAdminController
         ]);
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        $name = trim((string)($_POST['name'] ?? ''));
-        $slug = trim((string)($_POST['slug'] ?? ''));
-        $currency = trim((string)($_POST['currency'] ?? 'CZK'));
-        $price = trim((string)($_POST['price'] ?? $_POST['price_czk'] ?? ''));
-        $isActive = isset($_POST['is_active']) ? 1 : 0;
+        $name = $request->string('name');
+        $slug = $request->string('slug');
+        $currency = $request->string('currency', 'CZK');
+        $price = $request->string('price', $request->string('price_czk'));
+        $isActive = $request->has('is_active') ? 1 : 0;
 
         $errors = [];
         if ($name === '') $errors[] = 'Název je povinný.';
@@ -62,14 +63,14 @@ class VouchersController extends BaseAdminController
 
         if ($errors) {
             Toast::error(implode(' ', $errors));
-            Flash::withInput('admin_voucher', $_POST);
+            Flash::withInput('admin_voucher', $request->post());
             header('Location: ' . BASE_URL . '/admin/vouchers/create');
             exit;
         }
 
         $priceCents = (int) round((float) str_replace(',', '.', $price) * 100);
-        $description = trim((string)($_POST['description'] ?? ''));
-        $validityMonths = (int)($_POST['validity_months'] ?? 6);
+        $description = $request->string('description');
+        $validityMonths = $request->int('validity_months', 6);
 
         $res = $this->voucherModel->create([
             'name' => $name,
@@ -84,7 +85,7 @@ class VouchersController extends BaseAdminController
 
         if (!$res['success']) {
             Toast::error($res['message'] ?? 'Chyba při vytváření voucheru.');
-            Flash::withInput('admin_voucher', $_POST);
+            Flash::withInput('admin_voucher', $request->post());
             header('Location: ' . BASE_URL . '/admin/vouchers/create');
             exit;
         }
@@ -107,17 +108,17 @@ class VouchersController extends BaseAdminController
         ]);
     }
 
-    public function update(int $id)
+    public function update(Request $request, int $id)
     {
         $voucher = $this->voucherModel->getById($id);
         if (!$voucher) return $this->show404();
 
-        $name = trim((string)($_POST['name'] ?? ''));
-        $slug = trim((string)($_POST['slug'] ?? ''));
-        $description = trim((string)($_POST['description'] ?? ''));
-        $currency = trim((string)($_POST['currency'] ?? ($voucher['currency'] ?? 'CZK')));
-        $price = trim((string)($_POST['price'] ?? $_POST['price_czk'] ?? ''));
-        $isActive = isset($_POST['is_active']) ? 1 : 0;
+        $name = $request->string('name');
+        $slug = $request->string('slug');
+        $description = $request->string('description');
+        $currency = $request->string('currency', (string)($voucher['currency'] ?? 'CZK'));
+        $price = $request->string('price', $request->string('price_czk'));
+        $isActive = $request->has('is_active') ? 1 : 0;
 
         $errors = [];
         if ($name === '') $errors[] = 'Název je povinný.';
@@ -128,7 +129,7 @@ class VouchersController extends BaseAdminController
 
         if ($errors) {
             Toast::error(implode(' ', $errors));
-            Flash::withInput('admin_voucher', $_POST);
+            Flash::withInput('admin_voucher', $request->post());
             header('Location: ' . BASE_URL . '/admin/vouchers/edit/' . (int)$id);
             exit;
         }
@@ -146,7 +147,7 @@ class VouchersController extends BaseAdminController
 
         if (!$res['success']) {
             Toast::error($res['message'] ?? 'Chyba při ukládání voucheru.');
-            Flash::withInput('admin_voucher', $_POST);
+            Flash::withInput('admin_voucher', $request->post());
             header('Location: ' . BASE_URL . '/admin/vouchers/edit/' . (int)$id);
             exit;
         }

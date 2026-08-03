@@ -53,6 +53,23 @@ foreach (['profile', 'profile/update'] as $protectedPath) {
     }
 }
 
+$csrfExceptions = [
+    'payment/comgate/notify',
+    'api/v1/chat',
+    'api/v1/telemetry/collect',
+];
+
+foreach ($routes['POST'] ?? [] as $path => $route) {
+    if (in_array($path, $csrfExceptions, true)) {
+        continue;
+    }
+
+    $middleware = $route['options']['middleware'] ?? [];
+    if (!in_array('csrf', $middleware, true)) {
+        $failures[] = "POST $path: missing csrf middleware";
+    }
+}
+
 if ($failures !== []) {
     fwrite(STDERR, implode(PHP_EOL, $failures) . PHP_EOL);
     exit(1);

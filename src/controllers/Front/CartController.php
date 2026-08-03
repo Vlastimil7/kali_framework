@@ -3,6 +3,7 @@
 namespace Controllers\Front;
 
 use Core\Controller;
+use Core\Request;
 use Core\Database;
 use Models\Cart;
 use Models\Order;
@@ -44,15 +45,15 @@ class CartController extends Controller
     /**
      * Přidání voucheru do košíku
      */
-    public function addVoucher()
+    public function addVoucher(Request $request)
     {
-        if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+        if (!$request->isMethod('POST')) {
             header('Location: ' . locale_url('vouchers'));
             exit;
         }
 
-        $voucherId = (int)($_POST['voucher_id'] ?? 0);
-        $quantity  = (int)($_POST['quantity'] ?? 1);
+        $voucherId = $request->int('voucher_id');
+        $quantity  = $request->int('quantity', 1);
 
         $result = $this->cartModel->addVoucher($voucherId, $quantity);
 
@@ -65,15 +66,15 @@ class CartController extends Controller
     /**
      * Aktualizace množství
      */
-    public function updateItem()
+    public function updateItem(Request $request)
     {
-        if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+        if (!$request->isMethod('POST')) {
             header('Location: ' . locale_url('cart'));
             exit;
         }
 
-        $itemKey = (string)($_POST['item_key'] ?? '');
-        $quantity = (int)($_POST['quantity'] ?? 0);
+        $itemKey = $request->string('item_key');
+        $quantity = $request->int('quantity');
 
         if ($itemKey === '') {
             Toast::error('Položka nebyla nalezena');
@@ -92,14 +93,14 @@ class CartController extends Controller
     /**
      * Odstranění položky
      */
-    public function removeItem()
+    public function removeItem(Request $request)
     {
-        if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+        if (!$request->isMethod('POST')) {
             header('Location: ' . locale_url('cart'));
             exit;
         }
 
-        $itemKey = (string)($_POST['item_key'] ?? '');
+        $itemKey = $request->string('item_key');
 
         if ($itemKey === '') {
             Toast::error('Položka nebyla nalezena');
@@ -118,9 +119,9 @@ class CartController extends Controller
     /**
      * Vyprázdnění košíku
      */
-    public function clearCart()
+    public function clearCart(Request $request)
     {
-        if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+        if (!$request->isMethod('POST')) {
             header('Location: ' . locale_url('cart'));
             exit;
         }
@@ -157,14 +158,14 @@ class CartController extends Controller
      * Vytvoření objednávky + založení platby v Comgate + redirect na bránu
      * ROUTE: POST /cart/create-order
      */
-    public function createOrder()
+    public function createOrder(Request $request)
     {
         Logger::info('CartController::createOrder START', [
-            'method' => $_SERVER['REQUEST_METHOD'] ?? null,
-            'uri'    => $_SERVER['REQUEST_URI'] ?? null,
+            'method' => $request->method(),
+            'uri'    => $request->uri(),
         ]);
 
-        if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+        if (!$request->isMethod('POST')) {
             Logger::warning('CartController::createOrder non-POST request');
             header('Location: ' . locale_url('cart'));
             exit;
@@ -185,16 +186,16 @@ class CartController extends Controller
         }
 
         $billing = [
-            'billing_name'     => trim((string)($_POST['billing_name'] ?? '')),
-            'billing_email'    => trim((string)($_POST['billing_email'] ?? '')),
-            'billing_phone'    => trim((string)($_POST['billing_phone'] ?? '')),
-            'billing_street'   => trim((string)($_POST['billing_street'] ?? '')),
-            'billing_house_no' => trim((string)($_POST['billing_house_no'] ?? '')),
-            'billing_city'     => trim((string)($_POST['billing_city'] ?? '')),
-            'billing_zip'      => trim((string)($_POST['billing_zip'] ?? '')),
-            'billing_company'  => !empty($_POST['billing_company']) ? trim((string)$_POST['billing_company']) : null,
-            'billing_ico'      => !empty($_POST['billing_ico']) ? trim((string)$_POST['billing_ico']) : null,
-            'billing_dic'      => !empty($_POST['billing_dic']) ? trim((string)$_POST['billing_dic']) : null,
+            'billing_name'     => $request->string('billing_name'),
+            'billing_email'    => $request->string('billing_email'),
+            'billing_phone'    => $request->string('billing_phone'),
+            'billing_street'   => $request->string('billing_street'),
+            'billing_house_no' => $request->string('billing_house_no'),
+            'billing_city'     => $request->string('billing_city'),
+            'billing_zip'      => $request->string('billing_zip'),
+            'billing_company'  => $request->filled('billing_company') ? $request->string('billing_company') : null,
+            'billing_ico'      => $request->filled('billing_ico') ? $request->string('billing_ico') : null,
+            'billing_dic'      => $request->filled('billing_dic') ? $request->string('billing_dic') : null,
         ];
 
         Logger::info('Billing received', [
@@ -221,8 +222,8 @@ class CartController extends Controller
             exit;
         }
 
-        $recipientMap = $_POST['recipient_name'] ?? [];
-        $noteMap      = $_POST['note'] ?? [];
+        $recipientMap = $request->post('recipient_name', []);
+        $noteMap      = $request->post('note', []);
 
         $db = Database::getInstance();
         $orderNumber = $this->generateOrderNumber();

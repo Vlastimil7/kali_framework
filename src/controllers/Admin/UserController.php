@@ -2,6 +2,7 @@
 
 namespace Controllers\Admin;
 
+use Core\Request;
 use Models\User;
 use Helpers\Flash;
 use Helpers\Toast;
@@ -35,19 +36,19 @@ class UserController extends BaseAdminController
         ]);
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        if (!$request->isMethod('POST')) {
             return $this->show404();
         }
 
         $userData = [
-            'email' => $_POST['email'] ?? '',
-            'password' => $_POST['password'] ?? '',
-            'name' => $_POST['name'] ?? '',
-            'surname' => $_POST['surname'] ?? '',
-            'phone' => $_POST['phone'] ?? '',
-            'role' => $_POST['role'] ?? 'user',
+            'email' => $request->string('email'),
+            'password' => $request->string('password'),
+            'name' => $request->string('name'),
+            'surname' => $request->string('surname'),
+            'phone' => $request->string('phone'),
+            'role' => $request->string('role', 'user'),
         ];
 
         $result = $this->userModel->register($userData);
@@ -78,22 +79,22 @@ class UserController extends BaseAdminController
         ]);
     }
 
-    public function update(int $id)
+    public function update(Request $request, int $id)
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        if (!$request->isMethod('POST')) {
             return $this->show404();
         }
 
         $userData = [
-            'name' => $_POST['name'] ?? '',
-            'surname' => $_POST['surname'] ?? '',
-            'email' => $_POST['email'] ?? '',
-            'phone' => $_POST['phone'] ?? '',
-            'role' => $_POST['role'] ?? 'user',
+            'name' => $request->string('name'),
+            'surname' => $request->string('surname'),
+            'email' => $request->string('email'),
+            'phone' => $request->string('phone'),
+            'role' => $request->string('role', 'user'),
         ];
 
-        if (!empty($_POST['password'])) {
-            $userData['password'] = $_POST['password'];
+        if ($request->filled('password')) {
+            $userData['password'] = $request->string('password');
         }
 
         $result = $this->userModel->updateUser($id, $userData);
@@ -108,9 +109,9 @@ class UserController extends BaseAdminController
         exit;
     }
 
-    public function delete(int $id)
+    public function delete(Request $request, int $id)
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        if (!$request->isMethod('POST')) {
             return $this->show404();
         }
 

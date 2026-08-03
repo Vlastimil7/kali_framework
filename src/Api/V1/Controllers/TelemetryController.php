@@ -4,6 +4,7 @@ namespace Api\V1\Controllers;
 
 use Api\BaseApiController;
 use Api\ApiResponse;
+use Core\Request;
 use Helpers\Logger;
 use Services\Telemetry\TelemetryService;
 
@@ -16,23 +17,24 @@ class TelemetryController extends BaseApiController
         $this->telemetryService = new TelemetryService();
     }
 
-    public function collect()
+    public function collect(Request $request)
     {
+        $request = $this->useRequest($request);
         try {
             if (!$this->validateMethod('POST')) {
                 return;
             }
 
-            $requestData = $this->getRequestData();
+            $requestData = $request->post();
             if (empty($requestData)) {
                 ApiResponse::badRequest('Invalid or empty JSON payload.');
                 return;
             }
 
             $result = $this->telemetryService->collect($requestData, [
-                'clientIpAddress' => $_SERVER['REMOTE_ADDR'] ?? '',
-                'userAgent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
-                'referer' => $_SERVER['HTTP_REFERER'] ?? '',
+                'clientIpAddress' => $request->ip(),
+                'userAgent' => (string)$request->header('User-Agent', ''),
+                'referer' => (string)$request->header('Referer', ''),
                 'isAdmin' => $this->isAdmin(),
             ]);
 

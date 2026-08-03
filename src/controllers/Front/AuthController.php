@@ -3,6 +3,7 @@
 namespace Controllers\Front;
 
 use Core\Controller;
+use Core\Request;
 use Services\Auth\GoogleOAuthService;
 use Models\User;
 use Helpers\Toast;
@@ -31,7 +32,7 @@ class AuthController extends Controller
         exit;
     }
 
-    public function handleGoogleCallback(): void
+    public function handleGoogleCallback(Request $request): void
     {
         http_response_code(200);
 
@@ -40,8 +41,8 @@ class AuthController extends Controller
             if (!lang()->isValidLanguage($returnLanguage)) {
                 $returnLanguage = lang()->getDefaultLanguage();
             }
-            $state = (string)($_GET['state'] ?? '');
-            $code = (string)($_GET['code'] ?? '');
+            $state = $request->string('state');
+            $code = $request->string('code');
             $storedState = (string)($_SESSION['google_oauth_state'] ?? '');
 
             if ($state === '' || $storedState === '' || !hash_equals($storedState, $state)) {

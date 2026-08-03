@@ -91,12 +91,16 @@
                     </div>
 
                     <div class="flex flex-wrap justify-center gap-4 mt-12">
-                        <a href="<?= locale_url('cookies/reject') ?>" class="btn-outline px-8 py-3 rounded bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors">
-                            Odmítnout vše
-                        </a>
-                        <a href="<?= locale_url('cookies/accept-all') ?>" class="btn-outline px-8 py-3 rounded bg-green-500 border border-green-500 text-white hover:bg-green-600 transition-colors">
-                            Přijmout vše
-                        </a>
+                        <form action="<?= locale_url('cookies/reject') ?>" method="post">
+                            <button type="submit" class="btn-outline px-8 py-3 rounded bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors">
+                                Odmítnout vše
+                            </button>
+                        </form>
+                        <form action="<?= locale_url('cookies/accept-all') ?>" method="post">
+                            <button type="submit" class="btn-outline px-8 py-3 rounded bg-green-500 border border-green-500 text-white hover:bg-green-600 transition-colors">
+                                Přijmout vše
+                            </button>
+                        </form>
                         <button type="submit" class="btn-primary px-8 py-3 rounded cursor-pointer bg-blue-500 border border-blue-500 text-white hover:bg-blue-600 transition-colors">
                             Uložit nastavení
                         </button>

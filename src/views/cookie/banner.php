@@ -20,12 +20,18 @@ $showBanner = $cookieConsent === null;
                 <a href="<?= locale_url('cookies/settings') ?>" class="text-sm border border-white text-white px-4 py-2 rounded hover:bg-white hover:text-gray-800 transition">
                     Nastavení
                 </a>
-                <a href="<?= locale_url('cookies/reject') ?>" class="text-sm border border-white text-white px-4 py-2 rounded hover:bg-white hover:text-gray-800 transition">
-                    Odmítnout
-                </a>
-                <a href="<?= locale_url('cookies/accept-all') ?>" class="text-sm bg-gold border border-gold text-white px-4 py-2 rounded hover:bg-opacity-90 transition">
-                    Přijmout vše
-                </a>
+                <form action="<?= locale_url('cookies/reject') ?>" method="post">
+                    <?= csrf_field() ?>
+                    <button type="submit" class="text-sm border border-white text-white px-4 py-2 rounded hover:bg-white hover:text-gray-800 transition">
+                        Odmítnout
+                    </button>
+                </form>
+                <form action="<?= locale_url('cookies/accept-all') ?>" method="post">
+                    <?= csrf_field() ?>
+                    <button type="submit" class="text-sm bg-gold border border-gold text-white px-4 py-2 rounded hover:bg-opacity-90 transition">
+                        Přijmout vše
+                    </button>
+                </form>
             </div>
         </div>
     </div>

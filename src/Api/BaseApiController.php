@@ -2,8 +2,12 @@
 
 namespace Api;
 
+use Core\Request;
+
 class BaseApiController
 {
+    private ?Request $requestInstance = null;
+
     /**
      * Nastavení CORS.
      *
@@ -37,7 +41,7 @@ class BaseApiController
             return;
         }
 
-        $requestOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
+        $requestOrigin = (string)$this->request()->header('Origin', '');
 
         // V allowAll režimu NIKDY nepoužívej credentials
         if ($corsOptions['mode'] === 'allowAll') {
@@ -86,7 +90,7 @@ class BaseApiController
 
     protected function isPreflightRequest(): bool
     {
-        return ($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS';
+        return $this->request()->isMethod('OPTIONS');
     }
 
     /**
@@ -130,20 +134,7 @@ class BaseApiController
 
     protected function getRequestData()
     {
-        $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
-
-        if (strpos($contentType, 'application/json') !== false) {
-            $json = file_get_contents('php://input');
-            $data = json_decode($json, true);
-
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                return [];
-            }
-
-            return $data;
-        }
-
-        return $_POST;
+        return $this->request()->post();
     }
 
     protected function validateMethod($allowedMethods)
@@ -152,11 +143,11 @@ class BaseApiController
             $allowedMethods = [$allowedMethods];
         }
 
-        if (!in_array($_SERVER['REQUEST_METHOD'], $allowedMethods, true)) {
+        if (!in_array($this->request()->method(), $allowedMethods, true)) {
             $this->response(
                 null,
                 false,
-                'Metoda ' . ($_SERVER['REQUEST_METHOD'] ?? '') . ' není povolena. Povolené metody: ' . implode(', ', $allowedMethods),
+                'Metoda ' . $this->request()->method() . ' není povolena. Povolené metody: ' . implode(', ', $allowedMethods),
                 405
             );
             return false;
@@ -168,5 +159,17 @@ class BaseApiController
     protected function isAdmin(): bool
     {
         return !empty($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+    }
+
+    protected function request(): Request
+    {
+        return $this->requestInstance ??= Request::capture();
+    }
+
+    protected function useRequest(Request $request): Request
+    {
+        $this->requestInstance = $request;
+
+        return $request;
     }
 }

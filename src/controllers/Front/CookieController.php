@@ -3,6 +3,7 @@
 namespace Controllers\Front;
 
 use Core\Controller;
+use Core\Request;
 
 class CookieController extends Controller
 {
@@ -21,10 +22,12 @@ class CookieController extends Controller
     /**
      * Zobrazí nastavení cookies
      */
-    public function showSettings()
+    public function showSettings(Request $request)
     {
         // Získat aktuální nastavení cookies, pokud existuje
-        $cookieConsent = isset($_COOKIE['cookie_consent']) ? json_decode($_COOKIE['cookie_consent'], true) : null;
+        $cookieConsent = $request->cookie('cookie_consent')
+            ? json_decode((string)$request->cookie('cookie_consent'), true)
+            : null;
 
         $data = [
             'title' => '' . __('cookies_settings_title', [], 'cookies') . ' | VK-DEV.cz',
@@ -42,12 +45,12 @@ class CookieController extends Controller
     /**
      * Uloží nastavení cookies podle preferencí uživatele
      */
-    public function saveConsent()
+    public function saveConsent(Request $request)
     {
         $necessary = true; // Vždy povoleno
-        $analytics = isset($_POST['analytics']) ? true : false;
-        $marketing = isset($_POST['marketing']) ? true : false;
-        $preferences = isset($_POST['preferences']) ? true : false;
+        $analytics = $request->has('analytics');
+        $marketing = $request->has('marketing');
+        $preferences = $request->has('preferences');
 
         // Vytvoření pole preferencí
         $cookiePreferences = [
@@ -59,10 +62,10 @@ class CookieController extends Controller
         ];
 
         // Uložení do cookie na 1 rok
-        $this->setCookie('cookie_consent', json_encode($cookiePreferences), 365);
+        $this->setCookie('cookie_consent', json_encode($cookiePreferences), 365, $request->isSecure());
 
         // Přesměrování zpět na stránku, odkud byl požadavek odeslán
-        $referer = $_SERVER['HTTP_REFERER'] ?? BASE_URL;
+        $referer = $request->header('Referer', BASE_URL);
         header('Location: ' . $referer);
         exit;
     }
@@ -70,7 +73,7 @@ class CookieController extends Controller
     /**
      * Přijme všechny cookies
      */
-    public function acceptAll()
+    public function acceptAll(Request $request)
     {
         $cookiePreferences = [
             'necessary' => true,
@@ -81,10 +84,10 @@ class CookieController extends Controller
         ];
 
         // Uložení do cookie na 1 rok
-        $this->setCookie('cookie_consent', json_encode($cookiePreferences), 365);
+        $this->setCookie('cookie_consent', json_encode($cookiePreferences), 365, $request->isSecure());
 
         // Přesměrování zpět na stránku, odkud byl požadavek odeslán
-        $referer = $_SERVER['HTTP_REFERER'] ?? BASE_URL;
+        $referer = $request->header('Referer', BASE_URL);
         header('Location: ' . $referer);
         exit;
     }
@@ -92,7 +95,7 @@ class CookieController extends Controller
     /**
      * Odmítne všechny volitelné cookies
      */
-    public function rejectAll()
+    public function rejectAll(Request $request)
     {
         $cookiePreferences = [
             'necessary' => true,
@@ -103,10 +106,10 @@ class CookieController extends Controller
         ];
 
         // Uložení do cookie na 1 rok
-        $this->setCookie('cookie_consent', json_encode($cookiePreferences), 365);
+        $this->setCookie('cookie_consent', json_encode($cookiePreferences), 365, $request->isSecure());
 
         // Přesměrování zpět na stránku, odkud byl požadavek odeslán
-        $referer = $_SERVER['HTTP_REFERER'] ?? BASE_URL;
+        $referer = $request->header('Referer', BASE_URL);
         header('Location: ' . $referer);
         exit;
     }
@@ -114,14 +117,14 @@ class CookieController extends Controller
     /**
      * Pomocná metoda pro nastavení cookie
      */
-    private function setCookie($name, $value, $days = 30)
+    private function setCookie($name, $value, $days = 30, bool $secure = false)
     {
         $expiry = time() + ($days * 86400); // 86400 = 1 den v sekundách
         setcookie($name, $value, [
             'expires' => $expiry,
             'path' => '/',
             'domain' => '',
-            'secure' => isset($_SERVER['HTTPS']),
+            'secure' => $secure,
             'httponly' => false,
             'samesite' => 'Lax'
         ]);

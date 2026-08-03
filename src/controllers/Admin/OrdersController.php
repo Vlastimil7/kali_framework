@@ -2,6 +2,7 @@
 
 namespace Controllers\Admin;
 
+use Core\Request;
 use Models\Order;
 use Models\OrderItem;
 use Models\VoucherCode;
@@ -138,22 +139,22 @@ class OrdersController extends BaseAdminController
         ]);
     }
 
-    public function update(int $id)
+    public function update(Request $request, int $id)
     {
         $order = $this->orderModel->getById($id);
         if (!$order) return $this->show404();
 
         $data = [
-            'billing_name' => trim((string)($_POST['billing_name'] ?? '')),
-            'billing_email' => trim((string)($_POST['billing_email'] ?? '')),
-            'billing_phone' => trim((string)($_POST['billing_phone'] ?? '')),
-            'billing_street' => trim((string)($_POST['billing_street'] ?? '')),
-            'billing_house_no' => trim((string)($_POST['billing_house_no'] ?? '')),
-            'billing_city' => trim((string)($_POST['billing_city'] ?? '')),
-            'billing_zip' => trim((string)($_POST['billing_zip'] ?? '')),
-            'billing_company' => trim((string)($_POST['billing_company'] ?? '')) ?: null,
-            'billing_ico' => trim((string)($_POST['billing_ico'] ?? '')) ?: null,
-            'billing_dic' => trim((string)($_POST['billing_dic'] ?? '')) ?: null,
+            'billing_name' => $request->string('billing_name'),
+            'billing_email' => $request->string('billing_email'),
+            'billing_phone' => $request->string('billing_phone'),
+            'billing_street' => $request->string('billing_street'),
+            'billing_house_no' => $request->string('billing_house_no'),
+            'billing_city' => $request->string('billing_city'),
+            'billing_zip' => $request->string('billing_zip'),
+            'billing_company' => $request->string('billing_company') ?: null,
+            'billing_ico' => $request->string('billing_ico') ?: null,
+            'billing_dic' => $request->string('billing_dic') ?: null,
         ];
 
         $errors = [];
@@ -164,14 +165,14 @@ class OrdersController extends BaseAdminController
 
         if ($errors) {
             Toast::error(implode(' ', $errors));
-            Flash::withInput('admin_order', $_POST);
+            Flash::withInput('admin_order', $request->post());
             $this->redirect('/admin/orders/edit/' . $id);
         }
 
         $res = $this->orderModel->updateAdmin($id, $data);
         if (!($res['success'] ?? false)) {
             Toast::error($res['message'] ?? 'Chyba při ukládání.');
-            Flash::withInput('admin_order', $_POST);
+            Flash::withInput('admin_order', $request->post());
             $this->redirect('/admin/orders/edit/' . $id);
         }
 
@@ -182,7 +183,7 @@ class OrdersController extends BaseAdminController
     /**
      * STORNO (canceled) – jen před zaplacením
      */
-    public function cancel(int $id)
+    public function cancel(Request $request, int $id)
     {
         $order = $this->orderModel->getById($id);
         if (!$order) return $this->show404();
@@ -193,7 +194,7 @@ class OrdersController extends BaseAdminController
             $this->redirect('/admin/orders/' . $id);
         }
 
-        $note = trim((string)($_POST['note'] ?? ''));
+        $note = $request->string('note');
 
         // 1) objednávka canceled
         $res = $this->orderModel->setStatusAdmin($id, 'canceled', $this->adminId(), $note);
@@ -220,7 +221,7 @@ class OrdersController extends BaseAdminController
     /**
      * EXPIRE – typicky pending/awaiting_payment (ne placené)
      */
-    public function expire(int $id)
+    public function expire(Request $request, int $id)
     {
         $order = $this->orderModel->getById($id);
         if (!$order) return $this->show404();
@@ -231,7 +232,7 @@ class OrdersController extends BaseAdminController
             $this->redirect('/admin/orders/' . $id);
         }
 
-        $note = trim((string)($_POST['note'] ?? ''));
+        $note = $request->string('note');
 
         $res = $this->orderModel->setStatusAdmin($id, 'expired', $this->adminId(), $note);
         if (!($res['success'] ?? false)) {
@@ -260,7 +261,7 @@ class OrdersController extends BaseAdminController
     /**
      * REFUND – jen paid + nesmí existovat redeemed kód
      */
-    public function refund(int $id)
+    public function refund(Request $request, int $id)
     {
         $order = $this->orderModel->getById($id);
         if (!$order) return $this->show404();
@@ -275,7 +276,7 @@ class OrdersController extends BaseAdminController
             $this->redirect('/admin/orders/' . $id);
         }
 
-        $note = trim((string)($_POST['note'] ?? ''));
+        $note = $request->string('note');
 
         // ✅ 1) COMGATE REFUND
         $cg = $this->orderService->adminRefund(

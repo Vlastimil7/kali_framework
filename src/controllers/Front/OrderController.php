@@ -3,6 +3,7 @@
 namespace Controllers\Front;
 
 use Core\Controller;
+use Core\Request;
 use Models\Order;
 use Models\OrderItem;
 use Models\VoucherCode;
@@ -24,9 +25,9 @@ class OrderController extends Controller
     /**
      * /order/success?order=MB-YYYYMMDD-XXXXXX
      */
-    public function success()
+    public function success(Request $request)
     {
-        $orderNumber = trim($_GET['order'] ?? '');
+        $orderNumber = $request->string('order');
         if ($orderNumber === '') {
             return $this->show404();
         }

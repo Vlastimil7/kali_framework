@@ -2,6 +2,7 @@
 
 namespace Controllers\Admin;
 
+use Core\Request;
 use Services\Telemetry\TelemetryAdminService;
 
 class TelemetryController extends BaseAdminController
@@ -14,10 +15,10 @@ class TelemetryController extends BaseAdminController
         $this->svc = new TelemetryAdminService();
     }
 
-    public function dashboard()
+    public function dashboard(Request $request)
     {
-        $app = (string)($_GET['app'] ?? 'vk-dev');
-        $range = (string)($_GET['range'] ?? '24h'); // 24h|7d|30d
+        $app = $request->string('app', 'vk-dev');
+        $range = $request->string('range', '24h'); // 24h|7d|30d
         [$from, $to] = $this->svc->rangeToDates($range);
 
         $data = $this->svc->getDashboard($app, $from, $to);
@@ -28,10 +29,10 @@ class TelemetryController extends BaseAdminController
         $this->view('admin/telemetry/dashboard', compact('app', 'range', 'from', 'to', 'data', 'onlineCount', 'onlineWindow'));
     }
 
-    public function online()
+    public function online(Request $request)
     {
-        $app = (string)($_GET['app'] ?? 'vk-dev');
-        $window = (int)($_GET['window'] ?? 20);
+        $app = $request->string('app', 'vk-dev');
+        $window = $request->int('window', 20);
         if (!in_array($window, [10, 20, 30, 60], true)) $window = 20;
 
         $rows = $this->svc->getOnline($app, $window, 200);
@@ -42,20 +43,20 @@ class TelemetryController extends BaseAdminController
         ]);
     }
 
-    public function events()
+    public function events(Request $request)
     {
-        $app = (string)($_GET['app'] ?? 'vk-dev');
+        $app = $request->string('app', 'vk-dev');
 
-        $range = (string)($_GET['range'] ?? '24h');
+        $range = $request->string('range', '24h');
         [$from, $to] = $this->svc->rangeToDates($range);
 
         $filters = [
-            'event' => trim((string)($_GET['event'] ?? '')) ?: null,
-            'path'  => trim((string)($_GET['path'] ?? '')) ?: null,
-            'sid'   => trim((string)($_GET['sid'] ?? '')) ?: null,
+            'event' => $request->string('event') ?: null,
+            'path'  => $request->string('path') ?: null,
+            'sid'   => $request->string('sid') ?: null,
         ];
 
-        $page = max(1, (int)($_GET['page'] ?? 1));
+        $page = max(1, $request->int('page', 1));
         $limit = 50;
         $offset = ($page - 1) * $limit;
 
@@ -76,9 +77,9 @@ class TelemetryController extends BaseAdminController
         ]);
     }
 
-    public function session(string $sessionId)
+    public function session(Request $request, string $sessionId)
     {
-        $app = (string)($_GET['app'] ?? 'vk-dev');
+        $app = $request->string('app', 'vk-dev');
         $detail = $this->svc->getSessionDetail($app, $sessionId);
 
         $this->view('admin/telemetry/session', [
