@@ -25,7 +25,7 @@ unset($_SESSION['form_data']);
         <div class="p-6 space-y-6">
             <p class="text-gray-600">Zadejte svůj e-mail a my vám zašleme instrukce pro reset hesla.</p>
             
-            <form id="reset-form" action="<?= BASE_URL ?>/password/email" method="post" class="space-y-4" onsubmit="return validateForm()">
+            <form id="reset-form" action="<?= locale_url('password/email') ?>" method="post" class="space-y-4" onsubmit="return validateForm()">
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                     <input 
@@ -65,7 +65,7 @@ unset($_SESSION['form_data']);
                 
                 <div class="mt-6">
                     <p class="text-center text-sm text-gray-600">
-                        <a href="<?= BASE_URL ?>/login" class="font-medium text-blue-600 hover:text-blue-500">
+                        <a href="<?= locale_url('login') ?>" class="font-medium text-blue-600 hover:text-blue-500">
                             Zpět na přihlášení
                         </a>
                     </p>

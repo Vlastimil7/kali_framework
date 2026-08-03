@@ -72,7 +72,11 @@ class Router
      */
     public function dispatch(string $url)
     {
-        // Normalizace URL
+        // The bootstrap normally initializes localization. Keeping this guard
+        // makes direct Router usage deterministic as well.
+        $url = isset($GLOBALS['localized_route_path'])
+            ? current_route_path()
+            : initialize_localized_request($url);
         $url = trim($url, '/');
 
         // Zjištění HTTP metody
@@ -98,13 +102,18 @@ class Router
      */
     private function matchRoute(string $url, string $method)
     {
+        if ($method === 'HEAD' && !isset($this->routes['HEAD'][$url])) {
+            $method = 'GET';
+        }
+        $methodRoutes = $this->routes[$method] ?? [];
+
         // Přesná shoda route
-        if (isset($this->routes[$method][$url])) {
+        if (isset($methodRoutes[$url])) {
             return $this->executeHandler($url, $method);
         }
 
         // Hledání parametrizované route
-        foreach ($this->routes[$method] as $route => $routeData) {
+        foreach ($methodRoutes as $route => $routeData) {
             if ($this->isParametricRoute($route)) {
                 $matchResult = $this->matchParametricRoute($url, $route);
                 if ($matchResult) {
@@ -293,10 +302,10 @@ class Router
     private function show404(): void
     {
         // Zjistíme URL
-        $url = $_GET['url'] ?? '';
+        $url = current_route_path();
 
         // Nastavení HTTP hlavičky
-        header("HTTP/1.0 404 Not Found");
+        http_response_code(404);
 
         // Rozlišení mezi API a webovou routou
         if ($this->isApiRoute($url)) {
@@ -305,7 +314,7 @@ class Router
 
             $response = [
                 'success' => false,
-                'message' => __('error_404_text', [], 'error'),
+                'message' => __('page_not_found', [], '404'),
                 'statusCode' => 404
             ];
 
@@ -314,17 +323,18 @@ class Router
         } else {
             // Pro webovou route použijeme HTML layout
             ob_start();
-            include  ROOT_PATH . "../src/views/errors/404.php";
+            include ROOT_PATH . "/src/views/errors/404.php";
             $content = ob_get_clean();
 
             // Data pro layout
             $data = [
-                'title' => __('error_404_headline', [], 'error') . ' | VK-DEV.cz',
-                'content' => $content
+                'title' => __('page_not_found', [], '404') . ' | VK-DEV.cz',
+                'content' => $content,
+                'noindex' => true,
             ];
 
             // Načtení layoutu
-            include  ROOT_PATH . "../src/views/layouts/main.php";
+            include ROOT_PATH . "/src/views/layouts/main.php";
             exit();
         }
     }

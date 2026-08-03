@@ -24,7 +24,7 @@ unset($_SESSION['form_data']);
         <?php endif; ?>
 
         <div class="p-6 space-y-6">
-            <form action="<?= BASE_URL ?>/login/process" method="post" class="space-y-4">
+            <form action="<?= locale_url('login/process') ?>" method="post" class="space-y-4">
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                     <input
@@ -59,7 +59,7 @@ unset($_SESSION['form_data']);
                     </div>
 
                     <div class="text-sm">
-                        <a href="<?= BASE_URL ?>/password/reset" class="font-medium text-blue-600 hover:text-blue-500">
+                        <a href="<?= locale_url('password/reset') ?>" class="font-medium text-blue-600 hover:text-blue-500">
                             Zapomenuté heslo?
                         </a>
                     </div>
@@ -76,7 +76,7 @@ unset($_SESSION['form_data']);
 
             <div class="mt-4">
                 <a
-                    href="<?= BASE_URL ?>/auth/google/redirect"
+                    href="<?= locale_url('auth/google/redirect') ?>"
                     class="w-full inline-flex items-center justify-center gap-3 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
                         <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.2 1.3-1.5 3.9-5.5 3.9-3.3 0-6-2.7-6-6s2.7-6 6-6c1.9 0 3.2.8 3.9 1.5l2.7-2.6C16.9 3.3 14.7 2.4 12 2.4 6.9 2.4 2.8 6.5 2.8 11.6S6.9 20.8 12 20.8c6.9 0 9.1-4.8 9.1-7.3 0-.5-.1-.9-.1-1.3H12z" />
@@ -104,7 +104,7 @@ unset($_SESSION['form_data']);
                 <div class="mt-6">
                     <p class="text-center text-sm text-gray-600">
                         Nemáte ještě účet?
-                        <a href="<?= BASE_URL ?>/register" class="font-medium text-blue-600 hover:text-blue-500">
+                        <a href="<?= locale_url('register') ?>" class="font-medium text-blue-600 hover:text-blue-500">
                             Zaregistrujte se
                         </a>
                     </p>

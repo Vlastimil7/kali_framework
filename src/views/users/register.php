@@ -24,7 +24,7 @@ unset($_SESSION['form_data']);
         <?php endif; ?>
 
         <div class="p-6 space-y-6">
-            <form action="<?= BASE_URL ?>/register/process" method="post" class="space-y-4">
+            <form action="<?= locale_url('register/process') ?>" method="post" class="space-y-4">
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Jméno</label>
@@ -105,7 +105,7 @@ unset($_SESSION['form_data']);
                         class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     >
                     <label for="terms" class="ml-2 block text-sm text-gray-700">
-                        Souhlasím s <a href="<?= BASE_URL ?>/terms" class="text-blue-600 hover:text-blue-500">obchodními podmínkami</a>
+                        Souhlasím s <a href="<?= locale_url('terms') ?>" class="text-blue-600 hover:text-blue-500">obchodními podmínkami</a>
                     </label>
                 </div>
                 
@@ -122,7 +122,7 @@ unset($_SESSION['form_data']);
             <div class="mt-6">
                 <p class="text-center text-sm text-gray-600">
                     Máte již účet? 
-                    <a href="<?= BASE_URL ?>/login" class="font-medium text-blue-600 hover:text-blue-500">
+                    <a href="<?= locale_url('login') ?>" class="font-medium text-blue-600 hover:text-blue-500">
                         Přihlaste se
                     </a>
                 </p>

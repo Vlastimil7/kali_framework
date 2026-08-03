@@ -72,17 +72,17 @@ if ($label === 'Platba zrušena / neproběhla') {
         </div>
 
         <div class="mt-8 flex flex-col sm:flex-row gap-3">
-            <a href="<?= BASE_URL ?>/vouchers"
+            <a href="<?= locale_url('vouchers') ?>"
                class="inline-flex justify-center items-center px-4 py-2 rounded-lg bg-gray-900 text-white font-semibold hover:bg-gray-800">
                 Zpět na vouchery
             </a>
 
-            <a href="<?= BASE_URL ?>/cart"
+            <a href="<?= locale_url('cart') ?>"
                class="inline-flex justify-center items-center px-4 py-2 rounded-lg bg-gray-100 text-gray-900 font-semibold hover:bg-gray-200">
                 Košík
             </a>
 
-            <a href="<?= BASE_URL ?>/contact"
+            <a href="<?= locale_url('contact') ?>"
                class="inline-flex justify-center items-center px-4 py-2 rounded-lg border border-gray-200 text-gray-700 font-semibold hover:bg-gray-50">
                 Kontakt
             </a>

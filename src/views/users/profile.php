@@ -57,7 +57,7 @@
             <div class="bg-gray-50 p-6 rounded-lg mt-6">
                 <h2 class="text-xl font-semibold text-gray-800 mb-6">Upravit profil</h2>
                 
-                <form action="<?= BASE_URL ?>/profile/update" method="post" class="space-y-6">
+                <form action="<?= locale_url('profile/update') ?>" method="post" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Jméno</label>
@@ -108,11 +108,11 @@
     </div>
     
     <div class="flex justify-between">
-        <a href="<?= BASE_URL ?>/" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        <a href="<?= locale_url() ?>" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
             Zpět na přehled
         </a>
         
-        <a href="<?= BASE_URL ?>/logout" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+        <a href="<?= locale_url('logout') ?>" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
             Odhlásit se
         </a>
     </div>

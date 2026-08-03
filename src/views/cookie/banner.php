@@ -17,13 +17,13 @@ $showBanner = $cookieConsent === null;
             </div>
             <div class="flex flex-wrap gap-2">
                 <!-- Odstraněna třída cookie-settings-btn, která způsobovala problém -->
-                <a href="<?= BASE_URL ?>/cookies/settings" class="text-sm border border-white text-white px-4 py-2 rounded hover:bg-white hover:text-gray-800 transition">
+                <a href="<?= locale_url('cookies/settings') ?>" class="text-sm border border-white text-white px-4 py-2 rounded hover:bg-white hover:text-gray-800 transition">
                     Nastavení
                 </a>
-                <a href="<?= BASE_URL ?>/cookies/reject" class="text-sm border border-white text-white px-4 py-2 rounded hover:bg-white hover:text-gray-800 transition">
+                <a href="<?= locale_url('cookies/reject') ?>" class="text-sm border border-white text-white px-4 py-2 rounded hover:bg-white hover:text-gray-800 transition">
                     Odmítnout
                 </a>
-                <a href="<?= BASE_URL ?>/cookies/accept-all" class="text-sm bg-gold border border-gold text-white px-4 py-2 rounded hover:bg-opacity-90 transition">
+                <a href="<?= locale_url('cookies/accept-all') ?>" class="text-sm bg-gold border border-gold text-white px-4 py-2 rounded hover:bg-opacity-90 transition">
                     Přijmout vše
                 </a>
             </div>

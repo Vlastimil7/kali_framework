@@ -57,6 +57,25 @@ spl_autoload_register(function ($className) {
     return false;
 });
 
+// Translation and localized URL helpers must exist before routes/controllers
+// are loaded or any request-dependent redirect is evaluated.
+require_once ROOT_PATH . '/src/helpers/language_helper.php';
+require_once ROOT_PATH . '/src/helpers/url_helper.php';
+
+$requestedRoute = trim((string) ($_GET['url'] ?? ''), '/');
+if ($requestedRoute === '') {
+    $requestPath = (string) (parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/');
+    $basePath = trim((string) (parse_url(BASE_URL, PHP_URL_PATH) ?? ''), '/');
+    $requestPath = trim($requestPath, '/');
+    if ($basePath !== '' && ($requestPath === $basePath || str_starts_with($requestPath, $basePath . '/'))) {
+        $requestPath = ltrim(substr($requestPath, strlen($basePath)), '/');
+    }
+    $requestedRoute = $requestPath;
+}
+
+redirect_legacy_url($requestedRoute);
+$url = initialize_localized_request($requestedRoute);
+
 // Načtení konfiguračního souboru
 use Core\Database;
 
@@ -70,13 +89,6 @@ require_once ROOT_PATH . '/src/routes/web.php'; // Uživatelské cesty
 require_once ROOT_PATH . '/src/routes/admin.php'; // Admin cesty
 require_once ROOT_PATH . '/src/routes/api.php'; // API cesty
 
-// Načtení language helperu
-require_once ROOT_PATH . '/src/helpers/language_helper.php';
-
-
-// Získání URL z požadavku
-$url = $_GET['url'] ?? '';
-
 // --------------------
 // AI MODE lockdown
 // --------------------
@@ -85,26 +97,16 @@ $aiMode = !empty($_SESSION['ai_mode']);
 // Zjisti "path" bez query stringu.
 // U tebe je hlavní routing přes ?url=..., ale současně můžeš mít REQUEST_URI.
 // Uděláme kompromis: primárně použijeme ?url=, fallback REQUEST_URI.
-$rawPath = $_GET['url'] ?? null;
-
-if ($rawPath === null || $rawPath === '') {
-    $reqPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
-    $rawPath = trim($reqPath, '/');
-}
-
-$path = trim((string)$rawPath, '/');
+$path = $url;
 
 // Povolené cesty když je AI mode ON
 $allowedWhenAi = [
     'chat',
     'ai-mode/toggle',
-    'language/change',
-
     // API – chat + telemetry
     'api/v1/chat',
     'api/v1/chat/status',
     'api/v1/chat/health',
-    'api/v1/chat/test',
     'api/v1/telemetry/collect',
 
     // bezpečně nech i logout (ať se uživatel může odhlásit)
@@ -136,7 +138,7 @@ if ($aiMode && !$isAsset) {
     }
 
     if (!$isAllowed) {
-        header('Location: ' . BASE_URL . '/?url=chat');
+        header('Location: ' . locale_url('chat'));
         Toast::info(
             __('ai_mode_restriction_message', [], 'toast'),
             'Notify',

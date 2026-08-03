@@ -8,6 +8,9 @@
 // Home / Vouchery
 $router->get('', 'Front\\VoucherController@index');
 $router->get('vouchers', 'Front\\VoucherController@index');
+$router->get('voucher/{slug}', 'Front\\VoucherController@detail');
+$router->get('voucher/{slug}/order', 'Front\\VoucherController@orderForm');
+$router->post('voucher/{slug}/order/process', 'Front\\VoucherController@processOrder');
 
 // Contact
 $router->get('contact', 'Front\\ContactController@index');
@@ -48,9 +51,6 @@ $router->get('order/success', 'Front\\OrderController@success');
 $router->get('payment/comgate/return', 'Front\\PaymentController@comgateReturn');
 $router->post('payment/comgate/notify', 'Front\\PaymentController@comgateNotify');
 
-// Language
-$router->get('language/change/{lang}', 'Front\\LanguageController@changeLanguage');
-
 // Cookies / Consent
 $router->get('cookies/settings', 'Front\\CookieController@showSettings');
 $router->post('cookies/save', 'Front\\CookieController@saveConsent');
@@ -66,8 +66,8 @@ $router->get('terms', 'Front\\TermsController@show');
 $router->get('terms/shipping-payment', 'Front\\TermsController@showShippingPayment');
 
 // Chat
-//$router->get('chat', 'Front\\ChatController@index');
-//$router->post('ai-mode/toggle', 'Front\\AiModeController@toggle');
+$router->get('chat', 'Front\\ChatController@index');
+$router->post('ai-mode/toggle', 'Front\\AiModeController@toggle');
 
 // Google OAuth
 $router->get('auth/google/redirect', 'Front\\AuthController@redirectToGoogle');

@@ -10,7 +10,7 @@
 
         <div class="max-w-4xl mx-auto animate-on-scroll">
             <div class="card p-8">
-                <form action="<?= BASE_URL ?>/cookies/save" method="POST">
+                <form action="<?= locale_url('cookies/save') ?>" method="POST">
                     <div class="space-y-8">
                         <!-- Nezbytné cookies -->
                         <div class="bg-gray-50 p-6 rounded-lg">
@@ -91,10 +91,10 @@
                     </div>
 
                     <div class="flex flex-wrap justify-center gap-4 mt-12">
-                        <a href="<?= BASE_URL ?>/cookies/reject-all" class="btn-outline px-8 py-3 rounded bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors">
+                        <a href="<?= locale_url('cookies/reject') ?>" class="btn-outline px-8 py-3 rounded bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors">
                             Odmítnout vše
                         </a>
-                        <a href="<?= BASE_URL ?>/cookies/accept-all" class="btn-outline px-8 py-3 rounded bg-green-500 border border-green-500 text-white hover:bg-green-600 transition-colors">
+                        <a href="<?= locale_url('cookies/accept-all') ?>" class="btn-outline px-8 py-3 rounded bg-green-500 border border-green-500 text-white hover:bg-green-600 transition-colors">
                             Přijmout vše
                         </a>
                         <button type="submit" class="btn-primary px-8 py-3 rounded cursor-pointer bg-blue-500 border border-blue-500 text-white hover:bg-blue-600 transition-colors">

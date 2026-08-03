@@ -1,0 +1,30 @@
+<?php
+
+return array (
+  'footer_about_text' => 'Profesionální vývoj webových stránek, e-shopů a aplikací s důrazem na moderní technologie a uživatelský zážitek. Pomáhám firmám růst v digitálním prostředí.',
+  'footer_contact_text' => 'Máte zájem o spolupráci nebo chcete konzultovat váš projekt? Neváhejte mě kontaktovat a společně najdeme řešení.',
+  'footer_contact_title' => 'Kontaktujte mě',
+  'footer_copyright' => 'Vlastimil Kalášek. Všechna práva vyhrazena.',
+  'footer_lead_consent_text' => 'Odesláním souhlasíte se zpracováním osobních údajů dle zásad ochrany soukromí.',
+  'footer_lead_email_placeholder' => 'Váš email',
+  'footer_lead_submit_aria' => 'Odeslat',
+  'footer_link_cookies' => 'Cookies',
+  'footer_link_privacy' => 'Ochrana osobních údajů',
+  'footer_nav_contact' => 'Kontakt',
+  'footer_nav_faq' => 'FAQ',
+  'footer_nav_home' => 'Úvod',
+  'footer_nav_how_it_works' => 'Jak spolupracuji',
+  'footer_nav_pricing' => 'Ceník',
+  'footer_nav_references' => 'Reference',
+  'footer_nav_services' => 'Služby',
+  'footer_nav_title' => 'Navigace',
+  'footer_services_eshops' => 'E-shopy',
+  'footer_services_rest_api' => 'REST API',
+  'footer_services_support_maintenance' => 'Podpora a údržba',
+  'footer_services_system_integrations' => 'Systémové integrace',
+  'footer_services_technical_consulting' => 'Technické konzultace',
+  'footer_services_title' => 'Služby',
+  'footer_services_web_apps' => 'Webové aplikace',
+  'footer_services_websites' => 'Webové stránky',
+);
+

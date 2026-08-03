@@ -21,7 +21,7 @@
         <div class="p-6 space-y-6">
             <p class="text-gray-600">Zadejte nové heslo.</p>
             
-            <form id="reset-form" action="<?= BASE_URL ?>/password/update" method="post" class="space-y-4" onsubmit="return validateForm()">
+            <form id="reset-form" action="<?= locale_url('password/update') ?>" method="post" class="space-y-4" onsubmit="return validateForm()">
                 <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
                 <!-- Skryté pole pro reCAPTCHA token -->
                 <input type="hidden" id="recaptcha-token" name="recaptcha_token">
@@ -74,7 +74,7 @@
                 
                 <div class="mt-6">
                     <p class="text-center text-sm text-gray-600">
-                        <a href="<?= BASE_URL ?>/login" class="font-medium text-blue-600 hover:text-blue-500">
+                        <a href="<?= locale_url('login') ?>" class="font-medium text-blue-600 hover:text-blue-500">
                             Zpět na přihlášení
                         </a>
                     </p>

@@ -100,7 +100,7 @@ class VoucherController extends Controller
         if (!$result['success']) {
             $_SESSION['flash_message'] = $result['error'];
             $_SESSION['flash_type'] = 'error';
-            header("Location: " . BASE_URL . "/voucher/{$slug}/order");
+            header('Location: ' . locale_url("voucher/{$slug}/order"));
             exit;
         }
 

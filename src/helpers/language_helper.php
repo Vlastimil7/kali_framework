@@ -2,41 +2,17 @@
 
 use Models\Language;
 
-if (!function_exists('__')) {
-    /**
-     * Přeloží textový řetězec
-     * 
-     * @param string $key Klíč překladu
-     * @param array $params Parametry pro nahrazení
-     * @param string $category Kategorie překladu
-     * @return string Přeložený text
-     */
-    function __($key, $params = [], $category = 'general')
+if (!function_exists('lang')) {
+    function lang(): Language
     {
-        static $language = null;
-        
-        if ($language === null) {
-            $language = new Language();
-        }
-        
-        return $language->translate($key, $params, $category);
+        static $language;
+        return $language ??= new Language();
     }
 }
 
-if (!function_exists('lang')) {
-    /**
-     * Vrátí instanci Language
-     * 
-     * @return Models\Language
-     */
-    function lang()
+if (!function_exists('__')) {
+    function __(string $key, array $params = [], string $category = 'general'): string
     {
-        static $language = null;
-        
-        if ($language === null) {
-            $language = new Language();
-        }
-        
-        return $language;
+        return lang()->translate($key, $params, $category);
     }
 }

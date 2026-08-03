@@ -115,7 +115,7 @@ foreach ($vouchers as $v) {
 
                     <!-- CTA -->
                     <div class="mt-auto pt-8">
-                        <form action="<?= BASE_URL ?>/cart/add-voucher" method="post">
+                        <form action="<?= locale_url('cart/add-voucher') ?>" method="post">
                             <input type="hidden" name="voucher_id" value="<?= (int)$voucher['id'] ?>">
                             <input type="hidden" name="quantity" value="1">
 

@@ -106,7 +106,7 @@
                 analýzu návštěvnosti a marketingové účely.
                 Nastavení cookies můžete kdykoliv změnit
                 na stránce
-                <a href="<?= BASE_URL ?>/cookies/settings"
+                <a href="<?= locale_url('cookies/settings') ?>"
                     class="text-indigo-600 hover:underline">
                     Nastavení cookies
                 </a>.
@@ -118,7 +118,7 @@
         </footer>
 
         <div>
-            <a href="<?= BASE_URL ?>/"
+            <a href="<?= locale_url() ?>"
                 class="text-xs text-slate-500 hover:text-indigo-600 hover:underline">
                 ← Zpět na hlavní stránku
             </a>

@@ -10,8 +10,8 @@ class Controller
 
     public function __construct()
     {
-        // Inicializace jazyka
-        $this->language = new Language();
+        // One translator instance is shared by helpers, controllers and views.
+        $this->language = lang();
 
         // Určení kategorie podle aktuálního controlleru
         $className = get_class($this);
@@ -49,11 +49,11 @@ class Controller
 
         // Načtení view do content
         ob_start();
-        include  ROOT_PATH . "../src/views/{$view}.php";
+        include ROOT_PATH . "/src/views/{$view}.php";
         $data['content'] = ob_get_clean();
 
         // Načtení layoutu
-        include ROOT_PATH . "../src/views/layouts/main.php";
+        include ROOT_PATH . "/src/views/layouts/main.php";
     }
 
     protected function renderView($view, $data = [])
@@ -63,19 +63,20 @@ class Controller
 
         extract($data);
         ob_start();
-        require_once ROOT_PATH . "../src/views/{$view}.php";
+        require ROOT_PATH . "/src/views/{$view}.php";
         return ob_get_clean();
     }
 
     protected function show404()
     {
+        http_response_code(404);
         $data = [
-            'title' => __('page_not_found') . ' | VK-DEV.cz',
+            'title' => __('page_not_found', [], '404') . ' | VK-DEV.cz',
             'content' => $this->renderView('errors/404'),
-
+            'noindex' => true,
         ];
 
-        require_once ROOT_PATH . "../src/views/layouts/main.php";
+        require ROOT_PATH . "/src/views/layouts/main.php";
         exit();
     }
 }

@@ -49,9 +49,9 @@ class UserController extends Controller
 
                 // Přesměrování podle role
                 if ($result['user']['role'] === 'admin') {
-                    header('Location: ' . BASE_URL . '/admin/dashboard');
+                    header('Location: ' . locale_url('admin/dashboard'));
                 } else {
-                    header('Location: ' . BASE_URL . '/profile');
+                    header('Location: ' . locale_url('profile'));
                 }
                 exit;
             } else {
@@ -62,7 +62,7 @@ class UserController extends Controller
                 // Zachování emailu pro pohodlí
                 $_SESSION['form_data'] = ['email' => $email];
 
-                header('Location: ' . BASE_URL . '/login');
+                header('Location: ' . locale_url('login'));
                 exit;
             }
         }
@@ -95,7 +95,7 @@ class UserController extends Controller
                 $_SESSION['flash_message'] = 'Registrace proběhla úspěšně! Nyní se můžete přihlásit.';
                 $_SESSION['flash_type'] = 'success';
 
-                header('Location: ' . BASE_URL . '/login');
+                header('Location: ' . locale_url('login'));
                 exit;
             } else {
                 $_SESSION['flash_message'] = $result['message'];
@@ -104,7 +104,7 @@ class UserController extends Controller
                 // Zachování zadaných údajů
                 $_SESSION['form_data'] = $userData;
 
-                header('Location: ' . BASE_URL . '/register');
+                header('Location: ' . locale_url('register'));
                 exit;
             }
         }
@@ -115,7 +115,7 @@ class UserController extends Controller
     {
         // Kontrola, zda je uživatel přihlášen
         if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . BASE_URL . '/login');
+            header('Location: ' . locale_url('login'));
             exit;
         }
 
@@ -136,7 +136,7 @@ class UserController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Kontrola, zda je uživatel přihlášen
             if (!isset($_SESSION['user_id'])) {
-                header('Location: ' . BASE_URL . '/login');
+                header('Location: ' . locale_url('login'));
                 exit;
             }
 
@@ -167,7 +167,7 @@ class UserController extends Controller
                 $_SESSION['flash_type'] = 'error';
             }
 
-            header('Location: ' . BASE_URL . '/profile');
+            header('Location: ' . locale_url('profile'));
             exit;
         }
     }
@@ -180,7 +180,7 @@ class UserController extends Controller
         session_destroy();
 
         // Přesměrování na přihlašovací stránku
-        header('Location: ' . BASE_URL . '/login');
+        header('Location: ' . locale_url('login'));
         exit;
     }
 
@@ -210,7 +210,7 @@ class UserController extends Controller
                 $timeRemaining = ceil($rateLimiter->getTimeRemaining() / 60); // Převod na minuty
                 $_SESSION['flash_message'] = "Překročili jste maximální počet pokusů. Zkuste to znovu za {$timeRemaining} minut.";
                 $_SESSION['flash_type'] = 'error';
-                header('Location: ' . BASE_URL . '/password/reset');
+                header('Location: ' . locale_url('password/reset'));
                 exit;
             }
 
@@ -218,7 +218,7 @@ class UserController extends Controller
             if (empty($email)) {
                 $_SESSION['flash_message'] = 'Zadejte prosím emailovou adresu';
                 $_SESSION['flash_type'] = 'error';
-                header('Location: ' . BASE_URL . '/password/reset');
+                header('Location: ' . locale_url('password/reset'));
                 exit;
             }
 
@@ -256,7 +256,7 @@ class UserController extends Controller
 
             //     $_SESSION['flash_message'] = $errorMessage;
             //     $_SESSION['flash_type'] = 'error';
-            //     header('Location: ' . BASE_URL . '/password/reset');
+            //     header('Location: ' . locale_url('password/reset'));
             //     exit;
             // }
 
@@ -281,7 +281,7 @@ class UserController extends Controller
                 $_SESSION['flash_type'] = 'success';
             }
 
-            header('Location: ' . BASE_URL . '/password/reset');
+            header('Location: ' . locale_url('password/reset'));
             exit;
         }
     }
@@ -297,7 +297,7 @@ class UserController extends Controller
         if (!$result['success']) {
             $_SESSION['flash_message'] = $result['message'];
             $_SESSION['flash_type'] = 'error';
-            header('Location: ' . BASE_URL . '/password/reset');
+            header('Location: ' . locale_url('password/reset'));
             exit;
         }
 
@@ -325,7 +325,7 @@ class UserController extends Controller
                 $timeRemaining = ceil($rateLimiter->getTimeRemaining() / 60); // Převod na minuty
                 $_SESSION['flash_message'] = "Překročili jste maximální počet pokusů. Zkuste to znovu za {$timeRemaining} minut.";
                 $_SESSION['flash_type'] = 'error';
-                header('Location: ' . BASE_URL . '/password/reset/' . $token);
+                header('Location: ' . locale_url('password/reset/' . $token));
                 exit;
             }
 
@@ -333,21 +333,21 @@ class UserController extends Controller
             if (empty($password) || empty($passwordConfirm)) {
                 $_SESSION['flash_message'] = 'Vyplňte prosím všechna pole';
                 $_SESSION['flash_type'] = 'error';
-                header('Location: ' . BASE_URL . '/password/reset/' . $token);
+                header('Location: ' . locale_url('password/reset/' . $token));
                 exit;
             }
 
             if ($password !== $passwordConfirm) {
                 $_SESSION['flash_message'] = 'Hesla se neshodují';
                 $_SESSION['flash_type'] = 'error';
-                header('Location: ' . BASE_URL . '/password/reset/' . $token);
+                header('Location: ' . locale_url('password/reset/' . $token));
                 exit;
             }
 
             if (strlen($password) < 6) {
                 $_SESSION['flash_message'] = 'Heslo musí mít alespoň 6 znaků';
                 $_SESSION['flash_type'] = 'error';
-                header('Location: ' . BASE_URL . '/password/reset/' . $token);
+                header('Location: ' . locale_url('password/reset/' . $token));
                 exit;
             }
 
@@ -358,7 +358,7 @@ class UserController extends Controller
             // if (!$recaptchaResult['success'] || $recaptchaResult['score'] < 0.5) {
             //     $_SESSION['flash_message'] = 'Ověření reCAPTCHA selhalo. Zkuste to prosím znovu.';
             //     $_SESSION['flash_type'] = 'error';
-            //     header('Location: ' . BASE_URL . '/password/reset/' . $token);
+            //     header('Location: ' . locale_url('password/reset/' . $token));
             //     exit;
             // }
 
@@ -368,11 +368,11 @@ class UserController extends Controller
             if ($result['success']) {
                 $_SESSION['flash_message'] = 'Vaše heslo bylo úspěšně změněno. Nyní se můžete přihlásit.';
                 $_SESSION['flash_type'] = 'success';
-                header('Location: ' . BASE_URL . '/login');
+                header('Location: ' . locale_url('login'));
             } else {
                 $_SESSION['flash_message'] = $result['message'];
                 $_SESSION['flash_type'] = 'error';
-                header('Location: ' . BASE_URL . '/password/reset/' . $token);
+                header('Location: ' . locale_url('password/reset/' . $token));
             }
             exit;
         }

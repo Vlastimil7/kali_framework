@@ -69,43 +69,37 @@
                 <h3 class="text-xl font-bold mb-6 text-white"><?= __('footer_nav_title', [], 'footer') ?></h3>
                 <ul class="space-y-4">
                     <li>
-                        <a href="<?= BASE_URL ?>#" class="text-gray-400 hover:text-cyan-400 transition-colors"
+                        <a href="<?= locale_url() ?>" class="text-gray-400 hover:text-cyan-400 transition-colors"
                             data-track="callToActionClick" data-track-meta='{"location":"footer","label":"home-link"}'>
                             <?= __('footer_nav_home', [], 'footer') ?>
                         </a>
                     </li>
                     <li>
-                        <a href="<?= BASE_URL ?>#services" class="text-gray-400 hover:text-cyan-400 transition-colors"
+                        <a href="<?= locale_url('#services') ?>" class="text-gray-400 hover:text-cyan-400 transition-colors"
                             data-track="callToActionClick" data-track-meta='{"location":"footer","label":"services-link"}'>
                             <?= __('footer_nav_services', [], 'footer') ?>
                         </a>
                     </li>
                     <li>
-                        <a href="<?= BASE_URL ?>#how-it-works" class="text-gray-400 hover:text-cyan-400 transition-colors"
+                        <a href="<?= locale_url('#how-it-works') ?>" class="text-gray-400 hover:text-cyan-400 transition-colors"
                             data-track="callToActionClick" data-track-meta='{"location":"footer","label":"how-it-works-link"}'>
                             <?= __('footer_nav_how_it_works', [], 'footer') ?>
                         </a>
                     </li>
                     <li>
-                        <a href="<?= BASE_URL ?>#pricing" class="text-gray-400 hover:text-cyan-400 transition-colors"
+                        <a href="<?= locale_url('#pricing') ?>" class="text-gray-400 hover:text-cyan-400 transition-colors"
                             data-track="callToActionClick" data-track-meta='{"location":"footer","label":"pricing-link"}'>
                             <?= __('footer_nav_pricing', [], 'footer') ?>
                         </a>
                     </li>
                     <li>
-                        <a href="<?= BASE_URL ?>#references" class="text-gray-400 hover:text-cyan-400 transition-colors"
+                        <a href="<?= locale_url('#references') ?>" class="text-gray-400 hover:text-cyan-400 transition-colors"
                             data-track="callToActionClick" data-track-meta='{"location":"footer","label":"references-link"}'>
                             <?= __('footer_nav_references', [], 'footer') ?>
                         </a>
                     </li>
                     <li>
-                        <a href="<?= BASE_URL ?>/faq" class="text-gray-400 hover:text-cyan-400 transition-colors"
-                            data-track="callToActionClick" data-track-meta='{"location":"footer","label":"faq-link"}'>
-                            <?= __('footer_nav_faq', [], 'footer') ?>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?= BASE_URL ?>/contact" class="text-gray-400 hover:text-cyan-400 transition-colors"
+                        <a href="<?= locale_url('contact') ?>" class="text-gray-400 hover:text-cyan-400 transition-colors"
                             data-track="callToActionClick" data-track-meta='{"location":"footer","label":"contact-link"}'>
                             <?= __('footer_nav_contact', [], 'footer') ?>
                         </a>
@@ -117,43 +111,43 @@
                 <h3 class="text-xl font-bold mb-6 text-white"><?= __('footer_services_title', [], 'footer') ?></h3>
                 <ul class="space-y-4">
                     <li>
-                        <a href="<?= BASE_URL ?>#services" class="text-gray-400 hover:text-cyan-400 transition-colors"
+                        <a href="<?= locale_url('#services') ?>" class="text-gray-400 hover:text-cyan-400 transition-colors"
                             data-track="callToActionClick" data-track-meta='{"location":"footer","label":"web-link"}'>
                             <?= __('footer_services_websites', [], 'footer') ?>
                         </a>
                     </li>
                     <li>
-                        <a href="<?= BASE_URL ?>#services" class="text-gray-400 hover:text-cyan-400 transition-colors"
+                        <a href="<?= locale_url('#services') ?>" class="text-gray-400 hover:text-cyan-400 transition-colors"
                             data-track="callToActionClick" data-track-meta='{"location":"footer","label":"eshop-link"}'>
                             <?= __('footer_services_eshops', [], 'footer') ?>
                         </a>
                     </li>
                     <li>
-                        <a href="<?= BASE_URL ?>#services" class="text-gray-400 hover:text-cyan-400 transition-colors"
+                        <a href="<?= locale_url('#services') ?>" class="text-gray-400 hover:text-cyan-400 transition-colors"
                             data-track="callToActionClick" data-track-meta='{"location":"footer","label":"web-apps-link"}'>
                             <?= __('footer_services_web_apps', [], 'footer') ?>
                         </a>
                     </li>
                     <li>
-                        <a href="<?= BASE_URL ?>#services" class="text-gray-400 hover:text-cyan-400 transition-colors"
+                        <a href="<?= locale_url('#services') ?>" class="text-gray-400 hover:text-cyan-400 transition-colors"
                             data-track="callToActionClick" data-track-meta='{"location":"footer","label":"rest-api-link"}'>
                             <?= __('footer_services_rest_api', [], 'footer') ?>
                         </a>
                     </li>
                     <li>
-                        <a href="<?= BASE_URL ?>#services" class="text-gray-400 hover:text-cyan-400 transition-colors"
+                        <a href="<?= locale_url('#services') ?>" class="text-gray-400 hover:text-cyan-400 transition-colors"
                             data-track="callToActionClick" data-track-meta='{"location":"footer","label":"system-integrations-link"}'>
                             <?= __('footer_services_system_integrations', [], 'footer') ?>
                         </a>
                     </li>
                     <li>
-                        <a href="<?= BASE_URL ?>#services" class="text-gray-400 hover:text-cyan-400 transition-colors"
+                        <a href="<?= locale_url('#services') ?>" class="text-gray-400 hover:text-cyan-400 transition-colors"
                             data-track="callToActionClick" data-track-meta='{"location":"footer","label":"technical-consulting-link"}'>
                             <?= __('footer_services_technical_consulting', [], 'footer') ?>
                         </a>
                     </li>
                     <li>
-                        <a href="<?= BASE_URL ?>#services" class="text-gray-400 hover:text-cyan-400 transition-colors"
+                        <a href="<?= locale_url('#services') ?>" class="text-gray-400 hover:text-cyan-400 transition-colors"
                             data-track="callToActionClick" data-track-meta='{"location":"footer","label":"support-and-maintenance-link"}'>
                             <?= __('footer_services_support_maintenance', [], 'footer') ?>
                         </a>
@@ -167,28 +161,11 @@
                     <?= __('footer_contact_text', [], 'footer') ?>
                 </p>
 
-                <form action="<?= BASE_URL ?>/lead/submit" method="POST"
-                    data-contact-form data-track="footerLeadFormSubmit"
-                    data-track-meta='{"location":"footer","label":"lead-form-submit"}'>
-
-                    <div class="flex mb-4">
-                        <input type="email" name="email_lead" id="email_lead"
-                            placeholder="<?= __('footer_lead_email_placeholder', [], 'footer') ?>"
-                            class="px-4 py-2 bg-black bg-opacity-50 border border-gray-700 rounded-l-lg focus:outline-none focus:border-cyan-400 transition-colors text-white w-full"
-                            required>
-
-                        <button type="submit" class="bg-gradient-main px-4 rounded-r-lg"
-                            aria-label="<?= __('footer_lead_submit_aria', [], 'footer') ?>">
-                            <svg class="w-6 h-6 text-white cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <p class="text-gray-500 text-sm">
-                        <?= __('footer_lead_consent_text', [], 'footer') ?>
-                    </p>
-                </form>
+                <a href="<?= locale_url('contact') ?>"
+                    class="inline-block bg-gradient-main px-5 py-3 rounded-lg text-white"
+                    data-track="callToActionClick" data-track-meta='{"location":"footer","label":"contact-cta"}'>
+                    <?= __('footer_nav_contact', [], 'footer') ?>
+                </a>
             </div>
         </div>
 
@@ -199,11 +176,11 @@
                 </p>
 
                 <div class="flex space-x-6">
-                    <a href="<?= BASE_URL ?>/gdpr" class="text-gray-500 hover:text-cyan-400 transition-colors"
+                    <a href="<?= locale_url('gdpr') ?>" class="text-gray-500 hover:text-cyan-400 transition-colors"
                         data-track="callToActionClick" data-track-meta='{"location":"footer","label":"gdpr-link"}'>
                         <?= __('footer_link_privacy', [], 'footer') ?>
                     </a>
-                    <a href="<?= BASE_URL ?>/cookies/settings" class="text-gray-500 hover:text-cyan-400 transition-colors"
+                    <a href="<?= locale_url('cookies/settings') ?>" class="text-gray-500 hover:text-cyan-400 transition-colors"
                         data-track="callToActionClick" data-track-meta='{"location":"footer","label":"cookies-link"}'>
                         <?= __('footer_link_cookies', [], 'footer') ?>
                     </a>

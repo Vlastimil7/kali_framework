@@ -1,0 +1,30 @@
+<?php
+
+return array (
+  'footer_about_text' => 'Professional development of websites, e-shops and web applications with a focus on modern technologies and user experience. I help companies grow in the digital space.',
+  'footer_contact_text' => 'Interested in working together or want to discuss your project? Feel free to contact me and we will find the right solution.',
+  'footer_contact_title' => 'Get in touch',
+  'footer_copyright' => 'Vlastimil Kalášek. All rights reserved.',
+  'footer_lead_consent_text' => 'By submitting, you agree to the processing of personal data according to the privacy policy.',
+  'footer_lead_email_placeholder' => 'Your email',
+  'footer_lead_submit_aria' => 'Submit',
+  'footer_link_cookies' => 'Cookies',
+  'footer_link_privacy' => 'Privacy policy',
+  'footer_nav_contact' => 'Contact',
+  'footer_nav_faq' => 'FAQ',
+  'footer_nav_home' => 'Home',
+  'footer_nav_how_it_works' => 'How I work',
+  'footer_nav_pricing' => 'Pricing',
+  'footer_nav_references' => 'References',
+  'footer_nav_services' => 'Services',
+  'footer_nav_title' => 'Navigation',
+  'footer_services_eshops' => 'E-shops',
+  'footer_services_rest_api' => 'REST API',
+  'footer_services_support_maintenance' => 'Support and maintenance',
+  'footer_services_system_integrations' => 'System integrations',
+  'footer_services_technical_consulting' => 'Technical consulting',
+  'footer_services_title' => 'Services',
+  'footer_services_web_apps' => 'Web applications',
+  'footer_services_websites' => 'Websites',
+);
+

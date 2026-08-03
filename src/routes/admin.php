@@ -5,16 +5,16 @@
 // namespace: Controllers\Admin
 // ============================
 
-$router->get('admin', 'Admin\\DashboardController@dashboard');
-$router->get('admin/dashboard', 'Admin\\DashboardController@dashboard');
+$router->get('admin', 'Admin\\DashboardController@index');
+$router->get('admin/dashboard', 'Admin\\DashboardController@index');
 
 // Users
-$router->get('admin/users', 'Admin\\UsersController@index');
-$router->get('admin/users/create', 'Admin\\UsersController@create');
-$router->post('admin/users/store', 'Admin\\UsersController@store');
-$router->get('admin/users/edit/{id}', 'Admin\\UsersController@edit');
-$router->post('admin/users/update/{id}', 'Admin\\UsersController@update');
-$router->post('admin/users/delete/{id}', 'Admin\\UsersController@delete');
+$router->get('admin/users', 'Admin\\UserController@index');
+$router->get('admin/users/create', 'Admin\\UserController@create');
+$router->post('admin/users/store', 'Admin\\UserController@store');
+$router->get('admin/users/edit/{id}', 'Admin\\UserController@edit');
+$router->post('admin/users/update/{id}', 'Admin\\UserController@update');
+$router->post('admin/users/delete/{id}', 'Admin\\UserController@delete');
 
 // Orders
 $router->get('admin/orders', 'Admin\\OrdersController@index');
@@ -43,17 +43,6 @@ $router->post('admin/voucher-codes/verify', 'Admin\\VoucherCodesController@verif
 $router->post('admin/voucher-codes/redeem',   'Admin\\VoucherCodesController@redeem');
 $router->post('admin/voucher-codes/void',     'Admin\\VoucherCodesController@void');
 $router->post('admin/voucher-codes/exchange', 'Admin\\VoucherCodesController@exchange');
-
-// Translations – sjednoť jen na Admin\\LanguageController (už ho máš)
-$router->get('admin/translations', 'Admin\\LanguageController@adminTranslations');
-$router->get('admin/translations/edit/{key}', 'Admin\\LanguageController@adminEditTranslation');
-$router->get('admin/translations/edit/{key}/{category}', 'Admin\\LanguageController@adminEditTranslation');
-$router->post('admin/translations/edit/process', 'Admin\\LanguageController@adminProcessEditTranslation');
-$router->get('admin/translations/add', 'Admin\\LanguageController@adminAddTranslation');
-$router->post('admin/translations/add/process', 'Admin\\LanguageController@adminProcessAddTranslation');
-$router->get('admin/translations/import', 'Admin\\LanguageController@adminImportTranslations');
-$router->post('admin/translations/import/process', 'Admin\\LanguageController@adminProcessImportTranslations');
-$router->get('admin/translations/export', 'Admin\\LanguageController@adminExportTranslations');
 
 // Telemetry cesty
 $router->get('admin/telemetry', 'Admin\\TelemetryController@dashboard');
