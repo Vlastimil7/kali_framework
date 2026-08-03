@@ -3,6 +3,7 @@
 namespace Controllers\Front;
 
 use Core\Controller;
+use Core\Request;
 use Models\User;
 use Helpers\RateLimiter;
 use Helpers\ReCaptcha;
@@ -32,11 +33,11 @@ class UserController extends Controller
     }
 
     // Zpracování přihlášení
-    public function processLogin()
+    public function processLogin(Request $request)
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = $_POST['email'] ?? '';
-            $password = $_POST['password'] ?? '';
+        if ($request->isMethod('POST')) {
+            $email = $request->string('email');
+            $password = $request->string('password');
 
             $result = $this->userModel->login($email, $password);
 
@@ -74,15 +75,15 @@ class UserController extends Controller
     }
 
     // Zpracování registrace
-    public function processRegister()
+    public function processRegister(Request $request)
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($request->isMethod('POST')) {
             $userData = [
-                'email' => $_POST['email'] ?? '',
-                'password' => $_POST['password'] ?? '',
-                'name' => $_POST['name'] ?? '',
-                'surname' => $_POST['surname'] ?? '',
-                'phone' => $_POST['phone'] ?? ''
+                'email' => $request->string('email'),
+                'password' => $request->string('password'),
+                'name' => $request->string('name'),
+                'surname' => $request->string('surname'),
+                'phone' => $request->string('phone')
             ];
 
             $result = $this->userModel->register($userData);
@@ -117,21 +118,21 @@ class UserController extends Controller
     }
 
     // Aktualizace profilu
-    public function updateProfile()
+    public function updateProfile(Request $request)
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($request->isMethod('POST')) {
             $userId = $_SESSION['user_id'];
 
             // Získání aktualizovaných údajů
             $userData = [
-                'name' => $_POST['name'] ?? '',
-                'surname' => $_POST['surname'] ?? '',
-                'phone' => $_POST['phone'] ?? ''
+                'name' => $request->string('name'),
+                'surname' => $request->string('surname'),
+                'phone' => $request->string('phone')
             ];
 
             // Přidání hesla, pokud bylo vyplněno
-            if (!empty($_POST['password'])) {
-                $userData['password'] = $_POST['password'];
+            if ($request->filled('password')) {
+                $userData['password'] = $request->string('password');
             }
 
             $result = $this->userModel->updateProfile($userId, $userData);
@@ -151,7 +152,7 @@ class UserController extends Controller
     }
 
     // Odhlášení uživatele
-    public function logout()
+    public function logout(Request $request)
     {
         // Zničení session
         session_unset();
@@ -176,11 +177,11 @@ class UserController extends Controller
     /**
      * Zpracování odeslání emailu pro reset hesla
      */
-    public function sendPasswordResetEmail()
+    public function sendPasswordResetEmail(Request $request)
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = $_POST['email'] ?? '';
-            $recaptchaToken = $_POST['recaptcha_token'] ?? '';
+        if ($request->isMethod('POST')) {
+            $email = $request->string('email');
+            $recaptchaToken = $request->string('recaptcha_token');
 
             // Inicializace RateLimiter pro tuto akci
             $rateLimiter = new RateLimiter('password_reset_request');
@@ -286,13 +287,13 @@ class UserController extends Controller
     /**
      * Zpracování resetování hesla
      */
-    public function updatePassword()
+    public function updatePassword(Request $request)
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $token = $_POST['token'] ?? '';
-            $password = $_POST['password'] ?? '';
-            $passwordConfirm = $_POST['password_confirm'] ?? '';
-            $recaptchaToken = $_POST['recaptcha_token'] ?? '';
+        if ($request->isMethod('POST')) {
+            $token = $request->string('token');
+            $password = $request->string('password');
+            $passwordConfirm = $request->string('password_confirm');
+            $recaptchaToken = $request->string('recaptcha_token');
 
             // Inicializace RateLimiter pro tuto akci
             $rateLimiter = new RateLimiter('password_reset_confirm');

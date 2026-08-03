@@ -3,6 +3,7 @@
 namespace Controllers\Front;
 
 use Core\Controller;
+use Core\Request;
 use Helpers\RateLimiter;
 use Helpers\ReCaptcha;
 use Helpers\Logger;
@@ -38,21 +39,21 @@ class ContactController extends Controller
         return [$first, $last];
     }
 
-    public function sendMessage()
+    public function sendMessage(Request $request)
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        if (!$request->isMethod('POST')) {
             header('Location: ' . locale_url('contact'));
             exit;
         }
 
-        $clinic = trim($_POST['clinic'] ?? '');
+        $clinic = $request->string('clinic');
         // Rate limit
         $rateLimiter = new RateLimiter('contact_form');
         if (!$rateLimiter->check()) {
             $timeRemaining = ceil($rateLimiter->getTimeRemaining() / 60);
 
             Logger::warning('Contact form rate limit exceeded', [
-                'email'  => $_POST['email'] ?? null,
+                'email'  => $request->input('email'),
                 'clinic' => $clinic ?: null,
                 'wait_min' => $timeRemaining,
             ]);
@@ -63,16 +64,16 @@ class ContactController extends Controller
         }
 
         // Data z formuláře
-        $firstName = trim((string) ($_POST['first_name'] ?? ''));
-        $lastName = trim((string) ($_POST['last_name'] ?? ''));
+        $firstName = $request->string('first_name');
+        $lastName = $request->string('last_name');
         $fullName = trim($firstName . ' ' . $lastName);
         if ($fullName === '') {
-            $fullName = trim((string) ($_POST['name'] ?? ''));
+            $fullName = $request->string('name');
             [$firstName, $lastName] = $this->splitName($fullName);
         }
 
-        $topic = trim($_POST['topic'] ?? '');
-        $phone = trim($_POST['phone'] ?? '');
+        $topic = $request->string('topic');
+        $phone = $request->string('phone');
 
         // očistí telefon na tel: odkaz: nechá jen + a čísla
         $cleanPhone = preg_replace('/[^\d+]/', '', $phone);
@@ -82,16 +83,16 @@ class ContactController extends Controller
             'lastName'  => $lastName,
             'fullName'  => $fullName,
 
-            'email'     => trim($_POST['email'] ?? ''),
+            'email'     => $request->string('email'),
             'phone'     => $phone,
             'fullPhone' => $cleanPhone,
 
             'topic'   => $topic,
-            'budget'  => trim((string) ($_POST['budget'] ?? '')),
+            'budget'  => $request->string('budget'),
             'subject' => $topic !== '' ? $topic : ('Kontakt – ' . ($clinic !== '' ? $clinic : 'ordinace')),
-            'message' => trim($_POST['message'] ?? ''),
+            'message' => $request->string('message'),
 
-            'privacy' => isset($_POST['gdpr']) ? 1 : 0,
+            'privacy' => $request->has('gdpr') ? 1 : 0,
             'clinic'  => $clinic,
         ];
 
@@ -105,13 +106,13 @@ class ContactController extends Controller
             ]);
 
             Toast::error($validationResult['message']);
-            Flash::withInput('contact', $_POST);
+            Flash::withInput('contact', $request->post());
             header('Location: ' . locale_url('contact'));
             exit;
         }
 
         // reCAPTCHA
-        $recaptchaToken = $_POST['recaptcha_token'] ?? '';
+        $recaptchaToken = $request->string('recaptcha_token');
         $recaptcha = new ReCaptcha(RECAPTCHA_SECRET_KEY);
         $recaptchaResult = $recaptcha->verify($recaptchaToken, 'contact', 0.5);
 
@@ -124,20 +125,20 @@ class ContactController extends Controller
             ]);
 
             Toast::error('Ověření reCAPTCHA selhalo. Zkuste to prosím znovu.');
-            Flash::withInput('contact', $_POST);
+            Flash::withInput('contact', $request->post());
             header('Location: ' . locale_url('contact'));
             exit;
         }
 
         $attachmentUpload = new ContactAttachmentUpload();
         $upload = $attachmentUpload->saveTmp(
-            $_FILES['attachments'] ?? [],
+            $request->file('attachments', []),
             ROOT_PATH . '/storage/tmp/contact-attachments',
         );
         if (!$upload['success']) {
             $attachmentUpload->cleanup($upload['files']);
             Toast::error(implode(' ', $upload['errors']));
-            Flash::withInput('contact', $_POST);
+            Flash::withInput('contact', $request->post());
             header('Location: ' . locale_url('contact'));
             exit;
         }
@@ -162,7 +163,7 @@ class ContactController extends Controller
             ]);
 
             Toast::error('Nepodařilo se odeslat zprávu. Zkuste to prosím později nebo nás kontaktujte telefonicky.');
-            Flash::withInput('contact', $_POST);
+            Flash::withInput('contact', $request->post());
         }
 
         header('Location: ' . locale_url('contact'));

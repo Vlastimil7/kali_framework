@@ -11,13 +11,15 @@ require ROOT_PATH . '/src/helpers/language_helper.php';
 require ROOT_PATH . '/src/helpers/url_helper.php';
 
 use Core\Router;
+use Core\Request;
 use Helpers\Toast;
 use Middleware\AdminMiddleware;
 use Middleware\AuthMiddleware;
 
 $_SESSION = [];
+$request = new Request([], [], [], ['REQUEST_METHOD' => 'GET']);
 $called = false;
-$result = (new AuthMiddleware())->handle(function () use (&$called): string {
+$result = (new AuthMiddleware())->handle($request, function () use (&$called): string {
     $called = true;
     return 'allowed';
 });
@@ -27,13 +29,13 @@ if ($called || $result !== null || Toast::all()[0]['type'] !== 'warning') {
 }
 
 $_SESSION = ['user_id' => 10, 'user_role' => 'user'];
-$result = (new AuthMiddleware())->handle(static fn (): string => 'allowed');
+$result = (new AuthMiddleware())->handle($request, static fn (): string => 'allowed');
 if ($result !== 'allowed') {
     throw new RuntimeException('Auth middleware blocked an authenticated user.');
 }
 
 $called = false;
-$result = (new AdminMiddleware())->handle(function () use (&$called): string {
+$result = (new AdminMiddleware())->handle($request, function () use (&$called): string {
     $called = true;
     return 'allowed';
 });
@@ -42,7 +44,7 @@ if ($called || $result !== null || Toast::all()[0]['type'] !== 'error') {
 }
 
 $_SESSION['user_role'] = 'admin';
-$result = (new AdminMiddleware())->handle(static fn (): string => 'allowed');
+$result = (new AdminMiddleware())->handle($request, static fn (): string => 'allowed');
 if ($result !== 'allowed') {
     throw new RuntimeException('Admin middleware blocked an administrator.');
 }

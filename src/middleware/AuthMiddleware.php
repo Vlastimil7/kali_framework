@@ -3,11 +3,12 @@
 namespace Middleware;
 
 use Core\MiddlewareInterface;
+use Core\Request;
 use Helpers\Toast;
 
 class AuthMiddleware implements MiddlewareInterface
 {
-    public function handle(callable $next)
+    public function handle(Request $request, callable $next)
     {
         if (empty($_SESSION['user_id'])) {
             Toast::warning('Pro pokračování se musíte přihlásit.');

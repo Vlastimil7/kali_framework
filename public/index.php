@@ -62,6 +62,7 @@ spl_autoload_register(function ($className) {
 // are loaded or any request-dependent redirect is evaluated.
 require_once ROOT_PATH . '/src/helpers/language_helper.php';
 require_once ROOT_PATH . '/src/helpers/url_helper.php';
+require_once ROOT_PATH . '/src/helpers/csrf_helper.php';
 
 $requestedRoute = trim((string) ($_GET['url'] ?? ''), '/');
 if ($requestedRoute === '') {

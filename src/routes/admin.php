@@ -5,7 +5,7 @@
 // namespace: Controllers\Admin
 // ============================
 
-$router->group(['middleware' => ['auth', 'admin']], function (Core\Router $router): void {
+$router->group(['middleware' => ['auth', 'admin', 'csrf']], function (Core\Router $router): void {
 
 $router->get('admin', 'Admin\\DashboardController@index');
 $router->get('admin/dashboard', 'Admin\\DashboardController@index');

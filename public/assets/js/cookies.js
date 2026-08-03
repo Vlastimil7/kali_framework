@@ -103,13 +103,13 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 
-    const form = document.querySelector('form[action*="/cookies/save"]');
-    if (form) {
+    const forms = document.querySelectorAll('form[action*="/cookies/"]');
+    forms.forEach((form) => {
       form.addEventListener("submit", function () {
         hideCookieBanner();
         localStorage.setItem("cookie_action_pending", "true");
       });
-    }
+    });
   }
 
   // --- Pending akce mezi reloady ---

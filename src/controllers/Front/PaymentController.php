@@ -3,6 +3,7 @@
 namespace Controllers\Front;
 
 use Core\Controller;
+use Core\Request;
 use Services\Payments\ComgateService;
 use Services\Vouchers\OrderService;
 use Helpers\Logger;
@@ -19,13 +20,13 @@ class PaymentController extends Controller
         $this->orders = new OrderService();
     }
 
-    public function comgateReturn()
+    public function comgateReturn(Request $request)
     {
-        $transId = $_GET['id'] ?? null;
-        $refId   = $_GET['refId'] ?? null;
-        $paramStatus = $_GET['status'] ?? null;
+        $transId = $request->query('id');
+        $refId   = $request->query('refId');
+        $paramStatus = $request->query('status');
 
-        Logger::info("Comgate RETURN hit", ['get' => $_GET]);
+        Logger::info("Comgate RETURN hit", ['get' => $request->query()]);
 
         if (!$refId) {
             $this->show404();
@@ -47,17 +48,17 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function comgateNotify()
+    public function comgateNotify(Request $request)
     {
-        file_put_contents(BASE_PATH.'/storage/logs/notify.log', date('c')." HIT\n".print_r($_POST,true)."\n\n", FILE_APPEND);
+        file_put_contents(BASE_PATH.'/storage/logs/notify.log', date('c')." HIT\n".print_r($request->post(), true)."\n\n", FILE_APPEND);
 
-        $post = $_POST ?? [];
+        $post = $request->post();
         Logger::info("Comgate NOTIFY hit", ['post' => $post]);
 
         $normalized = $this->comgate->normalizeNotification($post);
         if ($normalized === null) {
             Logger::warning('Comgate NOTIFY ignored (invalid payload)', [
-                'post' => $_POST,
+                'post' => $post,
             ]);
 
             http_response_code(200);

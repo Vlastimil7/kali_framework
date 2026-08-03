@@ -3,6 +3,7 @@
 namespace Api\V1\Controllers;
 
 use Api\BaseApiController;
+use Core\Request;
 use Services\AI\ChatService;
 use Services\AI\AiClientFactory;
 use Helpers\Logger;
@@ -43,20 +44,20 @@ class ChatController extends BaseApiController
      * POST /api/v1/chat
      */
 
-    public function index()
+    public function index(Request $request)
     {
+        $request = $this->useRequest($request);
         $t0 = microtime(true);
         $question = '';
         $provider = null;
 
         try {
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            if (!$request->isMethod('POST')) {
                 $this->response(['error' => 'Method not allowed'], 405);
                 return;
             }
 
-            $input = json_decode(file_get_contents('php://input'), true) ?: [];
-            $question = trim((string)($input['question'] ?? ''));
+            $question = $request->string('question');
 
             if ($question === '') {
                 $this->response(['error' => 'Question is required'], 400);
@@ -74,7 +75,7 @@ class ChatController extends BaseApiController
 
             Logger::info('Chat API request', [
                 'provider' => $provider,
-                'ip'       => $_SERVER['REMOTE_ADDR'] ?? null,
+                'ip'       => $request->ip(),
                 'q_len'    => mb_strlen($question),
                 'q_head'   => $this->truncateForLog($question, 300),
             ]);
@@ -173,16 +174,16 @@ class ChatController extends BaseApiController
      * (Volitelné) změna providera přes API
      * POST /api/v1/chat/provider  JSON: {"provider":"openai|gemini|anthropic"}
      */
-    public function provider()
+    public function provider(Request $request)
     {
+        $request = $this->useRequest($request);
         try {
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            if (!$request->isMethod('POST')) {
                 $this->response(['error' => 'Method not allowed'], 405);
                 return;
             }
 
-            $input = json_decode(file_get_contents('php://input'), true);
-            $provider = strtolower(trim((string)($input['provider'] ?? '')));
+            $provider = strtolower($request->string('provider'));
 
             if (!in_array($provider, ['openai', 'gemini', 'anthropic', 'claude'], true)) {
                 $this->response(['error' => 'Invalid provider'], 400);

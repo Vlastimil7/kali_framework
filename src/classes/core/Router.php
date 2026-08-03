@@ -10,10 +10,12 @@ class Router
     private array $routes = [];
     private array $groupOptions = [];
     private ?array $lastRoute = null;
+    private ?Request $request = null;
 
     private array $middlewareAliases = [
         'auth' => \Middleware\AuthMiddleware::class,
         'admin' => \Middleware\AdminMiddleware::class,
+        'csrf' => \Middleware\CsrfMiddleware::class,
     ];
 
     // Výchozí namespace pro kontrolery
@@ -131,6 +133,7 @@ class Router
             ? current_route_path()
             : initialize_localized_request($url);
         $url = trim($url, '/');
+        $this->request = Request::capture();
 
         // Zjištění HTTP metody
         $method = $_SERVER['REQUEST_METHOD'];
@@ -231,6 +234,7 @@ class Router
 
         // Určení plného namespace kontroleru
         $controller = $this->resolveControllerNamespace($url, $controllerName);
+        $this->request?->setRouteParams([]);
 
         // Vyvolání metody kontroleru
         return $this->runMiddleware(
@@ -255,6 +259,7 @@ class Router
 
         // Určení plného namespace kontroleru
         $controller = $this->resolveControllerNamespace($route, $controllerName);
+        $this->request?->setRouteParams($params);
 
         // Vyvolání metody kontroleru s parametry
         return $this->runMiddleware(
@@ -280,7 +285,7 @@ class Router
                         throw new \RuntimeException("Middleware {$class} musí implementovat " . MiddlewareInterface::class . '.');
                     }
 
-                    return $middleware->handle($next);
+                    return $middleware->handle($this->request ?? Request::capture(), $next);
                 };
             },
             $destination
@@ -349,8 +354,15 @@ class Router
             throw new \Exception("Metoda $action nebyla nalezena v kontroleru $controller");
         }
 
-        // Volání metody s parametry
-        return call_user_func_array([$controllerObject, $action], $params);
+        $reflection = new \ReflectionMethod($controllerObject, $action);
+        $methodParams = $reflection->getParameters();
+        $firstType = isset($methodParams[0]) ? $methodParams[0]->getType() : null;
+
+        if ($firstType instanceof \ReflectionNamedType && $firstType->getName() === Request::class) {
+            array_unshift($params, $this->request ?? Request::capture());
+        }
+
+        return $reflection->invokeArgs($controllerObject, $params);
     }
 
     /**
