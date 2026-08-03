@@ -3,6 +3,8 @@
 namespace Controllers\Admin;
 
 use Models\User;
+use Helpers\Flash;
+use Helpers\Toast;
 
 class UserController extends BaseAdminController
 {
@@ -51,15 +53,13 @@ class UserController extends BaseAdminController
         $result = $this->userModel->register($userData);
 
         if ($result['success']) {
-            $_SESSION['flash_message'] = 'Uživatel byl úspěšně vytvořen';
-            $_SESSION['flash_type'] = 'success';
+            Toast::success('Uživatel byl úspěšně vytvořen');
             header('Location: ' . BASE_URL . '/admin/users');
             exit;
         }
 
-        $_SESSION['flash_message'] = $result['message'];
-        $_SESSION['flash_type'] = 'error';
-        $_SESSION['form_data'] = $userData;
+        Toast::error($result['message']);
+        Flash::withInput('admin_user', $userData);
         header('Location: ' . BASE_URL . '/admin/users/create');
         exit;
     }
@@ -98,10 +98,11 @@ class UserController extends BaseAdminController
 
         $result = $this->userModel->updateUser($id, $userData);
 
-        $_SESSION['flash_message'] = $result['success']
-            ? 'Uživatel byl úspěšně aktualizován'
-            : ($result['message'] ?? 'Chyba při aktualizaci');
-        $_SESSION['flash_type'] = $result['success'] ? 'success' : 'error';
+        if ($result['success']) {
+            Toast::success('Uživatel byl úspěšně aktualizován');
+        } else {
+            Toast::error($result['message'] ?? 'Chyba při aktualizaci');
+        }
 
         header('Location: ' . BASE_URL . '/admin/users/edit/' . $id);
         exit;
@@ -115,10 +116,11 @@ class UserController extends BaseAdminController
 
         $result = $this->userModel->deleteUser($id);
 
-        $_SESSION['flash_message'] = $result['success']
-            ? 'Uživatel byl úspěšně smazán'
-            : ($result['message'] ?? 'Chyba při mazání');
-        $_SESSION['flash_type'] = $result['success'] ? 'success' : 'error';
+        if ($result['success']) {
+            Toast::success('Uživatel byl úspěšně smazán');
+        } else {
+            Toast::error($result['message'] ?? 'Chyba při mazání');
+        }
 
         header('Location: ' . BASE_URL . '/admin/users');
         exit;

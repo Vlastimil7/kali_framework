@@ -3,10 +3,7 @@
 /** @var array $voucher */ ?>
 
 <?php
-$old = $_SESSION['_old'] ?? [];
-$err = $_SESSION['_flash_error'] ?? null;
-$ok  = $_SESSION['_flash_success'] ?? null;
-unset($_SESSION['_old'], $_SESSION['_flash_error'], $_SESSION['_flash_success']);
+$old = \Helpers\Flash::old('admin_voucher');
 
 $cur = $voucher['currency'] ?? 'CZK';
 
@@ -37,20 +34,6 @@ $val = function (string $k, $fallback = '') use ($old) {
         Zpět
       </a>
     </div>
-
-    <?php if ($err): ?>
-      <div class="mb-4 rounded-xl bg-red-50 border-2 border-red-200 p-4 text-sm text-red-900">
-        <div class="font-semibold mb-1">Chyba</div>
-        <div><?= htmlspecialchars($err) ?></div>
-      </div>
-    <?php endif; ?>
-
-    <?php if ($ok): ?>
-      <div class="mb-4 rounded-xl bg-green-50 border-2 border-green-200 p-4 text-sm text-green-900">
-        <div class="font-semibold mb-1">OK</div>
-        <div><?= htmlspecialchars($ok) ?></div>
-      </div>
-    <?php endif; ?>
 
     <!-- FIX: action musí být /admin/vouchers/update/{id} -->
     <form action="<?= BASE_URL ?>/admin/vouchers/update/<?= (int)$voucher['id'] ?>" method="post"

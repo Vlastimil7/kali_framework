@@ -9,6 +9,7 @@ use Models\Order;
 use Models\OrderItem;
 use Services\Payments\ComgateService;
 use Helpers\Logger;
+use Helpers\Toast;
 
 class CartController extends Controller
 {
@@ -55,8 +56,7 @@ class CartController extends Controller
 
         $result = $this->cartModel->addVoucher($voucherId, $quantity);
 
-        $_SESSION['flash_message'] = $result['message'] ?? '';
-        $_SESSION['flash_type'] = !empty($result['success']) ? 'success' : 'error';
+        $this->toastResult($result);
 
         header('Location: ' . locale_url('cart'));
         exit;
@@ -76,16 +76,14 @@ class CartController extends Controller
         $quantity = (int)($_POST['quantity'] ?? 0);
 
         if ($itemKey === '') {
-            $_SESSION['flash_message'] = 'Položka nebyla nalezena';
-            $_SESSION['flash_type'] = 'error';
+            Toast::error('Položka nebyla nalezena');
             header('Location: ' . locale_url('cart'));
             exit;
         }
 
         $result = $this->cartModel->updateItemQuantity($itemKey, $quantity);
 
-        $_SESSION['flash_message'] = $result['message'] ?? '';
-        $_SESSION['flash_type'] = !empty($result['success']) ? 'success' : 'error';
+        $this->toastResult($result);
 
         header('Location: ' . locale_url('cart'));
         exit;
@@ -104,16 +102,14 @@ class CartController extends Controller
         $itemKey = (string)($_POST['item_key'] ?? '');
 
         if ($itemKey === '') {
-            $_SESSION['flash_message'] = 'Položka nebyla nalezena';
-            $_SESSION['flash_type'] = 'error';
+            Toast::error('Položka nebyla nalezena');
             header('Location: ' . locale_url('cart'));
             exit;
         }
 
         $result = $this->cartModel->removeItem($itemKey);
 
-        $_SESSION['flash_message'] = $result['message'] ?? '';
-        $_SESSION['flash_type'] = !empty($result['success']) ? 'success' : 'error';
+        $this->toastResult($result);
 
         header('Location: ' . locale_url('cart'));
         exit;
@@ -131,8 +127,7 @@ class CartController extends Controller
 
         $result = $this->cartModel->clearCart();
 
-        $_SESSION['flash_message'] = $result['message'] ?? '';
-        $_SESSION['flash_type'] = !empty($result['success']) ? 'success' : 'error';
+        $this->toastResult($result);
 
         header('Location: ' . locale_url('cart'));
         exit;
@@ -146,8 +141,7 @@ class CartController extends Controller
         $cart = $this->cartModel->getCart();
 
         if (empty($cart['items'])) {
-            $_SESSION['flash_message'] = 'Váš košík je prázdný';
-            $_SESSION['flash_type'] = 'error';
+            Toast::error('Váš košík je prázdný');
             header('Location: ' . locale_url('cart'));
             exit;
         }
@@ -185,8 +179,7 @@ class CartController extends Controller
 
         if (empty($cart['items'])) {
             Logger::warning('Cart is empty, aborting createOrder');
-            $_SESSION['flash_message'] = 'Váš košík je prázdný';
-            $_SESSION['flash_type'] = 'error';
+            Toast::error('Váš košík je prázdný');
             header('Location: ' . locale_url('cart'));
             exit;
         }
@@ -215,8 +208,7 @@ class CartController extends Controller
         foreach (['billing_name', 'billing_email', 'billing_phone', 'billing_street', 'billing_house_no', 'billing_city', 'billing_zip'] as $k) {
             if ($billing[$k] === '') {
                 Logger::warning('Billing validation failed - missing field', ['field' => $k]);
-                $_SESSION['flash_message'] = 'Vyplňte prosím všechna povinná pole.';
-                $_SESSION['flash_type'] = 'error';
+                Toast::error('Vyplňte prosím všechna povinná pole.');
                 header('Location: ' . locale_url('cart/checkout'));
                 exit;
             }
@@ -224,8 +216,7 @@ class CartController extends Controller
 
         if (!filter_var($billing['billing_email'], FILTER_VALIDATE_EMAIL)) {
             Logger::warning('Billing validation failed - invalid email', ['email' => $billing['billing_email']]);
-            $_SESSION['flash_message'] = 'Email není validní.';
-            $_SESSION['flash_type'] = 'error';
+            Toast::error('Email není validní.');
             header('Location: ' . locale_url('cart/checkout'));
             exit;
         }
@@ -325,8 +316,7 @@ class CartController extends Controller
                     'response_payload' => $paymentResult,
                 ]);
 
-                $_SESSION['flash_message'] = 'Nepodařilo se vytvořit platbu. Zkuste to prosím znovu.';
-                $_SESSION['flash_type'] = 'error';
+                Toast::error('Nepodařilo se vytvořit platbu. Zkuste to prosím znovu.');
                 header('Location: ' . locale_url('cart/checkout'));
                 exit;
             }
@@ -357,8 +347,7 @@ class CartController extends Controller
                     'tx_id' => $txId,
                 ]);
 
-                $_SESSION['flash_message'] = 'Platba byla založena, ale chybí redirect URL. Kontaktujte správce.';
-                $_SESSION['flash_type'] = 'error';
+                Toast::error('Platba byla založena, ale chybí redirect URL. Kontaktujte správce.');
                 header('Location: ' . locale_url('cart/checkout'));
                 exit;
             }
@@ -376,8 +365,7 @@ class CartController extends Controller
 
             Logger::exception($e, ['context' => 'CartController::createOrder']);
 
-            $_SESSION['flash_message'] = 'Nepodařilo se vytvořit objednávku. Zkuste to prosím znovu.';
-            $_SESSION['flash_type'] = 'error';
+            Toast::error('Nepodařilo se vytvořit objednávku. Zkuste to prosím znovu.');
             header('Location: ' . locale_url('cart/checkout'));
             exit;
         }
@@ -388,6 +376,17 @@ class CartController extends Controller
         $date = date('Ymd');
         $rand = strtoupper(substr(bin2hex(random_bytes(3)), 0, 6));
         return "MB-$date-$rand";
+    }
+
+    private function toastResult(array $result): void
+    {
+        $message = (string)($result['message'] ?? '');
+        if (!empty($result['success'])) {
+            Toast::success($message);
+            return;
+        }
+
+        Toast::error($message);
     }
 
     private function insertTransaction($db, array $t): int

@@ -2,9 +2,9 @@
 // src/views/users/login.php
 // Pohled pro přihlášení uživatele
 
-// Získání případných dat z předchozího odeslání s chybami
-$formData = $_SESSION['form_data'] ?? [];
-unset($_SESSION['form_data']);
+use Helpers\Flash;
+
+$formData = Flash::old('login');
 ?>
 
 <div class="max-w-md mx-auto">
@@ -12,16 +12,6 @@ unset($_SESSION['form_data']);
         <div class="bg-blue-600 px-6 py-4">
             <h1 class="text-2xl font-bold text-white">Přihlášení</h1>
         </div>
-
-        <?php if (isset($_SESSION['flash_message'])): ?>
-            <div class="bg-<?= $_SESSION['flash_type'] === 'success' ? 'green' : 'red' ?>-100 border-l-4 border-<?= $_SESSION['flash_type'] === 'success' ? 'green' : 'red' ?>-500 text-<?= $_SESSION['flash_type'] === 'success' ? 'green' : 'red' ?>-700 p-4" role="alert">
-                <p><?= $_SESSION['flash_message'] ?></p>
-            </div>
-            <?php
-            unset($_SESSION['flash_message']);
-            unset($_SESSION['flash_type']);
-            ?>
-        <?php endif; ?>
 
         <div class="p-6 space-y-6">
             <form action="<?= locale_url('login/process') ?>" method="post" class="space-y-4">

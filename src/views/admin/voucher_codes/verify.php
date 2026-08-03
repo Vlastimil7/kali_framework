@@ -1,26 +1,8 @@
-<?php
-$err = $_SESSION['_flash_error'] ?? null;
-$ok  = $_SESSION['_flash_success'] ?? null;
-unset($_SESSION['_flash_error'], $_SESSION['_flash_success']);
-
-/** @var array|null $result */
-?>
+<?php /** @var array|null $result */ ?>
 
 <div class="max-w-3xl mx-auto px-4 py-8">
 
     <h1 class="text-2xl font-bold text-white mb-4">Ověření voucheru</h1>
-
-    <?php if ($err): ?>
-        <div class="mb-4 rounded-lg bg-red-50 border-2 border-red-200 p-4 text-sm text-red-900">
-            <?= htmlspecialchars($err) ?>
-        </div>
-    <?php endif; ?>
-
-    <?php if ($ok): ?>
-        <div class="mb-4 rounded-lg bg-green-50 border-2 border-green-200 p-4 text-sm text-green-900">
-            <?= htmlspecialchars($ok) ?>
-        </div>
-    <?php endif; ?>
 
     <!-- Form: Verify -->
     <form method="post" action="<?= BASE_URL ?>/admin/voucher-codes/verify"

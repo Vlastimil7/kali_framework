@@ -1,15 +1,6 @@
 <div class="max-w-7xl mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold text-white mb-6">Váš košík</h1>
 
-    <?php if (isset($_SESSION['flash_message'])): ?>
-        <div class="bg-<?= $_SESSION['flash_type'] === 'success' ? 'green' : 'red' ?>-100 border-l-4 border-<?= $_SESSION['flash_type'] === 'success' ? 'green' : 'red' ?>-500 text-<?= $_SESSION['flash_type'] === 'success' ? 'green' : 'red' ?>-700 p-4 mb-6" role="alert">
-            <p><?= $_SESSION['flash_message'] ?></p>
-        </div>
-        <?php
-        unset($_SESSION['flash_message'], $_SESSION['flash_type']);
-        ?>
-    <?php endif; ?>
-
     <?php if (empty($cart['items'])): ?>
         <div class="bg-[#ffffffe6] rounded-lg shadow-lg p-8 text-center">
             <div class="mb-6">

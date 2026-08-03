@@ -15,11 +15,6 @@ $status = !empty($voucher['is_active'])
     ? '<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-green-50 text-green-800 border-2 border-green-200">active</span>'
     : '<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-gray-50 text-gray-800 border-2 border-gray-200">inactive</span>';
 ?>
-<?php
-$err = $_SESSION['_flash_error'] ?? null;
-$ok  = $_SESSION['_flash_success'] ?? null;
-unset($_SESSION['_flash_error'], $_SESSION['_flash_success']);
-?>
 <div class="bg-gray-50 rounded-xl border">
     <div class="max-w-7xl mx-auto px-4 py-8">
 
@@ -54,20 +49,6 @@ unset($_SESSION['_flash_error'], $_SESSION['_flash_success']);
                 </a>
             </div>
         </div>
-        <?php if ($err): ?>
-            <div class="mb-4 rounded-xl bg-red-50 border-2 border-red-200 p-4 text-sm text-red-900">
-                <div class="font-semibold mb-1">Chyba</div>
-                <div><?= htmlspecialchars($err, ENT_QUOTES, 'UTF-8') ?></div>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($ok): ?>
-            <div class="mb-4 rounded-xl bg-green-50 border-2 border-green-200 p-4 text-sm text-green-900">
-                <div class="font-semibold mb-1">OK</div>
-                <div><?= htmlspecialchars($ok, ENT_QUOTES, 'UTF-8') ?></div>
-            </div>
-        <?php endif; ?>
-
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="bg-white rounded-2xl shadow-sm border-2 border-gray-200 p-6">

@@ -6,8 +6,12 @@ use Models\Order;
 use Models\OrderItem;
 use Models\VoucherCode;
 use Services\VoucherPdfService;
-use Helpers\Mailer;
 use Services\Vouchers\OrderService;
+use Services\Mail\Mail;
+use Services\Mail\Mailables\OrderPaidEmail;
+use Services\Mail\Mailables\OrderStatusChangedEmail;
+use Helpers\Flash;
+use Helpers\Toast;
 
 class OrdersController extends BaseAdminController
 {
@@ -15,7 +19,6 @@ class OrdersController extends BaseAdminController
     private OrderItem $orderItemModel;
     private VoucherCode $voucherCodeModel;
 
-    private Mailer $mailer;
     private VoucherPdfService $voucherPdf;
     private OrderService $orderService;
 
@@ -33,8 +36,6 @@ class OrdersController extends BaseAdminController
         $storage = BASE_PATH . '/storage';
         $this->voucherPdf = new VoucherPdfService($storage, BASE_URL, $logoAbs);
 
-        // Mailer
-        $this->mailer = new Mailer();
     }
 
     private function redirect(string $path): void
@@ -83,27 +84,27 @@ class OrdersController extends BaseAdminController
 
         $st = (string)($order['status'] ?? '');
         if (!in_array($st, ['pending', 'awaiting_payment'], true)) {
-            $_SESSION['_flash_error'] = 'Tuto objednávku nelze označit jako zaplacenou.';
+            Toast::error('Tuto objednávku nelze označit jako zaplacenou.');
             $this->redirect('/admin/orders/' . $id);
         }
 
         // 1) nastav paid
         $ok = $this->orderModel->markPaid($id);
         if (!$ok) {
-            $_SESSION['_flash_error'] = 'Nepodařilo se označit objednávku jako zaplacenou.';
+            Toast::error('Nepodařilo se označit objednávku jako zaplacenou.');
             $this->redirect('/admin/orders/' . $id);
         }
 
         // 2) vygeneruj kódy (idempotentně)
         $gen = $this->voucherCodeModel->ensureGeneratedForPaidOrder($id);
         if (!($gen['success'] ?? false)) {
-            $_SESSION['_flash_error'] = $gen['message'] ?? 'Objednávka je paid, ale nepodařilo se vygenerovat kódy.';
+            Toast::error($gen['message'] ?? 'Objednávka je paid, ale nepodařilo se vygenerovat kódy.');
             $this->redirect('/admin/orders/' . $id);
         }
 
-        $_SESSION['_flash_success'] = !empty($gen['skipped'])
+        Toast::success(!empty($gen['skipped'])
             ? 'Objednávka označena jako zaplacená. Kódy už existovaly.'
-            : 'Objednávka označena jako zaplacená. Vygenerováno kódů: ' . (int)($gen['created'] ?? 0) . '.';
+            : 'Objednávka označena jako zaplacená. Vygenerováno kódů: ' . (int)($gen['created'] ?? 0) . '.');
 
         // 3) PDF + email (neblokuj paid, jen případně flash error)
         $order = $this->orderModel->getById($id);
@@ -115,9 +116,10 @@ class OrdersController extends BaseAdminController
             foreach ($codes as $c) {
                 $pdfPaths[] = $this->voucherPdf->renderSingleVoucherPdf($order, $items, $c);
             }
-            $mailRes = $this->mailer->sendOrderPaidWithVoucherAttachments($order, $pdfPaths);
-            if (!($mailRes['success'] ?? false)) {
-                $_SESSION['_flash_error'] = 'Objednávka je paid, ale email se nepodařilo odeslat: ' . ($mailRes['message'] ?? '');
+            $mailRes = Mail::to((string) $order['billing_email'], (string) ($order['billing_name'] ?? ''))
+                ->send(new OrderPaidEmail($order, $pdfPaths));
+            if (!$mailRes->successful()) {
+                Toast::error('Objednávka je paid, ale email se nepodařilo odeslat: ' . $mailRes->message);
             }
         }
 
@@ -161,19 +163,19 @@ class OrdersController extends BaseAdminController
         }
 
         if ($errors) {
-            $_SESSION['_flash_error'] = implode(' ', $errors);
-            $_SESSION['_old'] = $_POST;
+            Toast::error(implode(' ', $errors));
+            Flash::withInput('admin_order', $_POST);
             $this->redirect('/admin/orders/edit/' . $id);
         }
 
         $res = $this->orderModel->updateAdmin($id, $data);
         if (!($res['success'] ?? false)) {
-            $_SESSION['_flash_error'] = $res['message'] ?? 'Chyba při ukládání.';
-            $_SESSION['_old'] = $_POST;
+            Toast::error($res['message'] ?? 'Chyba při ukládání.');
+            Flash::withInput('admin_order', $_POST);
             $this->redirect('/admin/orders/edit/' . $id);
         }
 
-        $_SESSION['_flash_success'] = 'Objednávka byla uložena.';
+        Toast::success('Objednávka byla uložena.');
         $this->redirect('/admin/orders/' . $id);
     }
 
@@ -187,7 +189,7 @@ class OrdersController extends BaseAdminController
 
         $status = (string)($order['status'] ?? '');
         if (!in_array($status, ['pending', 'awaiting_payment'], true)) {
-            $_SESSION['_flash_error'] = 'Objednávku lze stornovat jen před zaplacením.';
+            Toast::error('Objednávku lze stornovat jen před zaplacením.');
             $this->redirect('/admin/orders/' . $id);
         }
 
@@ -196,7 +198,7 @@ class OrdersController extends BaseAdminController
         // 1) objednávka canceled
         $res = $this->orderModel->setStatusAdmin($id, 'canceled', $this->adminId(), $note);
         if (!($res['success'] ?? false)) {
-            $_SESSION['_flash_error'] = $res['message'] ?? 'Chyba při stornu objednávky.';
+            Toast::error($res['message'] ?? 'Chyba při stornu objednávky.');
             $this->redirect('/admin/orders/' . $id);
         }
 
@@ -205,12 +207,13 @@ class OrdersController extends BaseAdminController
 
         // 3) email status
         $order = $this->orderModel->getById($id);
-        $mailRes = $this->mailer->sendOrderStatusChanged($order, 'canceled', $note);
-        if (!($mailRes['success'] ?? false)) {
-            $_SESSION['_flash_error'] = 'Objednávka je canceled, ale email se nepodařilo odeslat: ' . ($mailRes['message'] ?? '');
+        $mailRes = Mail::to((string) $order['billing_email'], (string) ($order['billing_name'] ?? ''))
+            ->send(new OrderStatusChangedEmail($order, 'canceled', $note));
+        if (!$mailRes->successful()) {
+            Toast::error('Objednávka je canceled, ale email se nepodařilo odeslat: ' . $mailRes->message);
         }
 
-        $_SESSION['_flash_success'] = 'Objednávka byla stornována.';
+        Toast::success('Objednávka byla stornována.');
         $this->redirect('/admin/orders/' . $id);
     }
 
@@ -224,7 +227,7 @@ class OrdersController extends BaseAdminController
 
         $status = (string)($order['status'] ?? '');
         if (!in_array($status, ['pending', 'awaiting_payment'], true)) {
-            $_SESSION['_flash_error'] = 'Expiraci lze nastavit jen pro nezaplacenou objednávku.';
+            Toast::error('Expiraci lze nastavit jen pro nezaplacenou objednávku.');
             $this->redirect('/admin/orders/' . $id);
         }
 
@@ -232,24 +235,25 @@ class OrdersController extends BaseAdminController
 
         $res = $this->orderModel->setStatusAdmin($id, 'expired', $this->adminId(), $note);
         if (!($res['success'] ?? false)) {
-            $_SESSION['_flash_error'] = $res['message'] ?? 'Chyba při změně stavu.';
+            Toast::error($res['message'] ?? 'Chyba při změně stavu.');
             $this->redirect('/admin/orders/' . $id);
         }
 
         $exp = $this->voucherCodeModel->expireAllByOrderId($id);
         if (!($exp['success'] ?? false)) {
-            $_SESSION['_flash_error'] = $exp['message'] ?? 'Objednávka je expired, ale nepodařilo se změnit stavy voucherů.';
+            Toast::error($exp['message'] ?? 'Objednávka je expired, ale nepodařilo se změnit stavy voucherů.');
             $this->redirect('/admin/orders/' . $id);
         }
 
         // email status
         $order = $this->orderModel->getById($id);
-        $mailRes = $this->mailer->sendOrderStatusChanged($order, 'expired', $note);
-        if (!($mailRes['success'] ?? false)) {
-            $_SESSION['_flash_error'] = 'Objednávka je expired, ale email se nepodařilo odeslat: ' . ($mailRes['message'] ?? '');
+        $mailRes = Mail::to((string) $order['billing_email'], (string) ($order['billing_name'] ?? ''))
+            ->send(new OrderStatusChangedEmail($order, 'expired', $note));
+        if (!$mailRes->successful()) {
+            Toast::error('Objednávka je expired, ale email se nepodařilo odeslat: ' . $mailRes->message);
         }
 
-        $_SESSION['_flash_success'] = 'Objednávka nastavena jako expired. Změněno voucherů: ' . (int)($exp['affected'] ?? 0) . '.';
+        Toast::success('Objednávka nastavena jako expired. Změněno voucherů: ' . (int)($exp['affected'] ?? 0) . '.');
         $this->redirect('/admin/orders/' . $id);
     }
 
@@ -262,12 +266,12 @@ class OrdersController extends BaseAdminController
         if (!$order) return $this->show404();
 
         if (($order['status'] ?? '') !== 'paid') {
-            $_SESSION['_flash_error'] = 'Refund lze jen pro paid objednávku.';
+            Toast::error('Refund lze jen pro paid objednávku.');
             $this->redirect('/admin/orders/' . $id);
         }
 
         if ($this->voucherCodeModel->hasRedeemedByOrderId($id)) {
-            $_SESSION['_flash_error'] = 'Nelze refundovat: objednávka má uplatněný (redeemed) voucher.';
+            Toast::error('Nelze refundovat: objednávka má uplatněný (redeemed) voucher.');
             $this->redirect('/admin/orders/' . $id);
         }
 
@@ -282,15 +286,14 @@ class OrdersController extends BaseAdminController
         );
 
         if (!($cg['success'] ?? false)) {
-            $_SESSION['_flash_error'] =
-                'Refund na Comgate selhal: ' . ($cg['error'] ?? 'neznámá chyba');
+            Toast::error('Refund na Comgate selhal: ' . ($cg['error'] ?? 'neznámá chyba'));
             $this->redirect('/admin/orders/' . $id);
         }
 
         // ✅ 2) objednávka refunded
         $res = $this->orderModel->setStatusAdmin($id, 'refunded', $this->adminId(), $note);
         if (!($res['success'] ?? false)) {
-            $_SESSION['_flash_error'] = $res['message'] ?? 'Chyba při refundu objednávky.';
+            Toast::error($res['message'] ?? 'Chyba při refundu objednávky.');
             $this->redirect('/admin/orders/' . $id);
         }
 
@@ -299,13 +302,13 @@ class OrdersController extends BaseAdminController
 
         // ✅ 4) email
         $order = $this->orderModel->getById($id);
-        $mailRes = $this->mailer->sendOrderStatusChanged($order, 'refunded', $note);
-        if (!($mailRes['success'] ?? false)) {
-            $_SESSION['_flash_error'] =
-                'Objednávka je refunded, ale email se nepodařilo odeslat.';
+        $mailRes = Mail::to((string) $order['billing_email'], (string) ($order['billing_name'] ?? ''))
+            ->send(new OrderStatusChangedEmail($order, 'refunded', $note));
+        if (!$mailRes->successful()) {
+            Toast::error('Objednávka je refunded, ale email se nepodařilo odeslat.');
         }
 
-        $_SESSION['_flash_success'] = 'Objednávka refundována a platba vrácena přes Comgate.';
+        Toast::success('Objednávka refundována a platba vrácena přes Comgate.');
         $this->redirect('/admin/orders/' . $id);
     }
 }

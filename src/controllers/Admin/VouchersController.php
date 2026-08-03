@@ -3,6 +3,8 @@
 namespace Controllers\Admin;
 
 use Models\Voucher;
+use Helpers\Flash;
+use Helpers\Toast;
 
 class VouchersController extends BaseAdminController
 {
@@ -59,8 +61,8 @@ class VouchersController extends BaseAdminController
         if ($this->voucherModel->existsBySlug($slug)) $errors[] = 'Slug už existuje, zvol jiný.';
 
         if ($errors) {
-            $_SESSION['_flash_error'] = implode(' ', $errors);
-            $_SESSION['_old'] = $_POST;
+            Toast::error(implode(' ', $errors));
+            Flash::withInput('admin_voucher', $_POST);
             header('Location: ' . BASE_URL . '/admin/vouchers/create');
             exit;
         }
@@ -81,13 +83,13 @@ class VouchersController extends BaseAdminController
         ]);
 
         if (!$res['success']) {
-            $_SESSION['_flash_error'] = $res['message'] ?? 'Chyba při vytváření voucheru.';
-            $_SESSION['_old'] = $_POST;
+            Toast::error($res['message'] ?? 'Chyba při vytváření voucheru.');
+            Flash::withInput('admin_voucher', $_POST);
             header('Location: ' . BASE_URL . '/admin/vouchers/create');
             exit;
         }
 
-        $_SESSION['_flash_success'] = 'Voucher vytvořen.';
+        Toast::success('Voucher vytvořen.');
         header('Location: ' . BASE_URL . '/admin/vouchers/' . (int)$res['id']);
         exit;
     }
@@ -125,8 +127,8 @@ class VouchersController extends BaseAdminController
         if ($this->voucherModel->existsBySlug($slug, $id)) $errors[] = 'Slug už existuje, zvol jiný.';
 
         if ($errors) {
-            $_SESSION['_flash_error'] = implode(' ', $errors);
-            $_SESSION['_old'] = $_POST;
+            Toast::error(implode(' ', $errors));
+            Flash::withInput('admin_voucher', $_POST);
             header('Location: ' . BASE_URL . '/admin/vouchers/edit/' . (int)$id);
             exit;
         }
@@ -143,13 +145,13 @@ class VouchersController extends BaseAdminController
         ]);
 
         if (!$res['success']) {
-            $_SESSION['_flash_error'] = $res['message'] ?? 'Chyba při ukládání voucheru.';
-            $_SESSION['_old'] = $_POST;
+            Toast::error($res['message'] ?? 'Chyba při ukládání voucheru.');
+            Flash::withInput('admin_voucher', $_POST);
             header('Location: ' . BASE_URL . '/admin/vouchers/edit/' . (int)$id);
             exit;
         }
 
-        $_SESSION['_flash_success'] = 'Voucher uložen.';
+        Toast::success('Voucher uložen.');
         header('Location: ' . BASE_URL . '/admin/vouchers/edit/' . (int)$id);
         exit;
     }
@@ -157,7 +159,11 @@ class VouchersController extends BaseAdminController
     public function deactivate(int $id)
     {
         $result = $this->voucherModel->deactivate($id);
-        $_SESSION[$result['success'] ? '_flash_success' : '_flash_error'] = $result['message'] ?? 'Voucher se nepodařilo deaktivovat.';
+        if ($result['success']) {
+            Toast::success($result['message'] ?? 'Voucher byl deaktivován.');
+        } else {
+            Toast::error($result['message'] ?? 'Voucher se nepodařilo deaktivovat.');
+        }
         header('Location: ' . BASE_URL . '/admin/vouchers');
         exit;
     }

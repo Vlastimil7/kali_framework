@@ -2,10 +2,7 @@
 
 /** @var array $order */
 
-$old = $_SESSION['_old'] ?? [];
-$err = $_SESSION['_flash_error'] ?? null;
-$ok  = $_SESSION['_flash_success'] ?? null;
-unset($_SESSION['_old'], $_SESSION['_flash_error'], $_SESSION['_flash_success']);
+$old = \Helpers\Flash::old('admin_order');
 
 $val = function (string $k, $fallback = '') use ($old) {
     return array_key_exists($k, $old) ? (string)$old[$k] : (string)$fallback;
@@ -40,20 +37,6 @@ $orderNo = $order['order_number'] ?? ('#' . ($order['id'] ?? ''));
                 </a>
             </div>
         </div>
-
-        <?php if ($err): ?>
-            <div class="mb-4 rounded-xl bg-red-50 border-2 border-red-200 p-4 text-sm text-red-900">
-                <div class="font-semibold mb-1">Chyba</div>
-                <div><?= htmlspecialchars($err) ?></div>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($ok): ?>
-            <div class="mb-4 rounded-xl bg-green-50 border-2 border-green-200 p-4 text-sm text-green-900">
-                <div class="font-semibold mb-1">OK</div>
-                <div><?= htmlspecialchars($ok) ?></div>
-            </div>
-        <?php endif; ?>
 
         <form action="<?= BASE_URL ?>/admin/orders/update/<?= (int)$order['id'] ?>" method="post"
             class="bg-white rounded-2xl shadow-sm border-2 border-gray-200 overflow-hidden">

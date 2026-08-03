@@ -5,17 +5,18 @@ namespace Controllers\Front;
 use Core\Controller;
 use Helpers\RateLimiter;
 use Helpers\ReCaptcha;
-use Helpers\Mailer;
 use Helpers\Logger;
+use Helpers\ContactAttachmentUpload;
+use Helpers\Flash;
+use Helpers\Toast;
+use Services\Mail\Mail;
+use Services\Mail\Mailables\ContactEmail;
 
 class ContactController extends Controller
 {
-    private Mailer $mailer;
-
     public function __construct()
     {
         parent::__construct();
-        $this->mailer = new Mailer();
     }
 
     public function index()
@@ -37,53 +38,6 @@ class ContactController extends Controller
         return [$first, $last];
     }
 
-    /**
-     * Udělá z clinic bezpečný "namespace" klíč pro session
-     * Příklad: "Midobarbershop.cz s.r.o." -> "contact_Midobarbershop.cz_s_r_o_"
-     */
-    private function clinicNs(string $clinic): string
-    {
-        $clinic = trim($clinic);
-        if ($clinic === '') $clinic = 'default';
-
-        $slug = mb_strtolower($clinic);
-        $slug = preg_replace('~[^a-z0-9]+~i', '_', $slug);
-        $slug = trim($slug, '_');
-
-        return 'contact_' . $slug;
-    }
-
-    /**
-     * Uloží hlášku do session pro konkrétní formulář
-     */
-    private function flash(string $ns, string $type, string $message): void
-    {
-        $_SESSION['flash'][$ns] = [
-            'type' => $type,      // "success" nebo "error"
-            'message' => $message
-        ];
-    }
-
-    /**
-     * Uloží předvyplnění polí (old data) pro konkrétní formulář
-     */
-    private function setOld(string $ns, array $formData): void
-    {
-        $_SESSION['old'][$ns] = [
-            'name'    => $formData['fullName'] ?? '',
-            'email'   => $formData['email'] ?? '',
-            'phone'   => $formData['phone'] ?? '',
-            'topic'   => $formData['topic'] ?? '',
-            'message' => $formData['message'] ?? '',
-            // gdpr záměrně neukládám (většinou se po chybě musí znovu zaškrtnout)
-        ];
-    }
-
-    private function clearOld(string $ns): void
-    {
-        unset($_SESSION['old'][$ns]);
-    }
-
     public function sendMessage()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -92,8 +46,6 @@ class ContactController extends Controller
         }
 
         $clinic = trim($_POST['clinic'] ?? '');
-        $ns = $this->clinicNs($clinic);
-
         // Rate limit
         $rateLimiter = new RateLimiter('contact_form');
         if (!$rateLimiter->check()) {
@@ -105,14 +57,19 @@ class ContactController extends Controller
                 'wait_min' => $timeRemaining,
             ]);
 
-            $this->flash($ns, 'error', "Překročili jste maximální počet pokusů. Zkuste to znovu za {$timeRemaining} minut.");
+            Toast::error("Překročili jste maximální počet pokusů. Zkuste to znovu za {$timeRemaining} minut.");
             header('Location: ' . locale_url('contact'));
             exit;
         }
 
         // Data z formuláře
-        $fullName = trim($_POST['name'] ?? '');
-        [$firstName, $lastName] = $this->splitName($fullName);
+        $firstName = trim((string) ($_POST['first_name'] ?? ''));
+        $lastName = trim((string) ($_POST['last_name'] ?? ''));
+        $fullName = trim($firstName . ' ' . $lastName);
+        if ($fullName === '') {
+            $fullName = trim((string) ($_POST['name'] ?? ''));
+            [$firstName, $lastName] = $this->splitName($fullName);
+        }
 
         $topic = trim($_POST['topic'] ?? '');
         $phone = trim($_POST['phone'] ?? '');
@@ -130,6 +87,7 @@ class ContactController extends Controller
             'fullPhone' => $cleanPhone,
 
             'topic'   => $topic,
+            'budget'  => trim((string) ($_POST['budget'] ?? '')),
             'subject' => $topic !== '' ? $topic : ('Kontakt – ' . ($clinic !== '' ? $clinic : 'ordinace')),
             'message' => trim($_POST['message'] ?? ''),
 
@@ -146,8 +104,8 @@ class ContactController extends Controller
                 'clinic' => $clinic ?: null,
             ]);
 
-            $this->flash($ns, 'error', $validationResult['message']);
-            $this->setOld($ns, $formData); // ✅ uloží vyplněná pole
+            Toast::error($validationResult['message']);
+            Flash::withInput('contact', $_POST);
             header('Location: ' . locale_url('contact'));
             exit;
         }
@@ -165,32 +123,46 @@ class ContactController extends Controller
                 'score' => $recaptchaResult['score'] ?? null,
             ]);
 
-            $this->flash($ns, 'error', 'Ověření reCAPTCHA selhalo. Zkuste to prosím znovu.');
-            $this->setOld($ns, $formData); // ✅ ať nemusí psát znova
+            Toast::error('Ověření reCAPTCHA selhalo. Zkuste to prosím znovu.');
+            Flash::withInput('contact', $_POST);
             header('Location: ' . locale_url('contact'));
             exit;
         }
 
-        // Odeslání emailu
-        $result = $this->mailer->sendContactMessage($formData);
+        $attachmentUpload = new ContactAttachmentUpload();
+        $upload = $attachmentUpload->saveTmp(
+            $_FILES['attachments'] ?? [],
+            ROOT_PATH . '/storage/tmp/contact-attachments',
+        );
+        if (!$upload['success']) {
+            $attachmentUpload->cleanup($upload['files']);
+            Toast::error(implode(' ', $upload['errors']));
+            Flash::withInput('contact', $_POST);
+            header('Location: ' . locale_url('contact'));
+            exit;
+        }
 
-        if ($result['success']) {
+        $result = Mail::to(MAIL_TO_ADDRESS, MAIL_TO_NAME)
+            ->send(new ContactEmail($formData, $upload['files']));
+        $attachmentUpload->cleanup($upload['files']);
+
+        if ($result->successful()) {
             Logger::info('Contact message sent', [
                 'email'  => $formData['email'],
                 'clinic' => $clinic,
             ]);
 
-            $this->flash($ns, 'success', 'Vaše zpráva byla úspěšně odeslána. Brzy vás budeme kontaktovat.');
-            $this->clearOld($ns); // 
+            Toast::success('Vaše zpráva byla úspěšně odeslána. Brzy vás budeme kontaktovat.');
+            Flash::clearOld('contact');
         } else {
             Logger::error('Contact message send failed', [
                 'email'  => $formData['email'] ?? null,
                 'clinic' => $clinic ?: null,
-                'error'  => $result['message'] ?? null,
+                'error'  => $result->message,
             ]);
 
-            $this->flash($ns, 'error', 'Nepodařilo se odeslat zprávu. Zkuste to prosím později nebo nás kontaktujte telefonicky.');
-            $this->setOld($ns, $formData);
+            Toast::error('Nepodařilo se odeslat zprávu. Zkuste to prosím později nebo nás kontaktujte telefonicky.');
+            Flash::withInput('contact', $_POST);
         }
 
         header('Location: ' . locale_url('contact'));

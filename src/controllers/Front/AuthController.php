@@ -5,6 +5,7 @@ namespace Controllers\Front;
 use Core\Controller;
 use Services\Auth\GoogleOAuthService;
 use Models\User;
+use Helpers\Toast;
 
 class AuthController extends Controller
 {
@@ -44,8 +45,7 @@ class AuthController extends Controller
             $storedState = (string)($_SESSION['google_oauth_state'] ?? '');
 
             if ($state === '' || $storedState === '' || !hash_equals($storedState, $state)) {
-                $_SESSION['flash_message'] = 'Neplatný OAuth state.';
-                $_SESSION['flash_type'] = 'error';
+                Toast::error('Neplatný OAuth state.');
                 header('Location: ' . locale_url('login', $returnLanguage));
                 exit;
             }
@@ -53,8 +53,7 @@ class AuthController extends Controller
             unset($_SESSION['google_oauth_state'], $_SESSION['google_oauth_language']);
 
             if ($code === '') {
-                $_SESSION['flash_message'] = 'Google nevrátil autorizační kód.';
-                $_SESSION['flash_type'] = 'error';
+                Toast::error('Google nevrátil autorizační kód.');
                 header('Location: ' . locale_url('login', $returnLanguage));
                 exit;
             }
@@ -62,8 +61,7 @@ class AuthController extends Controller
             $result = $this->googleOAuthService->fetchUserByCode($code);
 
             if (!$result['success']) {
-                $_SESSION['flash_message'] = $result['message'] ?? 'Google přihlášení selhalo.';
-                $_SESSION['flash_type'] = 'error';
+                Toast::error($result['message'] ?? 'Google přihlášení selhalo.');
                 header('Location: ' . locale_url('login', $returnLanguage));
                 exit;
             }
@@ -75,8 +73,7 @@ class AuthController extends Controller
                 $createResult = $this->userModel->createGoogleUser($googleUser);
 
                 if (!$createResult['success']) {
-                    $_SESSION['flash_message'] = $createResult['message'] ?? 'Nepodařilo se vytvořit účet přes Google.';
-                    $_SESSION['flash_type'] = 'error';
+                    Toast::error($createResult['message'] ?? 'Nepodařilo se vytvořit účet přes Google.');
                     header('Location: ' . locale_url('login', $returnLanguage));
                     exit;
                 }
@@ -85,8 +82,7 @@ class AuthController extends Controller
             }
 
             if (!$user) {
-                $_SESSION['flash_message'] = 'Nepodařilo se načíst uživatele po přihlášení přes Google.';
-                $_SESSION['flash_type'] = 'error';
+                Toast::error('Nepodařilo se načíst uživatele po přihlášení přes Google.');
                 header('Location: ' . locale_url('login', $returnLanguage));
                 exit;
             }
@@ -96,8 +92,7 @@ class AuthController extends Controller
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['user_role'] = $user['role'];
 
-            $_SESSION['flash_message'] = 'Přihlášení přes Google proběhlo úspěšně.';
-            $_SESSION['flash_type'] = 'success';
+            Toast::success('Přihlášení přes Google proběhlo úspěšně.');
 
             if (($user['role'] ?? 'user') === 'admin') {
                 header('Location: ' . locale_url('admin/dashboard', $returnLanguage));
@@ -106,8 +101,7 @@ class AuthController extends Controller
             }
             exit;
         } catch (\Throwable $e) {
-            $_SESSION['flash_message'] = 'Chyba při přihlášení přes Google: ' . $e->getMessage();
-            $_SESSION['flash_type'] = 'error';
+            Toast::error('Chyba při přihlášení přes Google: ' . $e->getMessage());
             $returnLanguage = isset($returnLanguage) ? $returnLanguage : lang()->getDefaultLanguage();
             header('Location: ' . locale_url('login', $returnLanguage));
             exit;

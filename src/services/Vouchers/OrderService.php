@@ -5,8 +5,8 @@ namespace Services\Vouchers;
 use Core\Database;
 use Helpers\Logger;
 use Services\Payments\ComgateService;
-
-use Helpers\Mailer;
+use Services\Mail\Mail;
+use Services\Mail\Mailables\OrderPaidEmail;
 use Services\VoucherPdfService;
 
 use Models\VoucherCode;
@@ -16,7 +16,6 @@ class OrderService
     private Database $db;
     private ComgateService $comgate;
 
-    private Mailer $mailer;
     private VoucherPdfService $voucherPdf;
     private VoucherCode $voucherCodeModel;
 
@@ -30,8 +29,6 @@ class OrderService
         $storage = BASE_PATH . '/storage';
 
         $this->voucherPdf = new VoucherPdfService($storage, BASE_URL, $logoAbs);
-        $this->mailer = new Mailer();
-
         $this->voucherCodeModel = new VoucherCode();
     }
 
@@ -247,12 +244,13 @@ class OrderService
             ]);
         }
 
-        // 4) email (HTML + příloha) – tvoje Mailer metoda
-        $mailRes = $this->mailer->sendOrderPaidWithVouchers($order, $pdfPath);
-        if (!($mailRes['success'] ?? false)) {
+        // 4) email (HTML + příloha)
+        $mailRes = Mail::to((string) $order['billing_email'], (string) ($order['billing_name'] ?? ''))
+            ->send(new OrderPaidEmail($order, [$pdfPath]));
+        if (!$mailRes->successful()) {
             Logger::warning('fulfillPaidOrderOnce: email failed', [
                 'order_id' => $orderId,
-                'message' => $mailRes['message'] ?? null
+                'message' => $mailRes->message,
             ]);
             return;
         }

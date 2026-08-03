@@ -7,6 +7,7 @@ use Models\Voucher;
 use Models\Order;
 use Services\Vouchers\OrderService;
 use Helpers\Logger;
+use Helpers\Toast;
 
 class VoucherController extends Controller
 {
@@ -98,8 +99,7 @@ class VoucherController extends Controller
         $result = $this->orderService->createOrderAndPayment($voucher, $form);
 
         if (!$result['success']) {
-            $_SESSION['flash_message'] = $result['error'];
-            $_SESSION['flash_type'] = 'error';
+            Toast::error($result['error']);
             header('Location: ' . locale_url("voucher/{$slug}/order"));
             exit;
         }
