@@ -5,6 +5,7 @@ namespace Controllers\Admin;
 use Core\Request;
 use Models\VoucherCode;
 use Helpers\Toast;
+use Helpers\Validator;
 
 class VoucherCodesController extends BaseAdminController
 {
@@ -31,8 +32,11 @@ class VoucherCodesController extends BaseAdminController
     {
         $code = strtoupper($request->string('code'));
 
-        if ($code === '') {
-            Toast::error('Zadej kód voucheru.');
+        $validator = Validator::make(['code' => $code], [
+            'code' => 'bail|required|string|max:100',
+        ], [], ['code' => 'kód voucheru']);
+        if ($validator->fails()) {
+            $validator->flash('voucher_code', $request->post());
             header('Location: ' . BASE_URL . '/admin/voucher-codes/verify');
             exit;
         }
@@ -76,8 +80,12 @@ class VoucherCodesController extends BaseAdminController
         $code = strtoupper($request->string('code'));
         $note = $request->string('note');
 
-        if ($code === '') {
-            Toast::error('Zadej kód voucheru.');
+        $validator = Validator::make(['code' => $code, 'note' => $note], [
+            'code' => 'bail|required|string|max:100',
+            'note' => 'nullable|string|max:1000',
+        ], [], ['code' => 'kód voucheru', 'note' => 'poznámka']);
+        if ($validator->fails()) {
+            $validator->flash('voucher_code', $request->post());
             header('Location: ' . BASE_URL . '/admin/voucher-codes/verify');
             exit;
         }
@@ -109,8 +117,17 @@ class VoucherCodesController extends BaseAdminController
             $type = 'canceled';
         }
 
-        if ($code === '') {
-            Toast::error('Zadej kód voucheru.');
+        $validator = Validator::make(['code' => $code, 'reason' => $reason, 'type' => $type], [
+            'code' => 'bail|required|string|max:100',
+            'reason' => 'nullable|string|max:1000',
+            'type' => 'required|in:canceled,refunded',
+        ], [], [
+            'code' => 'kód voucheru',
+            'reason' => 'důvod',
+            'type' => 'typ změny',
+        ]);
+        if ($validator->fails()) {
+            $validator->flash('voucher_code', $request->post());
             header('Location: ' . BASE_URL . '/admin/voucher-codes/verify');
             exit;
         }
@@ -137,8 +154,12 @@ class VoucherCodesController extends BaseAdminController
         $code   = strtoupper($request->string('code'));
         $reason = $request->string('reason');
 
-        if ($code === '') {
-            Toast::error('Zadej kód voucheru.');
+        $validator = Validator::make(['code' => $code, 'reason' => $reason], [
+            'code' => 'bail|required|string|max:100',
+            'reason' => 'nullable|string|max:1000',
+        ], [], ['code' => 'kód voucheru', 'reason' => 'důvod']);
+        if ($validator->fails()) {
+            $validator->flash('voucher_code', $request->post());
             header('Location: ' . BASE_URL . '/admin/voucher-codes/verify');
             exit;
         }

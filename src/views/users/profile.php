@@ -1,6 +1,7 @@
 <?php
 // src/views/users/profile.php
 // Pohled pro zobrazení a úpravu profilu uživatele
+$old = \Helpers\Flash::old('profile');
 ?>
 
 <div class="max-w-full mx-auto">
@@ -51,20 +52,20 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Jméno</label>
-                            <input type="text" id="name" name="name" value="<?= htmlspecialchars($user['name']) ?>" 
+                            <input type="text" id="name" name="name" value="<?= htmlspecialchars($old['name'] ?? $user['name']) ?>"
                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
                         </div>
                         
                         <div>
                             <label for="surname" class="block text-sm font-medium text-gray-700 mb-1">Příjmení</label>
-                            <input type="text" id="surname" name="surname" value="<?= htmlspecialchars($user['surname']) ?>" 
+                            <input type="text" id="surname" name="surname" value="<?= htmlspecialchars($old['surname'] ?? $user['surname']) ?>"
                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
                         </div>
                     </div>
                     
                     <div>
                         <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
-                        <input type="tel" id="phone" name="phone" value="<?= htmlspecialchars($user['phone']) ?>" 
+                        <input type="tel" id="phone" name="phone" value="<?= htmlspecialchars($old['phone'] ?? $user['phone']) ?>"
                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     

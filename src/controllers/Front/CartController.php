@@ -11,6 +11,7 @@ use Models\OrderItem;
 use Services\Payments\ComgateService;
 use Helpers\Logger;
 use Helpers\Toast;
+use Helpers\Validator;
 
 class CartController extends Controller
 {
@@ -55,6 +56,19 @@ class CartController extends Controller
         $voucherId = $request->int('voucher_id');
         $quantity  = $request->int('quantity', 1);
 
+        $validator = Validator::make($request->post(), [
+            'voucher_id' => 'bail|required|integer|min:1',
+            'quantity' => 'bail|required|integer|min:1',
+        ], [], [
+            'voucher_id' => 'voucher',
+            'quantity' => 'množství',
+        ]);
+        if ($validator->fails()) {
+            $validator->flash('cart', $request->post());
+            header('Location: ' . locale_url('vouchers'));
+            exit;
+        }
+
         $result = $this->cartModel->addVoucher($voucherId, $quantity);
 
         $this->toastResult($result);
@@ -76,8 +90,15 @@ class CartController extends Controller
         $itemKey = $request->string('item_key');
         $quantity = $request->int('quantity');
 
-        if ($itemKey === '') {
-            Toast::error('Položka nebyla nalezena');
+        $validator = Validator::make($request->post(), [
+            'item_key' => 'bail|required|string',
+            'quantity' => 'bail|required|integer|min:0',
+        ], [], [
+            'item_key' => 'položka',
+            'quantity' => 'množství',
+        ]);
+        if ($validator->fails()) {
+            $validator->flash('cart', $request->post());
             header('Location: ' . locale_url('cart'));
             exit;
         }
@@ -102,8 +123,11 @@ class CartController extends Controller
 
         $itemKey = $request->string('item_key');
 
-        if ($itemKey === '') {
-            Toast::error('Položka nebyla nalezena');
+        $validator = Validator::make(['item_key' => $itemKey], [
+            'item_key' => 'bail|required|string',
+        ], [], ['item_key' => 'položka']);
+        if ($validator->fails()) {
+            $validator->flash('cart', $request->post());
             header('Location: ' . locale_url('cart'));
             exit;
         }
@@ -206,18 +230,33 @@ class CartController extends Controller
             'zip'       => $billing['billing_zip'],
         ]);
 
-        foreach (['billing_name', 'billing_email', 'billing_phone', 'billing_street', 'billing_house_no', 'billing_city', 'billing_zip'] as $k) {
-            if ($billing[$k] === '') {
-                Logger::warning('Billing validation failed - missing field', ['field' => $k]);
-                Toast::error('Vyplňte prosím všechna povinná pole.');
-                header('Location: ' . locale_url('cart/checkout'));
-                exit;
-            }
-        }
+        $validator = Validator::make($billing, [
+            'billing_name' => 'bail|required|string|max:120',
+            'billing_email' => 'bail|required|email|max:254',
+            'billing_phone' => 'bail|required|string|max:30',
+            'billing_street' => 'bail|required|string|max:150',
+            'billing_house_no' => 'bail|required|string|max:20',
+            'billing_city' => 'bail|required|string|max:100',
+            'billing_zip' => ['bail', 'required', 'regex:/^[0-9A-Za-z\s-]{3,12}$/'],
+            'billing_company' => 'nullable|string|max:150',
+            'billing_ico' => 'nullable|string|max:20',
+            'billing_dic' => 'nullable|string|max:20',
+        ], [], [
+            'billing_name' => 'jméno',
+            'billing_email' => 'e-mail',
+            'billing_phone' => 'telefon',
+            'billing_street' => 'ulice',
+            'billing_house_no' => 'číslo domu',
+            'billing_city' => 'město',
+            'billing_zip' => 'PSČ',
+            'billing_company' => 'firma',
+            'billing_ico' => 'IČO',
+            'billing_dic' => 'DIČ',
+        ]);
 
-        if (!filter_var($billing['billing_email'], FILTER_VALIDATE_EMAIL)) {
-            Logger::warning('Billing validation failed - invalid email', ['email' => $billing['billing_email']]);
-            Toast::error('Email není validní.');
+        if ($validator->fails()) {
+            Logger::warning('Billing validation failed', ['errors' => $validator->errors()]);
+            $validator->flash('checkout', $request->post());
             header('Location: ' . locale_url('cart/checkout'));
             exit;
         }

@@ -13,6 +13,7 @@ use Services\Mail\Mailables\OrderPaidEmail;
 use Services\Mail\Mailables\OrderStatusChangedEmail;
 use Helpers\Flash;
 use Helpers\Toast;
+use Helpers\Validator;
 
 class OrdersController extends BaseAdminController
 {
@@ -157,15 +158,32 @@ class OrdersController extends BaseAdminController
             'billing_dic' => $request->string('billing_dic') ?: null,
         ];
 
-        $errors = [];
-        if ($data['billing_name'] === '') $errors[] = 'Jméno je povinné.';
-        if ($data['billing_email'] === '' || !filter_var($data['billing_email'], FILTER_VALIDATE_EMAIL)) {
-            $errors[] = 'Email není validní.';
-        }
+        $validator = Validator::make($data, [
+            'billing_name' => 'bail|required|string|max:120',
+            'billing_email' => 'bail|required|email|max:254',
+            'billing_phone' => 'nullable|string|max:30',
+            'billing_street' => 'nullable|string|max:150',
+            'billing_house_no' => 'nullable|string|max:20',
+            'billing_city' => 'nullable|string|max:100',
+            'billing_zip' => 'nullable|string|max:12',
+            'billing_company' => 'nullable|string|max:150',
+            'billing_ico' => 'nullable|string|max:20',
+            'billing_dic' => 'nullable|string|max:20',
+        ], [], [
+            'billing_name' => 'jméno',
+            'billing_email' => 'e-mail',
+            'billing_phone' => 'telefon',
+            'billing_street' => 'ulice',
+            'billing_house_no' => 'číslo domu',
+            'billing_city' => 'město',
+            'billing_zip' => 'PSČ',
+            'billing_company' => 'firma',
+            'billing_ico' => 'IČO',
+            'billing_dic' => 'DIČ',
+        ]);
 
-        if ($errors) {
-            Toast::error(implode(' ', $errors));
-            Flash::withInput('admin_order', $request->post());
+        if ($validator->fails()) {
+            $validator->flash('admin_order', $request->post());
             $this->redirect('/admin/orders/edit/' . $id);
         }
 

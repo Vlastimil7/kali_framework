@@ -6,6 +6,7 @@ use Core\Request;
 use Models\User;
 use Helpers\Flash;
 use Helpers\Toast;
+use Helpers\Validator;
 
 class UserController extends BaseAdminController
 {
@@ -51,6 +52,34 @@ class UserController extends BaseAdminController
             'role' => $request->string('role', 'user'),
         ];
 
+        $adminUserValidationData = $userData;
+        $adminUserValidationData['password_confirm'] = $request->string('password_confirm');
+
+        $validator = Validator::make($adminUserValidationData, [
+            'email' => 'bail|required|email|max:254',
+            'password' => 'bail|required|string|min:8|max:255',
+            'name' => 'bail|required|string|max:100',
+            'surname' => 'bail|required|string|max:100',
+            'phone' => ['nullable', 'regex:/^[0-9+\s\-]{6,20}$/'],
+            'role' => 'required|in:user,admin',
+            'password_confirm' => 'bail|required|string|same:password',
+        ], [
+            'password_confirm.same' => 'Hesla se neshodují.',
+        ], [
+            'email' => 'e-mail',
+            'password' => 'heslo',
+            'name' => 'jméno',
+            'surname' => 'příjmení',
+            'phone' => 'telefon',
+            'role' => 'role',
+            'password_confirm' => 'potvrzení hesla',
+        ]);
+        if ($validator->fails()) {
+            $validator->flash('admin_user', $request->post());
+            header('Location: ' . BASE_URL . '/admin/users/create');
+            exit;
+        }
+
         $result = $this->userModel->register($userData);
 
         if ($result['success']) {
@@ -95,6 +124,34 @@ class UserController extends BaseAdminController
 
         if ($request->filled('password')) {
             $userData['password'] = $request->string('password');
+        }
+
+        $adminUserValidationData = $userData;
+        $adminUserValidationData['password_confirm'] = $request->string('password_confirm');
+
+        $validator = Validator::make($adminUserValidationData, [
+            'name' => 'bail|required|string|max:100',
+            'surname' => 'bail|required|string|max:100',
+            'email' => 'bail|required|email|max:254',
+            'phone' => ['nullable', 'regex:/^[0-9+\s\-]{6,20}$/'],
+            'role' => 'required|in:user,admin',
+            'password' => 'sometimes|nullable|string|min:8|max:255',
+            'password_confirm' => 'bail|required_with:password|nullable|string|same:password',
+        ], [
+            'password_confirm.same' => 'Hesla se neshodují.',
+        ], [
+            'name' => 'jméno',
+            'surname' => 'příjmení',
+            'email' => 'e-mail',
+            'phone' => 'telefon',
+            'role' => 'role',
+            'password' => 'heslo',
+            'password_confirm' => 'potvrzení hesla',
+        ]);
+        if ($validator->fails()) {
+            $validator->flash('admin_user', $request->post());
+            header('Location: ' . BASE_URL . '/admin/users/edit/' . $id);
+            exit;
         }
 
         $result = $this->userModel->updateUser($id, $userData);
