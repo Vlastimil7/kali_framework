@@ -21,7 +21,7 @@ $status = !empty($voucher['is_active'])
         <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-6">
             <div>
                 <div class="text-sm text-gray-500">
-                    <a href="<?= BASE_URL ?>/admin/vouchers" class="hover:text-gray-900 hover:underline">Vouchery</a>
+                    <a href="<?= config('app.base_url', '') ?>/admin/vouchers" class="hover:text-gray-900 hover:underline">Vouchery</a>
                     <span class="mx-2">/</span>
                     <span class="text-gray-700">Detail</span>
                 </div>
@@ -37,13 +37,13 @@ $status = !empty($voucher['is_active'])
             </div>
 
             <div class="flex flex-wrap gap-2">
-                <a href="<?= BASE_URL ?>/admin/vouchers/edit/<?= (int)$voucher['id'] ?>"
+                <a href="<?= config('app.base_url', '') ?>/admin/vouchers/edit/<?= (int)$voucher['id'] ?>"
                     class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-gray-900 text-white hover:bg-black text-sm font-semibold
                   focus:ring-2 focus:ring-gray-900/30">
                     Upravit
                 </a>
 
-                <a href="<?= BASE_URL ?>/admin/vouchers"
+                <a href="<?= config('app.base_url', '') ?>/admin/vouchers"
                     class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-sm font-semibold text-gray-800">
                     Zpět
                 </a>

@@ -20,7 +20,7 @@ class ChatController extends BaseApiController
     public function status()
     {
         try {
-            $provider = defined('AI_PROVIDER') ? (string)AI_PROVIDER : 'openai';
+            $provider = (string)config('ai.provider', 'openai');
             $client   = AiClientFactory::make($provider);
 
             $this->response([
@@ -76,7 +76,7 @@ class ChatController extends BaseApiController
 
             // provider primárně z configu/const (jak chceš ty)
             // (pokud nechceš vůbec session, tuhle řádku vyhoď)
-            $provider = defined('AI_PROVIDER') ? (string)AI_PROVIDER : 'openai';
+            $provider = (string)config('ai.provider', 'openai');
 
             Logger::info('Chat API request', [
                 'provider' => $provider,

@@ -2,7 +2,7 @@
 
 /**
  * Permanent redirects used during migration from the previous website.
- * Paths are relative to BASE_URL and may include a locale prefix.
+ * Paths are relative to config('app.base_url') and may include a locale prefix.
  *
  * Example:
  * 'cs/stary-kontakt' => 'cs/contact',

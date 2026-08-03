@@ -3,11 +3,13 @@
 declare(strict_types=1);
 
 define('ROOT_PATH', dirname(__DIR__));
-define('BASE_URL', '/subdir');
-define('SITE_URL', 'https://example.test/subdir');
-define('RECAPTCHA_SITE_KEY', 'test-key');
 
 require ROOT_PATH . '/vendor/autoload.php';
+Core\Config::set('app', [
+    'base_url' => '/subdir',
+    'site_url' => 'https://example.test/subdir',
+]);
+Core\Config::set('recaptcha', ['site_key' => 'test-key']);
 require ROOT_PATH . '/src/helpers/language_helper.php';
 require ROOT_PATH . '/src/helpers/url_helper.php';
 

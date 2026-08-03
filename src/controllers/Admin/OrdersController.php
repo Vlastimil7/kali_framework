@@ -34,15 +34,15 @@ class OrdersController extends BaseAdminController
         $this->orderService = new OrderService();
 
         // PDF service
-        $logoAbs = BASE_PATH . '/public/assets/logo.png'; // uprav si reálnou cestu
-        $storage = BASE_PATH . '/storage';
-        $this->voucherPdf = new VoucherPdfService($storage, BASE_URL, $logoAbs);
+        $logoAbs = config('app.base_path') . '/public/assets/logo.png'; // uprav si reálnou cestu
+        $storage = config('app.base_path') . '/storage';
+        $this->voucherPdf = new VoucherPdfService($storage, config('app.base_url', ''), $logoAbs);
 
     }
 
     private function redirect(string $path): void
     {
-        header('Location: ' . BASE_URL . $path);
+        header('Location: ' . config('app.base_url', '') . $path);
         exit;
     }
 

@@ -6,13 +6,14 @@ use Helpers\Logger;
 final class AnthropicClient implements AiClientInterface
 {
     private string $apiKey = '';
-    private string $model = 'claude-3-haiku-20240307';
+    private string $model;
     private string $endpoint = 'https://api.anthropic.com/v1/messages';
     private string $version = '2023-06-01';
 
     public function __construct()
     {
-        $this->apiKey = defined('ANTHROPIC_API_KEY') ? (string)ANTHROPIC_API_KEY : '';
+        $this->apiKey = (string)config('ai.providers.anthropic.api_key', '');
+        $this->model = (string)config('ai.providers.anthropic.model', 'claude-3-haiku-20240307');
     }
 
     public function name(): string

@@ -42,7 +42,7 @@ class Auth
             "name" => $_SESSION["user_name"] ?? null,
             "email" => $_SESSION["user_email"] ?? null,
             "role" => $_SESSION["user_role"] ?? null,
-            "avatar" => $_SESSION["user_avatar"] ?? (BASE_URL . "/assets/avatars/default.png"),
+            "avatar" => $_SESSION["user_avatar"] ?? (config('app.base_url', '') . "/assets/avatars/default.png"),
         ];
     }
 

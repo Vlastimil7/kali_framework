@@ -4,12 +4,13 @@ namespace Services\AI;
 final class GeminiClient implements AiClientInterface
 {
     private string $apiKey = '';
-    private string $model = 'gemini-2.5-flash';
+    private string $model;
     private string $endpointBase = 'https://generativelanguage.googleapis.com/v1beta/models';
 
     public function __construct()
     {
-        $this->apiKey = defined('GEMINI_API_KEY') ? (string)GEMINI_API_KEY : '';
+        $this->apiKey = (string)config('ai.providers.gemini.api_key', '');
+        $this->model = (string)config('ai.providers.gemini.model', 'gemini-2.5-flash');
     }
 
     public function name(): string { return 'gemini'; }

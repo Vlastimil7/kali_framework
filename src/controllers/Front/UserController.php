@@ -271,7 +271,7 @@ class UserController extends Controller
             }
 
             // Inicializace ReCaptcha
-            $recaptcha = new ReCaptcha(RECAPTCHA_SECRET_KEY);
+            $recaptcha = new ReCaptcha((string)config('recaptcha.secret_key', ''));
             $recaptchaResult = $recaptcha->verify($recaptchaToken);
 
             // Pokud ověření selhalo, zobrazíme vhodnou chybovou zprávu
@@ -395,7 +395,7 @@ class UserController extends Controller
             }
 
             // Inicializace ReCaptcha
-            $recaptcha = new ReCaptcha(RECAPTCHA_SECRET_KEY);
+            $recaptcha = new ReCaptcha((string)config('recaptcha.secret_key', ''));
             $recaptchaResult = $recaptcha->verify($recaptchaToken);
 
             // if (!$recaptchaResult['success'] || $recaptchaResult['score'] < 0.5) {

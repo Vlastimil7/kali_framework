@@ -37,7 +37,7 @@ class VoucherCodesController extends BaseAdminController
         ], [], ['code' => 'kód voucheru']);
         if ($validator->fails()) {
             $validator->flash('voucher_code', $request->post());
-            header('Location: ' . BASE_URL . '/admin/voucher-codes/verify');
+            header('Location: ' . config('app.base_url', '') . '/admin/voucher-codes/verify');
             exit;
         }
 
@@ -45,7 +45,7 @@ class VoucherCodesController extends BaseAdminController
 
         if (!$row) {
             Toast::error('Kód nenalezen.');
-            header('Location: ' . BASE_URL . '/admin/voucher-codes/verify');
+            header('Location: ' . config('app.base_url', '') . '/admin/voucher-codes/verify');
             exit;
         }
 
@@ -86,7 +86,7 @@ class VoucherCodesController extends BaseAdminController
         ], [], ['code' => 'kód voucheru', 'note' => 'poznámka']);
         if ($validator->fails()) {
             $validator->flash('voucher_code', $request->post());
-            header('Location: ' . BASE_URL . '/admin/voucher-codes/verify');
+            header('Location: ' . config('app.base_url', '') . '/admin/voucher-codes/verify');
             exit;
         }
 
@@ -101,7 +101,7 @@ class VoucherCodesController extends BaseAdminController
         }
 
         // vrať se na verify s výsledkem
-        header('Location: ' . BASE_URL . '/admin/voucher-codes/verify?code=' . urlencode($code));
+        header('Location: ' . config('app.base_url', '') . '/admin/voucher-codes/verify?code=' . urlencode($code));
         exit;
     }
 
@@ -128,7 +128,7 @@ class VoucherCodesController extends BaseAdminController
         ]);
         if ($validator->fails()) {
             $validator->flash('voucher_code', $request->post());
-            header('Location: ' . BASE_URL . '/admin/voucher-codes/verify');
+            header('Location: ' . config('app.base_url', '') . '/admin/voucher-codes/verify');
             exit;
         }
 
@@ -144,7 +144,7 @@ class VoucherCodesController extends BaseAdminController
                 : 'Voucher byl zrušen (storno).');
         }
 
-        header('Location: ' . BASE_URL . '/admin/voucher-codes/verify?code=' . urlencode($code));
+        header('Location: ' . config('app.base_url', '') . '/admin/voucher-codes/verify?code=' . urlencode($code));
         exit;
     }
 
@@ -160,7 +160,7 @@ class VoucherCodesController extends BaseAdminController
         ], [], ['code' => 'kód voucheru', 'reason' => 'důvod']);
         if ($validator->fails()) {
             $validator->flash('voucher_code', $request->post());
-            header('Location: ' . BASE_URL . '/admin/voucher-codes/verify');
+            header('Location: ' . config('app.base_url', '') . '/admin/voucher-codes/verify');
             exit;
         }
 
@@ -170,13 +170,13 @@ class VoucherCodesController extends BaseAdminController
 
         if (!$res['success']) {
             Toast::error($res['message'] ?? 'Nelze provést výměnu.');
-            header('Location: ' . BASE_URL . '/admin/voucher-codes/verify?code=' . urlencode($code));
+            header('Location: ' . config('app.base_url', '') . '/admin/voucher-codes/verify?code=' . urlencode($code));
             exit;
         }
 
         // zpráva + přesměrování na nový kód (ať ho hned vidíš)
         Toast::success('Voucher byl vyměněn. Nový kód: ' . ($res['new_code'] ?? ''));
-        header('Location: ' . BASE_URL . '/admin/voucher-codes/verify?code=' . urlencode((string)($res['new_code'] ?? $code)));
+        header('Location: ' . config('app.base_url', '') . '/admin/voucher-codes/verify?code=' . urlencode((string)($res['new_code'] ?? $code)));
         exit;
     }
 }

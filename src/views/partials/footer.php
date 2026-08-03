@@ -5,7 +5,7 @@
             <div>
                 <div class="flex items-center space-x-2 mt-10">
                     <!-- Logo -->
-                    <img src="<?= BASE_URL ?>/assets/images/logo/vk-dev.png" alt="VK-DEV" class="w-40 h-40" />
+                    <img src="<?= config('app.base_url', '') ?>/assets/images/logo/vk-dev.png" alt="VK-DEV" class="w-40 h-40" />
 
                 </div>
                 <p class="text-gray-400 mb-6">

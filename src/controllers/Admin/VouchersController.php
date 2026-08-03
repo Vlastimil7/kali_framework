@@ -85,7 +85,7 @@ class VouchersController extends BaseAdminController
 
         if ($validator->fails()) {
             $validator->flash('admin_voucher', $request->post());
-            header('Location: ' . BASE_URL . '/admin/vouchers/create');
+            header('Location: ' . config('app.base_url', '') . '/admin/vouchers/create');
             exit;
         }
 
@@ -107,12 +107,12 @@ class VouchersController extends BaseAdminController
         if (!$res['success']) {
             Toast::error($res['message'] ?? 'Chyba při vytváření voucheru.');
             Flash::withInput('admin_voucher', $request->post());
-            header('Location: ' . BASE_URL . '/admin/vouchers/create');
+            header('Location: ' . config('app.base_url', '') . '/admin/vouchers/create');
             exit;
         }
 
         Toast::success('Voucher vytvořen.');
-        header('Location: ' . BASE_URL . '/admin/vouchers/' . (int)$res['id']);
+        header('Location: ' . config('app.base_url', '') . '/admin/vouchers/' . (int)$res['id']);
         exit;
     }
 
@@ -173,7 +173,7 @@ class VouchersController extends BaseAdminController
 
         if ($validator->fails()) {
             $validator->flash('admin_voucher', $request->post());
-            header('Location: ' . BASE_URL . '/admin/vouchers/edit/' . (int)$id);
+            header('Location: ' . config('app.base_url', '') . '/admin/vouchers/edit/' . (int)$id);
             exit;
         }
 
@@ -191,12 +191,12 @@ class VouchersController extends BaseAdminController
         if (!$res['success']) {
             Toast::error($res['message'] ?? 'Chyba při ukládání voucheru.');
             Flash::withInput('admin_voucher', $request->post());
-            header('Location: ' . BASE_URL . '/admin/vouchers/edit/' . (int)$id);
+            header('Location: ' . config('app.base_url', '') . '/admin/vouchers/edit/' . (int)$id);
             exit;
         }
 
         Toast::success('Voucher uložen.');
-        header('Location: ' . BASE_URL . '/admin/vouchers/edit/' . (int)$id);
+        header('Location: ' . config('app.base_url', '') . '/admin/vouchers/edit/' . (int)$id);
         exit;
     }
 
@@ -208,7 +208,7 @@ class VouchersController extends BaseAdminController
         } else {
             Toast::error($result['message'] ?? 'Voucher se nepodařilo deaktivovat.');
         }
-        header('Location: ' . BASE_URL . '/admin/vouchers');
+        header('Location: ' . config('app.base_url', '') . '/admin/vouchers');
         exit;
     }
 }

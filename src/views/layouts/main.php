@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="csrf-token" content="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="<?= BASE_URL ?>/assets/images/logo/fav/vk-dev.ico">
+    <link rel="shortcut icon" href="<?= config('app.base_url', '') ?>/assets/images/logo/fav/vk-dev.ico">
     <?php
     header("Cache-Control: no-cache, no-store, must-revalidate");
     header("Pragma: no-cache");
@@ -27,7 +27,7 @@
     $seoTitle = $data['title'] ?? '';
     $seoDesc  = $data['description'] ?? '';
     $seoKw    = $data['keywords'] ?? 'vývoj webových aplikací, tvorba webových stránek, web na míru, firemní weby, vývoj informačních systémů, PHP vývojář, fullstack developer, REST API vývoj, systémové integrace, digitální řešení pro firmy, web developer Hradec Králové, programátor na míru, zakázkový software, vývoj e-commerce, webové portály, agilní vývoj, moderní webové technologie, optimalizace výkonu, bezpečnost webu, UX/UI design, správa a údržba webů';
-    $ogImage  = $data['og_image'] ?? (rtrim(SITE_URL, '/') . '/assets/images/logo/vk-dev.png');
+    $ogImage  = $data['og_image'] ?? (rtrim(config('app.site_url', ''), '/') . '/assets/images/logo/vk-dev.png');
     ?>
     <title><?= htmlspecialchars($seoTitle, ENT_QUOTES) ?></title>
     <meta name="description" content="<?= htmlspecialchars($seoDesc, ENT_QUOTES) ?>">
@@ -65,8 +65,8 @@
     <?php endforeach; ?>
 
 
-    <link href="<?= BASE_URL ?>/assets/css/style.css?v=<?= $styleVersion ?>" rel="stylesheet">
-    <link href="<?= BASE_URL ?>/assets/css/ownStyles.css?v=<?= $ownStyleVersion ?>" rel="stylesheet">
+    <link href="<?= config('app.base_url', '') ?>/assets/css/style.css?v=<?= $styleVersion ?>" rel="stylesheet">
+    <link href="<?= config('app.base_url', '') ?>/assets/css/ownStyles.css?v=<?= $ownStyleVersion ?>" rel="stylesheet">
 
     <script type="application/ld+json">
         {
@@ -74,8 +74,8 @@
             "@type": "SoftwareApplication",
             "name": "",
             "medicalSpecialty": "",
-            "url": "<?= SITE_URL ?>",
-            "logo": "<?= SITE_URL ?>/assets/images/logo/logo.jpeg",
+            "url": "<?= config('app.site_url', '') ?>",
+            "logo": "<?= config('app.site_url', '') ?>/assets/images/logo/logo.jpeg",
             "address": {
                 "@type": "PostalAddress",
                 "streetAddress": "Dobrovského 718/6",
@@ -89,16 +89,16 @@
 
 
     <script>
-        const BASE_URL = "<?= rtrim(BASE_URL, '/') ?>";
-        const API_BASE = BASE_URL + "/api/v1/chat";
+        const APP_BASE_URL = "<?= rtrim(config('app.base_url', ''), '/') ?>";
+        const API_BASE = APP_BASE_URL + "/api/v1/chat";
         const STATUS_URL = API_BASE + "/status";
         const CHAT_URL = API_BASE;
     </script>
 
 
     <script>
-        window.APP_BASE_URL = "<?= rtrim(BASE_URL, '/') ?>";
-        window.RECAPTCHA_SITE_KEY = '<?= RECAPTCHA_SITE_KEY ?>';
+        window.APP_BASE_URL = "<?= rtrim(config('app.base_url', ''), '/') ?>";
+        window.RECAPTCHA_SITE_KEY = '<?= config('recaptcha.site_key', '') ?>';
     </script>
 
 
@@ -139,13 +139,13 @@
     </script>
 
     <!--- Telemetry JS --->
-    <script type="text/plain" data-consent="analytics" data-src="<?= BASE_URL ?>/assets/js/telemetry/telemetry.js"></script>
-    <script type="text/plain" data-consent="analytics" data-src="<?= BASE_URL ?>/assets/js/telemetry/plugins/clicks.js"></script>
-    <script type="text/plain" data-consent="analytics" data-src="<?= BASE_URL ?>/assets/js/telemetry/plugins/scroll.js"></script>
-    <script type="text/plain" data-consent="analytics" data-src="<?= BASE_URL ?>/assets/js/telemetry/plugins/visibility.js"></script>
-    <script type="text/plain" data-consent="analytics" data-src="<?= BASE_URL ?>/assets/js/telemetry/plugins/section-dwell.js"></script>
-    <script type="text/plain" data-consent="analytics" data-src="<?= BASE_URL ?>/assets/js/telemetry/plugins/activity-ping.js"></script>
-    <script type="text/plain" data-consent="analytics" data-src="<?= BASE_URL ?>/assets/js/telemetry/init.js"></script>
+    <script type="text/plain" data-consent="analytics" data-src="<?= config('app.base_url', '') ?>/assets/js/telemetry/telemetry.js"></script>
+    <script type="text/plain" data-consent="analytics" data-src="<?= config('app.base_url', '') ?>/assets/js/telemetry/plugins/clicks.js"></script>
+    <script type="text/plain" data-consent="analytics" data-src="<?= config('app.base_url', '') ?>/assets/js/telemetry/plugins/scroll.js"></script>
+    <script type="text/plain" data-consent="analytics" data-src="<?= config('app.base_url', '') ?>/assets/js/telemetry/plugins/visibility.js"></script>
+    <script type="text/plain" data-consent="analytics" data-src="<?= config('app.base_url', '') ?>/assets/js/telemetry/plugins/section-dwell.js"></script>
+    <script type="text/plain" data-consent="analytics" data-src="<?= config('app.base_url', '') ?>/assets/js/telemetry/plugins/activity-ping.js"></script>
+    <script type="text/plain" data-consent="analytics" data-src="<?= config('app.base_url', '') ?>/assets/js/telemetry/init.js"></script>
 
 
 </head>
@@ -169,10 +169,10 @@
     <?php include ROOT_PATH . "/src/views/cookie/banner.php"; ?>
 
     <!-- Tvůj JS -->
-    <script src="<?= BASE_URL ?>/assets/js/cookies.js" defer></script>
-    <script src="<?= BASE_URL ?>/assets/js/ui/toast.js" defer></script>
-    <script src="<?= BASE_URL ?>/assets/js/recaptcha.js" defer></script>
-    <script src="https://www.google.com/recaptcha/api.js?render=<?= RECAPTCHA_SITE_KEY ?>" async defer></script>
+    <script src="<?= config('app.base_url', '') ?>/assets/js/cookies.js" defer></script>
+    <script src="<?= config('app.base_url', '') ?>/assets/js/ui/toast.js" defer></script>
+    <script src="<?= config('app.base_url', '') ?>/assets/js/recaptcha.js" defer></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=<?= config('recaptcha.site_key', '') ?>" async defer></script>
 
 
 

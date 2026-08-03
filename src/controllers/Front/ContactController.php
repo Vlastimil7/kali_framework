@@ -134,7 +134,7 @@ class ContactController extends Controller
 
         // reCAPTCHA
         $recaptchaToken = $request->string('recaptcha_token');
-        $recaptcha = new ReCaptcha(RECAPTCHA_SECRET_KEY);
+        $recaptcha = new ReCaptcha((string)config('recaptcha.secret_key', ''));
         $recaptchaResult = $recaptcha->verify($recaptchaToken, 'contact', 0.5);
 
         if (!$recaptchaResult['success']) {
@@ -164,7 +164,10 @@ class ContactController extends Controller
             exit;
         }
 
-        $result = Mail::to(MAIL_TO_ADDRESS, MAIL_TO_NAME)
+        $result = Mail::to(
+            (string)config('mail.to.address', ''),
+            (string)config('mail.to.name', '')
+        )
             ->send(new ContactEmail($formData, $upload['files']));
         $attachmentUpload->cleanup($upload['files']);
 

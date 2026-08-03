@@ -6,12 +6,13 @@ use Helpers\Logger;
 final class OpenAiClient implements AiClientInterface
 {
     private string $apiKey = '';
-    private string $model = 'gpt-4o-mini';
+    private string $model;
     private string $endpoint = 'https://api.openai.com/v1/responses';
 
     public function __construct()
     {
-        $this->apiKey = defined('OPENAI_API_KEY') ? (string)OPENAI_API_KEY : '';
+        $this->apiKey = (string)config('ai.providers.openai.api_key', '');
+        $this->model = (string)config('ai.providers.openai.model', 'gpt-4o-mini');
     }
 
     public function name(): string { return 'openai'; }

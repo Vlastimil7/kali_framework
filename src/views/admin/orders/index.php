@@ -99,7 +99,7 @@ $statusBadge = function (?string $status): string {
                 </td>
                 <td class="px-4 py-3 text-right">
                   <a class="text-blue-700 hover:underline font-medium"
-                    href="<?= BASE_URL ?>/admin/orders/<?= (int)$o['id'] ?>">
+                    href="<?= config('app.base_url', '') ?>/admin/orders/<?= (int)$o['id'] ?>">
                     Detail →
                   </a>
                 </td>
@@ -124,9 +124,9 @@ $statusBadge = function (?string $status): string {
 
   <!-- Back -->
   <div class="mt-4 text-xs text-slate-500">
-    <a href="<?= BASE_URL ?>/admin/dashboard" class="hover:text-white">← Zpět na dashboard</a>
+    <a href="<?= config('app.base_url', '') ?>/admin/dashboard" class="hover:text-white">← Zpět na dashboard</a>
   </div>
 </div>
 
 <!-- JS -->
-<script src="<?= BASE_URL ?>/assets/js/orders-table.js"></script>
+<script src="<?= config('app.base_url', '') ?>/assets/js/orders-table.js"></script>

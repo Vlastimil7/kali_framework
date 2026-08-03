@@ -5,7 +5,7 @@
     <h1 class="text-2xl font-bold text-white mb-4">Ověření voucheru</h1>
 
     <!-- Form: Verify -->
-    <form method="post" action="<?= BASE_URL ?>/admin/voucher-codes/verify"
+    <form method="post" action="<?= config('app.base_url', '') ?>/admin/voucher-codes/verify"
         class="bg-white rounded-xl border-2 border-gray-200 p-6 space-y-4">
 
         <div>
@@ -114,7 +114,7 @@
 
                 <?php if (!empty($result['order_id'])): ?>
                     <a
-                        href="<?= BASE_URL ?>/admin/orders/<?= (int)$result['order_id'] ?>"
+                        href="<?= config('app.base_url', '') ?>/admin/orders/<?= (int)$result['order_id'] ?>"
                         class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg
                    bg-gray-100 hover:bg-gray-200 text-gray-900
                    text-xs font-semibold border border-gray-300"
@@ -161,7 +161,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
 
                     <!-- UPLATNIT -->
-                    <form method="post" action="<?= BASE_URL ?>/admin/voucher-codes/redeem" class="w-full"
+                    <form method="post" action="<?= config('app.base_url', '') ?>/admin/voucher-codes/redeem" class="w-full"
                         onsubmit="this.note.value = document.getElementById('actionNote').value;">
                         <input type="hidden" name="code" value="<?= htmlspecialchars($code) ?>">
                         <input type="hidden" name="note" value="">
@@ -175,7 +175,7 @@
                     </form>
 
                     <!-- VRÁTIT (REFUND) -->
-                    <form method="post" action="<?= BASE_URL ?>/admin/voucher-codes/void" class="w-full"
+                    <form method="post" action="<?= config('app.base_url', '') ?>/admin/voucher-codes/void" class="w-full"
                         onsubmit="this.reason.value = document.getElementById('actionNote').value;">
                         <input type="hidden" name="code" value="<?= htmlspecialchars($code) ?>">
                         <input type="hidden" name="type" value="refunded">
@@ -190,7 +190,7 @@
                     </form>
 
                     <!-- VYMĚNIT -->
-                    <form method="post" action="<?= BASE_URL ?>/admin/voucher-codes/exchange" class="w-full"
+                    <form method="post" action="<?= config('app.base_url', '') ?>/admin/voucher-codes/exchange" class="w-full"
                         onsubmit="this.reason.value = document.getElementById('actionNote').value;">
                         <input type="hidden" name="code" value="<?= htmlspecialchars($code) ?>">
                         <input type="hidden" name="reason" value="">
@@ -218,6 +218,6 @@
     <?php endif; ?>
     <!-- Zpět na dashboard -->
     <div class="mt-8 text-xs text-slate-500">
-        <a href="<?= BASE_URL ?>/admin/dashboard" class="hover:text-white">← Zpět na dashboard </a>
+        <a href="<?= config('app.base_url', '') ?>/admin/dashboard" class="hover:text-white">← Zpět na dashboard </a>
     </div>
 </div>

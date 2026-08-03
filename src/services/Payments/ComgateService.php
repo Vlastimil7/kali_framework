@@ -15,18 +15,21 @@ use Helpers\Logger;
 class ComgateService
 {
     private $client;
+    private array $config;
 
     public function __construct()
     {
+        $this->config = (array)config('payments.comgate', []);
+
         try {
             $this->client = Comgate::defaults()
-                ->setMerchant(COMGATE_MERCHANT)
-                ->setSecret(COMGATE_SECRET)
+                ->setMerchant((string)($this->config['merchant'] ?? ''))
+                ->setSecret((string)($this->config['secret'] ?? ''))
                 ->createClient();
 
             Logger::info('Comgate client initialised', [
-                'merchant' => COMGATE_MERCHANT,
-                'test'     => COMGATE_TEST,
+                'merchant' => $this->config['merchant'] ?? '',
+                'test'     => (bool)($this->config['test'] ?? true),
             ]);
         } catch (\Throwable $e) {
             Logger::exception($e, ['context' => 'ComgateService::__construct']);
@@ -51,25 +54,28 @@ class ComgateService
 
         $payment
             ->setPrice($money)
-            ->setCurrency(defined('COMGATE_CURRENCY') && COMGATE_CURRENCY === 'CZK' ? CurrencyCode::CZK : CurrencyCode::CZK)
+            ->setCurrency(CurrencyCode::CZK)
             ->setLabel('Voucher objednávka ' . $orderData['reference'])
             ->setReferenceId((string)$orderData['reference'])
             ->setEmail((string)$orderData['email'])
             ->setFullName((string)$orderData['name'])
             ->addMethod(PaymentMethodCode::ALL)
-            ->setTest((bool)COMGATE_TEST);
+            ->setTest((bool)($this->config['test'] ?? true));
+
+        $returnUrl = (string)($this->config['return_url'] ?? '');
+        $notifyUrl = (string)($this->config['notify_url'] ?? '');
 
         // Return/Notify – SDK se může lišit, proto robustně:
-        $this->trySet($payment, 'setReturnUrl', COMGATE_RETURN_URL);
-        $this->trySet($payment, 'setNotifyUrl', COMGATE_NOTIFY_URL);
+        $this->trySet($payment, 'setReturnUrl', $returnUrl);
+        $this->trySet($payment, 'setNotifyUrl', $notifyUrl);
 
         // Některá SDK místo toho používají "setUrl" nebo parametry:
-        $payment->setParam('return_url', COMGATE_RETURN_URL);
-        $payment->setParam('notify_url', COMGATE_NOTIFY_URL);
+        $payment->setParam('return_url', $returnUrl);
+        $payment->setParam('notify_url', $notifyUrl);
 
         // lang/country (pokud se ti hodí)
-        if (defined('COMGATE_LANG'))    $payment->setParam('lang', COMGATE_LANG);
-        if (defined('COMGATE_COUNTRY')) $payment->setParam('country', COMGATE_COUNTRY);
+        $payment->setParam('lang', (string)($this->config['language'] ?? 'cs'));
+        $payment->setParam('country', (string)($this->config['country'] ?? 'CZ'));
 
         // phone jako custom param
         if (!empty($orderData['phone'])) {
@@ -81,9 +87,9 @@ class ComgateService
                 'reference'  => (string)$orderData['reference'],
                 'priceCents' => (int)$orderData['priceCents'],
                 'email'      => (string)$orderData['email'],
-                'return'     => COMGATE_RETURN_URL,
-                'notify'     => COMGATE_NOTIFY_URL,
-                'test'       => (bool)COMGATE_TEST,
+                'return'     => $returnUrl,
+                'notify'     => $notifyUrl,
+                'test'       => (bool)($this->config['test'] ?? true),
             ]);
 
             $response = $this->client->createPayment($payment);
@@ -191,7 +197,7 @@ class ComgateService
                 $refund = (new Refund())
                     ->setTransId($transId)
                     ->setAmount(Money::ofCents($amountCents))
-                    ->setTest((bool)COMGATE_TEST);
+                    ->setTest((bool)($this->config['test'] ?? true));
 
                 $resp = $this->client->refundPayment($refund);
                 return $this->okFromResponse($resp);

@@ -13,7 +13,7 @@ final class ChatService
 
     public function __construct(?string $provider = null)
     {
-        $provider ??= defined('AI_PROVIDER') ? (string)AI_PROVIDER : 'openai';
+        $provider ??= (string)config('ai.provider', 'openai');
         $this->client = AiClientFactory::make($provider);
         $this->loadPersonalData();
 
@@ -43,7 +43,7 @@ final class ChatService
     private function nowContext(): array
     {
         // nastav timezone – ideálně z configu, nebo natvrdo Europe/Prague
-        $tz = defined('APP_TIMEZONE') ? (string)APP_TIMEZONE : 'Europe/Prague';
+        $tz = (string)config('app.timezone', 'Europe/Prague');
         $dt = new \DateTimeImmutable('now', new \DateTimeZone($tz));
 
 
@@ -301,7 +301,7 @@ final class ChatService
             }
 
             // spočítej roky (přesněji klidně i měsíce)
-            $tz = defined('APP_TIMEZONE') ? (string)APP_TIMEZONE : 'Europe/Prague';
+            $tz = (string)config('app.timezone', 'Europe/Prague');
             $now = new \DateTimeImmutable('now', new \DateTimeZone($tz));
             $dt  = new \DateTimeImmutable($founded, new \DateTimeZone($tz));
             $diff = $dt->diff($now);

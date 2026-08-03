@@ -353,7 +353,7 @@
 
 
 
-<script src="<?= BASE_URL ?>/assets/js/home/contact-form.js" defer></script>
+<script src="<?= config('app.base_url', '') ?>/assets/js/home/contact-form.js" defer></script>
 
 <script id="i18n-contact" type="application/json">
     <?= json_encode([

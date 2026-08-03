@@ -65,7 +65,7 @@ class CookieController extends Controller
         $this->setCookie('cookie_consent', json_encode($cookiePreferences), 365, $request->isSecure());
 
         // Přesměrování zpět na stránku, odkud byl požadavek odeslán
-        $referer = $request->header('Referer', BASE_URL);
+        $referer = $request->header('Referer', config('app.base_url', ''));
         header('Location: ' . $referer);
         exit;
     }
@@ -87,7 +87,7 @@ class CookieController extends Controller
         $this->setCookie('cookie_consent', json_encode($cookiePreferences), 365, $request->isSecure());
 
         // Přesměrování zpět na stránku, odkud byl požadavek odeslán
-        $referer = $request->header('Referer', BASE_URL);
+        $referer = $request->header('Referer', config('app.base_url', ''));
         header('Location: ' . $referer);
         exit;
     }
@@ -109,7 +109,7 @@ class CookieController extends Controller
         $this->setCookie('cookie_consent', json_encode($cookiePreferences), 365, $request->isSecure());
 
         // Přesměrování zpět na stránku, odkud byl požadavek odeslán
-        $referer = $request->header('Referer', BASE_URL);
+        $referer = $request->header('Referer', config('app.base_url', ''));
         header('Location: ' . $referer);
         exit;
     }

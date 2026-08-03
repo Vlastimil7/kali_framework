@@ -19,13 +19,15 @@ class Database
     private $inTransaction = false;
 
     // Metoda pro nastavení konfigurace
-    public static function setConfig($config)
+    public static function setConfig(array $config): void
     {
-        if (!isset($config['db'])) {
+        // Accept both the new direct database section and the old ['db' => ...] shape.
+        $database = isset($config['db']) && is_array($config['db']) ? $config['db'] : $config;
+        if (!isset($database['host'], $database['dbname'], $database['username'], $database['password'])) {
             Logger::error("Invalid database configuration format");
             throw new \Exception("Invalid database configuration format");
         }
-        self::$config = $config;
+        self::$config = $database;
     }
 
 
@@ -39,10 +41,10 @@ class Database
             throw new \Exception("Database configuration not set. Call Database::setConfig() first.");
         }
 
-        $this->host = self::$config['db']['host'];
-        $this->dbname = self::$config['db']['dbname'];
-        $this->username = self::$config['db']['username'];
-        $this->password = self::$config['db']['password'];
+        $this->host = self::$config['host'];
+        $this->dbname = self::$config['dbname'];
+        $this->username = self::$config['username'];
+        $this->password = self::$config['password'];
 
         // Spojení se vytvoří při prvním volání getConnection()
     }
@@ -68,7 +70,10 @@ class Database
     private function connect()
     {
         try {
-            $dsn = "mysql:host={$this->host};dbname={$this->dbname};charset=utf8mb4";
+            $driver = self::$config['driver'] ?? 'mysql';
+            $port = (int)(self::$config['port'] ?? 3306);
+            $charset = self::$config['charset'] ?? 'utf8mb4';
+            $dsn = "{$driver}:host={$this->host};port={$port};dbname={$this->dbname};charset={$charset}";
             $options = [
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,

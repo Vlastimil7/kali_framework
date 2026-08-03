@@ -25,10 +25,10 @@ class OrderService
         $this->comgate = new ComgateService();
 
         // stejně jako v adminu
-        $logoAbs = BASE_PATH . '/public/assets/images/logo/mido_barbershop_01_logo.png'; // uprav dle reality
-        $storage = BASE_PATH . '/storage';
+        $logoAbs = config('app.base_path') . '/public/assets/images/logo/mido_barbershop_01_logo.png'; // uprav dle reality
+        $storage = config('app.base_path') . '/storage';
 
-        $this->voucherPdf = new VoucherPdfService($storage, BASE_URL, $logoAbs);
+        $this->voucherPdf = new VoucherPdfService($storage, config('app.base_url', ''), $logoAbs);
         $this->voucherCodeModel = new VoucherCode();
     }
 

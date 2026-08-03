@@ -166,6 +166,29 @@ project/
 │ └── uploads/ # File uploads
 └── vendor/ # Composer dependencies (ignored by git)
 
+### Configuration
+
+Environment variables are translated into application configuration in focused files:
+
+- `src/config/app.php` – environment, URLs, debug mode and timezone
+- `src/config/database.php` – database connection
+- `src/config/mail.php` – SMTP and sender/recipient defaults
+- `src/config/recaptcha.php` – reCAPTCHA keys
+- `src/config/ai.php` – AI provider, models and API keys
+- `src/config/payments.php` – payment gateways
+- `src/config/oauth.php` – OAuth providers
+- `src/config/vouchers.php` – voucher settings
+
+Read values anywhere in PHP with dot notation:
+
+```php
+$host = config('database.host');
+$smtpPort = config('mail.smtp.port', 587);
+$openAiModel = config('ai.providers.openai.model');
+```
+
+Keep secrets only in `.env`; application code should use `config()` rather than calling `env()` directly. Configuration constants are intentionally not created.
+
 ### Route middleware
 
 Protect one route with the fluent API:

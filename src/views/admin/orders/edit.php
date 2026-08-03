@@ -17,9 +17,9 @@ $orderNo = $order['order_number'] ?? ('#' . ($order['id'] ?? ''));
         <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-6">
             <div>
                 <div class="text-sm text-gray-500">
-                    <a href="<?= BASE_URL ?>/admin/orders" class="hover:text-gray-900 hover:underline">Objednávky</a>
+                    <a href="<?= config('app.base_url', '') ?>/admin/orders" class="hover:text-gray-900 hover:underline">Objednávky</a>
                     <span class="mx-2">/</span>
-                    <a href="<?= BASE_URL ?>/admin/orders/<?= (int)$order['id'] ?>" class="hover:text-gray-900 hover:underline">
+                    <a href="<?= config('app.base_url', '') ?>/admin/orders/<?= (int)$order['id'] ?>" class="hover:text-gray-900 hover:underline">
                         <?= htmlspecialchars($orderNo) ?>
                     </a>
                     <span class="mx-2">/</span>
@@ -31,14 +31,14 @@ $orderNo = $order['order_number'] ?? ('#' . ($order['id'] ?? ''));
             </div>
 
             <div class="flex gap-2">
-                <a href="<?= BASE_URL ?>/admin/orders/<?= (int)$order['id'] ?>"
+                <a href="<?= config('app.base_url', '') ?>/admin/orders/<?= (int)$order['id'] ?>"
                     class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-sm font-semibold text-gray-800">
                     Zpět
                 </a>
             </div>
         </div>
 
-        <form action="<?= BASE_URL ?>/admin/orders/update/<?= (int)$order['id'] ?>" method="post"
+        <form action="<?= config('app.base_url', '') ?>/admin/orders/update/<?= (int)$order['id'] ?>" method="post"
             class="bg-white rounded-2xl shadow-sm border-2 border-gray-200 overflow-hidden">
 
             <div class="p-6 border-b-2 border-gray-200">
@@ -158,7 +158,7 @@ $orderNo = $order['order_number'] ?? ('#' . ($order['id'] ?? ''));
                         Uložit změny
                     </button>
 
-                    <a href="<?= BASE_URL ?>/admin/orders/<?= (int)$order['id'] ?>"
+                    <a href="<?= config('app.base_url', '') ?>/admin/orders/<?= (int)$order['id'] ?>"
                         class="px-4 py-2 rounded-lg bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-sm font-semibold text-gray-800">
                         Zrušit
                     </a>
