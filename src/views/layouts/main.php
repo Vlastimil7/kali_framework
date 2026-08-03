@@ -177,14 +177,17 @@
 
     <?php
 
-    use Helpers\Flash;
+    use Helpers\Toast;
 
-    $toast = Flash::get('toast');
+    $toasts = Toast::all();
     ?>
-    <?php if ($toast): ?>
+    <?php if ($toasts): ?>
         <script>
             window.__toastQueue = window.__toastQueue || [];
-            window.__toastQueue.push(<?= json_encode($toast) ?>);
+            window.__toastQueue.push(...<?= json_encode(
+                $toasts,
+                JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+            ) ?>);
         </script>
     <?php endif; ?>
 

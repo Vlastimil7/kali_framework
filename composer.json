@@ -6,7 +6,7 @@
     "Core\\": "src/classes/core/",
     "Helpers\\": "src/helpers/",
     "Services\\": "src/services/",
-    "Api\\": "src/api/"
+    "Api\\": "src/Api/"
   }
   },
   "require": {

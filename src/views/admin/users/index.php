@@ -12,16 +12,6 @@
             </a>
         </div>
         
-        <?php if (isset($_SESSION['flash_message'])): ?>
-            <div class="bg-<?= $_SESSION['flash_type'] === 'success' ? 'green' : 'red' ?>-100 border-l-4 border-<?= $_SESSION['flash_type'] === 'success' ? 'green' : 'red' ?>-500 text-<?= $_SESSION['flash_type'] === 'success' ? 'green' : 'red' ?>-700 p-4 mb-4" role="alert">
-                <p><?= $_SESSION['flash_message'] ?></p>
-            </div>
-            <?php 
-            unset($_SESSION['flash_message']);
-            unset($_SESSION['flash_type']);
-            ?>
-        <?php endif; ?>
-        
         <div class="p-6">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">

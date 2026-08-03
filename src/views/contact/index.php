@@ -126,7 +126,7 @@
 
 
             <?php
-            $old = $_SESSION['old']['contact'] ?? [];
+            $old = \Helpers\Flash::old('contact');
             $topicOptions = [
                 'web'          => 'contact_topic_web',
                 'eshop'        => 'contact_topic_eshop',

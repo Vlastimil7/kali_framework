@@ -6,19 +6,19 @@ use Core\Controller;
 use Models\User;
 use Helpers\RateLimiter;
 use Helpers\ReCaptcha;
-use Helpers\Mailer;
+use Helpers\Flash;
+use Helpers\Toast;
+use Services\Mail\Mail;
+use Services\Mail\Mailables\PasswordResetEmail;
 
 class UserController extends Controller
 {
     private $userModel;
     private $orderModel;
-    private $mailer;
 
     public function __construct()
     {
         $this->userModel = new User();
-        $this->mailer = new Mailer();
-
         // RateLimiter a ReCaptcha inicializujeme až při potřebě, protože potřebují parametry
     }
 
@@ -55,12 +55,8 @@ class UserController extends Controller
                 }
                 exit;
             } else {
-                // Nastavení flash zprávy
-                $_SESSION['flash_message'] = $result['message'];
-                $_SESSION['flash_type'] = 'error';
-
-                // Zachování emailu pro pohodlí
-                $_SESSION['form_data'] = ['email' => $email];
+                Toast::error($result['message']);
+                Flash::withInput('login', ['email' => $email]);
 
                 header('Location: ' . locale_url('login'));
                 exit;
@@ -92,17 +88,13 @@ class UserController extends Controller
             $result = $this->userModel->register($userData);
 
             if ($result['success']) {
-                $_SESSION['flash_message'] = 'Registrace proběhla úspěšně! Nyní se můžete přihlásit.';
-                $_SESSION['flash_type'] = 'success';
+                Toast::success('Registrace proběhla úspěšně! Nyní se můžete přihlásit.');
 
                 header('Location: ' . locale_url('login'));
                 exit;
             } else {
-                $_SESSION['flash_message'] = $result['message'];
-                $_SESSION['flash_type'] = 'error';
-
-                // Zachování zadaných údajů
-                $_SESSION['form_data'] = $userData;
+                Toast::error($result['message']);
+                Flash::withInput('register', $userData);
 
                 header('Location: ' . locale_url('register'));
                 exit;
@@ -157,14 +149,12 @@ class UserController extends Controller
             $result = $this->userModel->updateProfile($userId, $userData);
 
             if ($result['success']) {
-                $_SESSION['flash_message'] = 'Profil byl úspěšně aktualizován';
-                $_SESSION['flash_type'] = 'success';
+                Toast::success('Profil byl úspěšně aktualizován');
 
                 // Aktualizace session proměnných
                 $_SESSION['user_name'] = $userData['name'];
             } else {
-                $_SESSION['flash_message'] = $result['message'];
-                $_SESSION['flash_type'] = 'error';
+                Toast::error($result['message']);
             }
 
             header('Location: ' . locale_url('profile'));
@@ -208,16 +198,16 @@ class UserController extends Controller
             $rateLimiter = new RateLimiter('password_reset_request');
             if (!$rateLimiter->check()) {
                 $timeRemaining = ceil($rateLimiter->getTimeRemaining() / 60); // Převod na minuty
-                $_SESSION['flash_message'] = "Překročili jste maximální počet pokusů. Zkuste to znovu za {$timeRemaining} minut.";
-                $_SESSION['flash_type'] = 'error';
+                Toast::error("Překročili jste maximální počet pokusů. Zkuste to znovu za {$timeRemaining} minut.");
+                Flash::withInput('password_request', ['email' => $email]);
                 header('Location: ' . locale_url('password/reset'));
                 exit;
             }
 
             // Validace vstupu
             if (empty($email)) {
-                $_SESSION['flash_message'] = 'Zadejte prosím emailovou adresu';
-                $_SESSION['flash_type'] = 'error';
+                Toast::error('Zadejte prosím emailovou adresu');
+                Flash::withInput('password_request', ['email' => $email]);
                 header('Location: ' . locale_url('password/reset'));
                 exit;
             }
@@ -254,8 +244,7 @@ class UserController extends Controller
             //             $errorMessage .= 'Zkuste to prosím znovu.';
             //     }
 
-            //     $_SESSION['flash_message'] = $errorMessage;
-            //     $_SESSION['flash_type'] = 'error';
+            //     Toast::error($errorMessage);
             //     header('Location: ' . locale_url('password/reset'));
             //     exit;
             // }
@@ -264,21 +253,20 @@ class UserController extends Controller
             $result = $this->userModel->createPasswordResetToken($email);
 
             if ($result['success']) {
-                // Odeslání emailu pomocí PHPMailer
-                $mailResult = $this->mailer->sendPasswordReset($email, $result['token'], $result['userName'] ?? '');
+                $resetUrl = locale_site_url('password/reset/' . $result['token']);
+                $mailResult = Mail::to($email, $result['userName'] ?? '')
+                    ->send(new PasswordResetEmail($result['userName'] ?? '', $resetUrl));
 
                 // Vždy zobrazíme stejnou zprávu, ať už byl email nalezen nebo ne - bezpečnostní opatření
-                $_SESSION['flash_message'] = 'Pokud je zadaný email registrován v našem systému, odeslali jsme instrukce pro reset hesla.';
-                $_SESSION['flash_type'] = 'success';
+                Toast::success('Pokud je zadaný email registrován v našem systému, odeslali jsme instrukce pro reset hesla.');
 
-                if (!$mailResult['success']) {
+                if (!$mailResult->successful()) {
                     // Logování chyby, ale nezobrazování uživateli
-                    error_log('Chyba při odesílání emailu: ' . $mailResult['message']);
+                    error_log('Chyba při odesílání emailu: ' . $mailResult->message);
                 }
             } else {
                 // Stejná zpráva i v případě, že email neexistuje - ochrana proti enumeration útokům
-                $_SESSION['flash_message'] = 'Pokud je zadaný email registrován v našem systému, odeslali jsme instrukce pro reset hesla.';
-                $_SESSION['flash_type'] = 'success';
+                Toast::success('Pokud je zadaný email registrován v našem systému, odeslali jsme instrukce pro reset hesla.');
             }
 
             header('Location: ' . locale_url('password/reset'));
@@ -295,8 +283,7 @@ class UserController extends Controller
         $result = $this->userModel->verifyPasswordResetToken($token);
 
         if (!$result['success']) {
-            $_SESSION['flash_message'] = $result['message'];
-            $_SESSION['flash_type'] = 'error';
+            Toast::error($result['message']);
             header('Location: ' . locale_url('password/reset'));
             exit;
         }
@@ -323,30 +310,26 @@ class UserController extends Controller
             $rateLimiter = new RateLimiter('password_reset_confirm');
             if (!$rateLimiter->check()) {
                 $timeRemaining = ceil($rateLimiter->getTimeRemaining() / 60); // Převod na minuty
-                $_SESSION['flash_message'] = "Překročili jste maximální počet pokusů. Zkuste to znovu za {$timeRemaining} minut.";
-                $_SESSION['flash_type'] = 'error';
+                Toast::error("Překročili jste maximální počet pokusů. Zkuste to znovu za {$timeRemaining} minut.");
                 header('Location: ' . locale_url('password/reset/' . $token));
                 exit;
             }
 
             // Validace
             if (empty($password) || empty($passwordConfirm)) {
-                $_SESSION['flash_message'] = 'Vyplňte prosím všechna pole';
-                $_SESSION['flash_type'] = 'error';
+                Toast::error('Vyplňte prosím všechna pole');
                 header('Location: ' . locale_url('password/reset/' . $token));
                 exit;
             }
 
             if ($password !== $passwordConfirm) {
-                $_SESSION['flash_message'] = 'Hesla se neshodují';
-                $_SESSION['flash_type'] = 'error';
+                Toast::error('Hesla se neshodují');
                 header('Location: ' . locale_url('password/reset/' . $token));
                 exit;
             }
 
             if (strlen($password) < 6) {
-                $_SESSION['flash_message'] = 'Heslo musí mít alespoň 6 znaků';
-                $_SESSION['flash_type'] = 'error';
+                Toast::error('Heslo musí mít alespoň 6 znaků');
                 header('Location: ' . locale_url('password/reset/' . $token));
                 exit;
             }
@@ -356,8 +339,7 @@ class UserController extends Controller
             $recaptchaResult = $recaptcha->verify($recaptchaToken);
 
             // if (!$recaptchaResult['success'] || $recaptchaResult['score'] < 0.5) {
-            //     $_SESSION['flash_message'] = 'Ověření reCAPTCHA selhalo. Zkuste to prosím znovu.';
-            //     $_SESSION['flash_type'] = 'error';
+            //     Toast::error('Ověření reCAPTCHA selhalo. Zkuste to prosím znovu.');
             //     header('Location: ' . locale_url('password/reset/' . $token));
             //     exit;
             // }
@@ -366,12 +348,10 @@ class UserController extends Controller
             $result = $this->userModel->resetPassword($token, $password);
 
             if ($result['success']) {
-                $_SESSION['flash_message'] = 'Vaše heslo bylo úspěšně změněno. Nyní se můžete přihlásit.';
-                $_SESSION['flash_type'] = 'success';
+                Toast::success('Vaše heslo bylo úspěšně změněno. Nyní se můžete přihlásit.');
                 header('Location: ' . locale_url('login'));
             } else {
-                $_SESSION['flash_message'] = $result['message'];
-                $_SESSION['flash_type'] = 'error';
+                Toast::error($result['message']);
                 header('Location: ' . locale_url('password/reset/' . $token));
             }
             exit;

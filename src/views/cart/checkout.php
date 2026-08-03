@@ -1,13 +1,6 @@
 <div class="max-w-5xl mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold text-white mb-6">Dokončení objednávky</h1>
 
-    <?php if (isset($_SESSION['flash_message'])): ?>
-        <div class="bg-<?= $_SESSION['flash_type'] === 'success' ? 'green' : 'red' ?>-100 border-l-4 border-<?= $_SESSION['flash_type'] === 'success' ? 'green' : 'red' ?>-500 text-<?= $_SESSION['flash_type'] === 'success' ? 'green' : 'red' ?>-700 p-4 mb-6">
-            <p><?= $_SESSION['flash_message'] ?></p>
-        </div>
-        <?php unset($_SESSION['flash_message'], $_SESSION['flash_type']); ?>
-    <?php endif; ?>
-
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="lg:col-span-2">
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">

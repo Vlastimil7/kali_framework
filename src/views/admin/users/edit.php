@@ -9,16 +9,6 @@
             <h1 class="text-2xl font-bold text-white">Úprava uživatele</h1>
         </div>
         
-        <?php if (isset($_SESSION['flash_message'])): ?>
-            <div class="bg-<?= $_SESSION['flash_type'] === 'success' ? 'green' : 'red' ?>-100 border-l-4 border-<?= $_SESSION['flash_type'] === 'success' ? 'green' : 'red' ?>-500 text-<?= $_SESSION['flash_type'] === 'success' ? 'green' : 'red' ?>-700 p-4 mb-4" role="alert">
-                <p><?= $_SESSION['flash_message'] ?></p>
-            </div>
-            <?php 
-            unset($_SESSION['flash_message']);
-            unset($_SESSION['flash_type']);
-            ?>
-        <?php endif; ?>
-
         <div class="p-6">
             <form action="<?= BASE_URL ?>/admin/users/update/<?= $user['id'] ?>" method="post" class="space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

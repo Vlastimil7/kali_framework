@@ -44,11 +44,6 @@ $orderNo = $order['order_number'] ?? ('#' . ($order['id'] ?? ''));
 $cur = $order['currency'] ?? 'CZK';
 $status = $order['status'] ?? '';
 
-// flash
-$err = $_SESSION['_flash_error'] ?? null;
-$ok  = $_SESSION['_flash_success'] ?? null;
-unset($_SESSION['_flash_error'], $_SESSION['_flash_success']);
-
 // --- Akce pravidla ---
 $st = strtolower(trim((string)$status));
 $canCancel = in_array($st, ['pending', 'awaiting_payment'], true);
@@ -199,21 +194,6 @@ $disabledCls = 'opacity-50 cursor-not-allowed';
 
       </div>
     </div>
-
-    <!-- Alerts -->
-    <?php if ($err): ?>
-      <div class="mt-4 rounded-xl bg-red-50 border-2 border-red-200 p-4 text-sm text-red-900">
-        <div class="font-semibold mb-1">Chyba</div>
-        <div><?= htmlspecialchars($err) ?></div>
-      </div>
-    <?php endif; ?>
-
-    <?php if ($ok): ?>
-      <div class="mt-4 rounded-xl bg-green-50 border-2 border-green-200 p-4 text-sm text-green-900">
-        <div class="font-semibold mb-1">OK</div>
-        <div><?= htmlspecialchars($ok) ?></div>
-      </div>
-    <?php endif; ?>
 
     <!-- Content -->
     <div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">

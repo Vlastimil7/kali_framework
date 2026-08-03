@@ -3,6 +3,7 @@
 namespace Controllers\Admin;
 
 use Models\VoucherCode;
+use Helpers\Toast;
 
 class VoucherCodesController extends BaseAdminController
 {
@@ -30,7 +31,7 @@ class VoucherCodesController extends BaseAdminController
         $code = strtoupper(trim((string)($_POST['code'] ?? '')));
 
         if ($code === '') {
-            $_SESSION['_flash_error'] = 'Zadej kód voucheru.';
+            Toast::error('Zadej kód voucheru.');
             header('Location: ' . BASE_URL . '/admin/voucher-codes/verify');
             exit;
         }
@@ -38,7 +39,7 @@ class VoucherCodesController extends BaseAdminController
         $row = $this->voucherCodeModel->getVerifyDataByCode($code);
 
         if (!$row) {
-            $_SESSION['_flash_error'] = 'Kód nenalezen.';
+            Toast::error('Kód nenalezen.');
             header('Location: ' . BASE_URL . '/admin/voucher-codes/verify');
             exit;
         }
@@ -75,7 +76,7 @@ class VoucherCodesController extends BaseAdminController
         $note = trim((string)($_POST['note'] ?? ''));
 
         if ($code === '') {
-            $_SESSION['_flash_error'] = 'Zadej kód voucheru.';
+            Toast::error('Zadej kód voucheru.');
             header('Location: ' . BASE_URL . '/admin/voucher-codes/verify');
             exit;
         }
@@ -85,9 +86,9 @@ class VoucherCodesController extends BaseAdminController
         $res = $this->voucherCodeModel->redeemByCode($code, $adminId, $note);
 
         if (!$res['success']) {
-            $_SESSION['_flash_error'] = $res['message'] ?? 'Nelze uplatnit.';
+            Toast::error($res['message'] ?? 'Nelze uplatnit.');
         } else {
-            $_SESSION['_flash_success'] = 'Voucher byl uplatněn.';
+            Toast::success('Voucher byl uplatněn.');
         }
 
         // vrať se na verify s výsledkem
@@ -108,7 +109,7 @@ class VoucherCodesController extends BaseAdminController
         }
 
         if ($code === '') {
-            $_SESSION['_flash_error'] = 'Zadej kód voucheru.';
+            Toast::error('Zadej kód voucheru.');
             header('Location: ' . BASE_URL . '/admin/voucher-codes/verify');
             exit;
         }
@@ -118,11 +119,11 @@ class VoucherCodesController extends BaseAdminController
         $res = $this->voucherCodeModel->voidByCode($code, $adminId, $reason, $type);
 
         if (!$res['success']) {
-            $_SESSION['_flash_error'] = $res['message'] ?? 'Nelze zrušit/refundovat.';
+            Toast::error($res['message'] ?? 'Nelze zrušit/refundovat.');
         } else {
-            $_SESSION['_flash_success'] = ($type === 'refunded')
+            Toast::success(($type === 'refunded')
                 ? 'Voucher byl refundován.'
-                : 'Voucher byl zrušen (storno).';
+                : 'Voucher byl zrušen (storno).');
         }
 
         header('Location: ' . BASE_URL . '/admin/voucher-codes/verify?code=' . urlencode($code));
@@ -136,7 +137,7 @@ class VoucherCodesController extends BaseAdminController
         $reason = trim((string)($_POST['reason'] ?? ''));
 
         if ($code === '') {
-            $_SESSION['_flash_error'] = 'Zadej kód voucheru.';
+            Toast::error('Zadej kód voucheru.');
             header('Location: ' . BASE_URL . '/admin/voucher-codes/verify');
             exit;
         }
@@ -146,13 +147,13 @@ class VoucherCodesController extends BaseAdminController
         $res = $this->voucherCodeModel->exchangeByCode($code, $adminId, $reason);
 
         if (!$res['success']) {
-            $_SESSION['_flash_error'] = $res['message'] ?? 'Nelze provést výměnu.';
+            Toast::error($res['message'] ?? 'Nelze provést výměnu.');
             header('Location: ' . BASE_URL . '/admin/voucher-codes/verify?code=' . urlencode($code));
             exit;
         }
 
         // zpráva + přesměrování na nový kód (ať ho hned vidíš)
-        $_SESSION['_flash_success'] = 'Voucher byl vyměněn. Nový kód: ' . ($res['new_code'] ?? '');
+        Toast::success('Voucher byl vyměněn. Nový kód: ' . ($res['new_code'] ?? ''));
         header('Location: ' . BASE_URL . '/admin/voucher-codes/verify?code=' . urlencode((string)($res['new_code'] ?? $code)));
         exit;
     }
