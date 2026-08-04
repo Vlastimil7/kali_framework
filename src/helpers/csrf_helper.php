@@ -22,7 +22,7 @@ if (!function_exists('csrf_protect_forms')) {
         return preg_replace_callback(
             '/<form\b(?=[^>]*\bmethod\s*=\s*(["\']?)post\1)[^>]*>/i',
             static fn (array $match): string => $match[0] . csrf_field(),
-            $html
+            $html,
         ) ?? $html;
     }
 }

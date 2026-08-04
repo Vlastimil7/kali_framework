@@ -112,7 +112,7 @@ class BaseApiController
             'message' => $message,
             'data' => $this->utf8EncodeRecursive($data),
             'timestamp' => time(),
-            'api_version' => '1.0'
+            'api_version' => '1.0',
         ];
 
         echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
@@ -148,7 +148,7 @@ class BaseApiController
                 null,
                 false,
                 'Metoda ' . $this->request()->method() . ' není povolena. Povolené metody: ' . implode(', ', $allowedMethods),
-                405
+                405,
             );
             return false;
         }

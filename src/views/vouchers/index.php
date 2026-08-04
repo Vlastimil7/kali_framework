@@ -6,7 +6,9 @@
 $maxPriceCents = 0;
 foreach ($vouchers as $v) {
     $price = (int)($v['price_cents'] ?? 0);
-    if ($price > $maxPriceCents) $maxPriceCents = $price;
+    if ($price > $maxPriceCents) {
+        $maxPriceCents = $price;
+    }
 }
 ?>
 
@@ -87,7 +89,7 @@ foreach ($vouchers as $v) {
                             <?= $isRecommended
                                 ? 'bg-zinc-900 text-white shadow-sm'
                                 : 'bg-zinc-50 text-zinc-900 ring-1 ring-zinc-200'
-                            ?>
+            ?>
                         ">
                             <div class="text-xs font-semibold uppercase tracking-wide <?= $isRecommended ? 'text-white/70' : 'text-zinc-500' ?>">
                                 Hodnota voucheru
@@ -124,9 +126,9 @@ foreach ($vouchers as $v) {
                                     w-full rounded-2xl px-5 py-3.5
                                     text-sm font-extrabold tracking-wide
                                     <?= $isRecommended
-                                        ? 'bg-zinc-900 text-white hover:bg-zinc-800'
-                                        : 'bg-zinc-900 text-white hover:bg-zinc-800'
-                                    ?>
+                        ? 'bg-zinc-900 text-white hover:bg-zinc-800'
+                        : 'bg-zinc-900 text-white hover:bg-zinc-800'
+            ?>
                                     focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 cursor-pointer
                                 ">
                                 Přidat do košíku

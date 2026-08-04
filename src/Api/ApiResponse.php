@@ -18,7 +18,7 @@ class ApiResponse
             'message' => $message,
             'data' => $data,
             'timestamp' => time(),
-            'api_version' => '1.0'
+            'api_version' => '1.0',
         ];
 
         echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

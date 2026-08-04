@@ -4,9 +4,9 @@ namespace Controllers\Front;
 
 use Core\Controller;
 use Core\Request;
-use Services\Auth\GoogleOAuthService;
-use Models\User;
 use Helpers\Toast;
+use Models\User;
+use Services\Auth\GoogleOAuthService;
 
 class AuthController extends Controller
 {

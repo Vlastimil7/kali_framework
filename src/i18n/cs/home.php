@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'cta_button_consultation' => 'Nezávazná konzultace',
   'cta_button_project' => 'Probrat projekt',
   'cta_description' => 'Proměňte vaše nápady v realitu. Nabízím nezávaznou konzultaci, během které můžeme probrat váš projekt a možnosti spolupráce.',
@@ -161,5 +161,4 @@ return array (
   'services_feature_6_desc' => 'Zabezpečení vašich aplikací, optimalizace výkonu a implementace nejlepších praktik vývoje.',
   'services_feature_6_title' => 'Bezpečnost a optimalizace',
   'services_title' => 'Moje služby',
-);
-
+];

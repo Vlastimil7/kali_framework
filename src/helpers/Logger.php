@@ -1,4 +1,5 @@
 <?php
+
 namespace Helpers;
 
 final class Logger
@@ -15,10 +16,22 @@ final class Logger
         self::$dir = rtrim($dir, '/\\');
     }
 
-    public static function debug(string $msg, array $ctx = []): void { self::write(self::LEVEL_DEBUG, $msg, $ctx); }
-    public static function info(string $msg, array $ctx = []): void  { self::write(self::LEVEL_INFO, $msg, $ctx); }
-    public static function warning(string $msg, array $ctx = []): void { self::write(self::LEVEL_WARNING, $msg, $ctx); }
-    public static function error(string $msg, array $ctx = []): void { self::write(self::LEVEL_ERROR, $msg, $ctx); }
+    public static function debug(string $msg, array $ctx = []): void
+    {
+        self::write(self::LEVEL_DEBUG, $msg, $ctx);
+    }
+    public static function info(string $msg, array $ctx = []): void
+    {
+        self::write(self::LEVEL_INFO, $msg, $ctx);
+    }
+    public static function warning(string $msg, array $ctx = []): void
+    {
+        self::write(self::LEVEL_WARNING, $msg, $ctx);
+    }
+    public static function error(string $msg, array $ctx = []): void
+    {
+        self::write(self::LEVEL_ERROR, $msg, $ctx);
+    }
 
     public static function exception(\Throwable $e, array $ctx = []): void
     {

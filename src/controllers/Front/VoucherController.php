@@ -4,12 +4,11 @@ namespace Controllers\Front;
 
 use Core\Controller;
 use Core\Request;
-use Models\Voucher;
-use Models\Order;
-use Services\Vouchers\OrderService;
-use Helpers\Logger;
 use Helpers\Toast;
 use Helpers\Validator;
+use Models\Order;
+use Models\Voucher;
+use Services\Vouchers\OrderService;
 
 class VoucherController extends Controller
 {
@@ -134,7 +133,7 @@ class VoucherController extends Controller
         }
 
         // Redirect na Comgate platební bránu
-        header("Location: " . $result['redirect']);
+        header('Location: ' . $result['redirect']);
         exit;
     }
 }

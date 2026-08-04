@@ -1,4 +1,5 @@
 <?php
+
 // src/Models/ContactRequest.php
 
 namespace Models;
@@ -19,7 +20,7 @@ class ContactRequest
     public function create(array $data): array
     {
         try {
-            $sql = "INSERT INTO " . self::TABLE_NAME . " (
+            $sql = 'INSERT INTO ' . self::TABLE_NAME . ' (
                         first_name,
                         last_name,
                         email,
@@ -43,7 +44,7 @@ class ContactRequest
                         :ip_address,
                         :user_agent,
                         :gdpr
-                    )";
+                    )';
 
             $stmt = $this->db->prepare($sql);
             $stmt->execute([

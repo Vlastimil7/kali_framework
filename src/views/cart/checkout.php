@@ -3,7 +3,7 @@ $old = \Helpers\Flash::old('checkout');
 $oldValue = static fn (string $key, string $default = ''): string => htmlspecialchars(
     (string)($old[$key] ?? $default),
     ENT_QUOTES,
-    'UTF-8'
+    'UTF-8',
 );
 ?>
 <div class="max-w-5xl mx-auto px-4 py-8">

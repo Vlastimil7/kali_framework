@@ -1,5 +1,5 @@
 <?php
 
- return [
-    'title' => 'Kdo jsme',
- ];
+return [
+   'title' => 'Kdo jsme',
+];

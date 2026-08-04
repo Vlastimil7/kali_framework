@@ -4,8 +4,8 @@ namespace Models;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Smalot\PdfParser\Parser;
 use Exception;
+use Smalot\PdfParser\Parser;
 
 class ChatModel
 {
@@ -35,14 +35,14 @@ class ChatModel
                 'contents' => [
                     [
                         'parts' => [
-                            ['text' => 'Test']
-                        ]
-                    ]
+                            ['text' => 'Test'],
+                        ],
+                    ],
                 ],
                 'generationConfig' => [
                     'maxOutputTokens' => 10,
-                    'temperature' => 0.1
-                ]
+                    'temperature' => 0.1,
+                ],
             ];
 
             $ch = curl_init();
@@ -50,7 +50,7 @@ class ChatModel
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
             curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'Content-Type: application/json'
+                'Content-Type: application/json',
             ]);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 10); // Kratší timeout pro test
@@ -75,7 +75,7 @@ class ChatModel
             'api_key_set' => !empty($this->geminiApiKey),
             'personal_data_loaded' => !empty($this->personalData),
             'documents_path_exists' => is_dir($this->documentsPath),
-            'pdf_parser_ready' => $this->pdfParser !== null
+            'pdf_parser_ready' => $this->pdfParser !== null,
         ];
 
         return $status;
@@ -119,7 +119,7 @@ class ChatModel
             'projekty',
             'portfolio',
             'reference',
-            'zkušenosti'
+            'zkušenosti',
         ];
 
         $question = strtolower($question);
@@ -140,7 +140,7 @@ class ChatModel
         $pdfMapping = [
             'cv.pdf' => ['cv', 'životopis', 'kariéra', 'pracovní', 'zkušenosti'],
             'certificates.pdf' => ['certifikát', 'osvědčení', 'kurz', 'školení'],
-            'projects.pdf' => ['projekt', 'portfolio', 'reference', 'práce']
+            'projects.pdf' => ['projekt', 'portfolio', 'reference', 'práce'],
         ];
 
         foreach ($pdfMapping as $filename => $keywords) {
@@ -175,7 +175,7 @@ class ChatModel
             // Omeз text na rozumnou délku (pro Gemini API)
             return $this->truncateText($text, 2000);
         } catch (Exception $e) {
-            return "Chyba při čtení PDF: " . basename($pdfPath);
+            return 'Chyba při čtení PDF: ' . basename($pdfPath);
         }
     }
 
@@ -220,7 +220,7 @@ class ChatModel
             'education' => ['škola', 'studium', 'vzdělání', 'univerzita', 'pardubice', 'citroën'],
             'specialties' => ['digitalizace', 'průmysl', 'optimalizace', 'mes systém', 'manufacturing'],
             'philosophy' => ['motto', 'filozofie', 'přístup', 'debugger', 'bug'],
-            'contact' => ['kontakt', 'email', 'napsat', 'spojit', 'github']
+            'contact' => ['kontakt', 'email', 'napsat', 'spojit', 'github'],
         ];
 
         foreach ($keywords as $category => $words) {
@@ -242,89 +242,89 @@ class ChatModel
         return $relevant;
     }
 
-private function callGeminiAPI($question, $relevantData)
-{
-    // Zkontroluj API klíč
-    if (empty($this->geminiApiKey)) {
-        return "⚠️ **Chyba:** Gemini API klíč není nastaven.";
-    }
-
-    $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=' . $this->geminiApiKey;
-
-    $context = "Jsi chatbot reprezentující Vlastimila Kaláška. Odpovídáš v češtině jako on sám.\n";
-    $context .= "Zde jsou informace o něm:\n\n";
-
-    // JSON data
-    if (!empty($relevantData)) {
-        $context .= "ZÁKLADNÍ INFORMACE:\n";
-        $context .= json_encode($relevantData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-        $context .= "\n\n";
-    }
-
-    // PDF data (pokud jsou)
-    if (isset($relevantData['documents']) && !empty($relevantData['documents'])) {
-        $context .= "DOKUMENTY A DETAILY:\n";
-        foreach ($relevantData['documents'] as $filename => $content) {
-            $context .= "=== " . strtoupper(str_replace('.pdf', '', $filename)) . " ===\n";
-            $context .= $content . "\n\n";
+    private function callGeminiAPI($question, $relevantData)
+    {
+        // Zkontroluj API klíč
+        if (empty($this->geminiApiKey)) {
+            return '⚠️ **Chyba:** Gemini API klíč není nastaven.';
         }
-    }
 
-    $context .= "Odpověz přátelsky a osobně na otázku. Používej informace z dokumentů pokud jsou relevantní. Můžeš používat markdown formátování (**tučný text**, *kurzíva*, `kód`).";
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=' . $this->geminiApiKey;
 
-    $prompt = $context . "\n\nOtázka: " . $question;
+        $context = "Jsi chatbot reprezentující Vlastimila Kaláška. Odpovídáš v češtině jako on sám.\n";
+        $context .= "Zde jsou informace o něm:\n\n";
 
-    $data = [
-        'contents' => [
-            [
-                'parts' => [
-                    ['text' => $prompt]
-                ]
-            ]
-        ],
-        'generationConfig' => [
-            'maxOutputTokens' => 1000,
-            'temperature' => 0.7
-        ]
-    ];
+        // JSON data
+        if (!empty($relevantData)) {
+            $context .= "ZÁKLADNÍ INFORMACE:\n";
+            $context .= json_encode($relevantData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            $context .= "\n\n";
+        }
 
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'Content-Type: application/json'
-    ]);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Pro případné SSL problémy
+        // PDF data (pokud jsou)
+        if (isset($relevantData['documents']) && !empty($relevantData['documents'])) {
+            $context .= "DOKUMENTY A DETAILY:\n";
+            foreach ($relevantData['documents'] as $filename => $content) {
+                $context .= '=== ' . strtoupper(str_replace('.pdf', '', $filename)) . " ===\n";
+                $context .= $content . "\n\n";
+            }
+        }
 
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $curlError = curl_error($ch);
-    curl_close($ch);
+        $context .= 'Odpověz přátelsky a osobně na otázku. Používej informace z dokumentů pokud jsou relevantní. Můžeš používat markdown formátování (**tučný text**, *kurzíva*, `kód`).';
 
-    // Debug logování
-    error_log("Gemini API Response Code: " . $httpCode);
-    error_log("Gemini API Response: " . $response);
-    error_log("cURL Error: " . $curlError);
+        $prompt = $context . "\n\nOtázka: " . $question;
 
-    if ($curlError) {
-        return "⚠️ **Chyba připojení:** " . $curlError;
-    }
+        $data = [
+            'contents' => [
+                [
+                    'parts' => [
+                        ['text' => $prompt],
+                    ],
+                ],
+            ],
+            'generationConfig' => [
+                'maxOutputTokens' => 1000,
+                'temperature' => 0.7,
+            ],
+        ];
 
-    if ($httpCode === 200) {
-        $result = json_decode($response, true);
-        if (isset($result['candidates'][0]['content']['parts'][0]['text'])) {
-            return $result['candidates'][0]['content']['parts'][0]['text'];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Pro případné SSL problémy
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
+        curl_close($ch);
+
+        // Debug logování
+        error_log('Gemini API Response Code: ' . $httpCode);
+        error_log('Gemini API Response: ' . $response);
+        error_log('cURL Error: ' . $curlError);
+
+        if ($curlError) {
+            return '⚠️ **Chyba připojení:** ' . $curlError;
+        }
+
+        if ($httpCode === 200) {
+            $result = json_decode($response, true);
+            if (isset($result['candidates'][0]['content']['parts'][0]['text'])) {
+                return $result['candidates'][0]['content']['parts'][0]['text'];
+            } else {
+                error_log('Unexpected Gemini response structure: ' . json_encode($result));
+                return '⚠️ **Chyba:** Neočekávaná struktura odpovědi z Gemini API.';
+            }
         } else {
-            error_log("Unexpected Gemini response structure: " . json_encode($result));
-            return "⚠️ **Chyba:** Neočekávaná struktura odpovědi z Gemini API.";
+            $errorResponse = json_decode($response, true);
+            $errorMessage = isset($errorResponse['error']['message']) ? $errorResponse['error']['message'] : 'Neznámá chyba';
+            return '⚠️ **Gemini API chyba (' . $httpCode . '):** ' . $errorMessage;
         }
-    } else {
-        $errorResponse = json_decode($response, true);
-        $errorMessage = isset($errorResponse['error']['message']) ? $errorResponse['error']['message'] : 'Neznámá chyba';
-        return "⚠️ **Gemini API chyba (" . $httpCode . "):** " . $errorMessage;
     }
-}
 }

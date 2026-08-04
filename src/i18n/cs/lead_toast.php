@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'lead_toast_db_error_msg' => 'Nastala chyba při ukládání vaší poptávky. Zkuste to prosím znovu.',
   'lead_toast_db_error_title' => 'Chyba',
   'lead_toast_rate_limit_msg' => 'Překročili jste maximální počet pokusů. Zkuste to znovu za {minutes} minut.',
@@ -12,5 +12,4 @@ return array (
   'lead_toast_success_msg' => 'Děkuji za Váš zájem. Brzy se ozvu.',
   'lead_toast_success_title' => 'Hotovo',
   'lead_toast_validation_title' => 'Chyba ve formuláři',
-);
-
+];

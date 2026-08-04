@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'gdpr_back_home' => '← Zpět na hlavní stránku',
   'gdpr_controller_address' => 'Dobrosvkého 718/6',
   'gdpr_controller_city' => '500 02 Hradec Králové',
@@ -56,5 +56,4 @@ return array (
   'gdpr_section_9_text_1' => 'Přijal jsem vhodná technická a organizační opatření, aby byly osobní údaje chráněny proti neoprávněnému přístupu, ztrátě nebo zneužití.',
   'gdpr_section_9_title' => '9. Zabezpečení osobních údajů',
   'gdpr_title' => 'Ochrana osobních údajů',
-);
-
+];

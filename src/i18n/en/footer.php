@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'footer_about_text' => 'Professional development of websites, e-shops and web applications with a focus on modern technologies and user experience. I help companies grow in the digital space.',
   'footer_contact_text' => 'Interested in working together or want to discuss your project? Feel free to contact me and we will find the right solution.',
   'footer_contact_title' => 'Get in touch',
@@ -26,5 +26,4 @@ return array (
   'footer_services_title' => 'Services',
   'footer_services_web_apps' => 'Web applications',
   'footer_services_websites' => 'Websites',
-);
-
+];

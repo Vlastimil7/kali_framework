@@ -3,13 +3,13 @@
 namespace Services\Payments;
 
 use Comgate\SDK\Comgate;
-use Comgate\SDK\Entity\Payment;
-use Comgate\SDK\Entity\Money;
 use Comgate\SDK\Entity\Codes\CurrencyCode;
 use Comgate\SDK\Entity\Codes\PaymentMethodCode;
 use Comgate\SDK\Entity\Codes\RequestCode;
-use Comgate\SDK\Exception\ApiException;
+use Comgate\SDK\Entity\Money;
+use Comgate\SDK\Entity\Payment;
 use Comgate\SDK\Entity\Refund;
+use Comgate\SDK\Exception\ApiException;
 use Helpers\Logger;
 
 class ComgateService
@@ -127,28 +127,28 @@ class ComgateService
      * Notify normalizace – z POSTu vytáhne jednotný tvar.
      * (Ověření podpisu dle SDK/API případně doplníš sem.)
      */
-        public function normalizeNotification(array $post): ?array
-        {
-            foreach (['refId', 'transId', 'status'] as $k) {
-                if (!isset($post[$k]) || $post[$k] === '') {
-                    Logger::warning('Comgate NOTIFY missing required field', [
-                        'missing' => $k,
-                        'post' => $post,
-                    ]);
-                    return null;
-                }
+    public function normalizeNotification(array $post): ?array
+    {
+        foreach (['refId', 'transId', 'status'] as $k) {
+            if (!isset($post[$k]) || $post[$k] === '') {
+                Logger::warning('Comgate NOTIFY missing required field', [
+                    'missing' => $k,
+                    'post' => $post,
+                ]);
+                return null;
             }
-
-            return [
-                'refId'    => (int)$post['refId'],
-                'transId'  => (string)$post['transId'],
-                'status'   => (string)$post['status'], // PAID / CANCELLED / ...
-                'price'    => isset($post['price']) ? (int)$post['price'] : null,
-                'currency' => $post['curr'] ?? null,
-                'email'    => $post['email'] ?? null,
-                'raw'      => $post,
-            ];
         }
+
+        return [
+            'refId'    => (int)$post['refId'],
+            'transId'  => (string)$post['transId'],
+            'status'   => (string)$post['status'], // PAID / CANCELLED / ...
+            'price'    => isset($post['price']) ? (int)$post['price'] : null,
+            'currency' => $post['curr'] ?? null,
+            'email'    => $post['email'] ?? null,
+            'raw'      => $post,
+        ];
+    }
 
     /**
      * Status platby – snaží se použít metodu ze SDK (názvy se liší).
@@ -256,5 +256,5 @@ class ComgateService
         return ['success' => true];
     }
 
-    
+
 }

@@ -19,8 +19,12 @@ class TelemetryAdminService
     public function rangeToDates(string $range): array
     {
         $to = date('Y-m-d H:i:s');
-        if ($range === '7d')  return [date('Y-m-d H:i:s', time() - 7 * 86400), $to];
-        if ($range === '30d') return [date('Y-m-d H:i:s', time() - 30 * 86400), $to];
+        if ($range === '7d') {
+            return [date('Y-m-d H:i:s', time() - 7 * 86400), $to];
+        }
+        if ($range === '30d') {
+            return [date('Y-m-d H:i:s', time() - 30 * 86400), $to];
+        }
         return [date('Y-m-d H:i:s', time() - 24 * 3600), $to];
     }
 

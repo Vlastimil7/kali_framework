@@ -3,10 +3,10 @@
 namespace Controllers\Admin;
 
 use Core\Request;
-use Models\User;
 use Helpers\Flash;
 use Helpers\Toast;
 use Helpers\Validator;
+use Models\User;
 
 class UserController extends BaseAdminController
 {

@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'contact_attachments_click' => 'klikněte pro výběr',
   'contact_attachments_hint' => 'Přetáhněte soubory sem nebo',
   'contact_attachments_label' => 'Přílohy (volitelné)',
@@ -62,5 +62,4 @@ return array (
   'contact_topic_other' => 'Jiné',
   'contact_topic_reservation' => 'Rezervační systém',
   'contact_topic_web' => 'Webová stránka',
-);
-
+];

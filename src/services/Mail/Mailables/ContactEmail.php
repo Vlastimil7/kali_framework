@@ -47,11 +47,11 @@ final class ContactEmail extends Mailable
     private function plainText(): string
     {
         return "NOVÁ POPTÁVKA Z KONTAKTNÍHO FORMULÁŘE\n"
-            . "Jméno: " . (string) ($this->formData['fullName'] ?? '') . "\n"
-            . "Email: " . (string) ($this->formData['email'] ?? '') . "\n"
-            . "Telefon: " . (string) ($this->formData['phone'] ?? '') . "\n"
-            . "Typ projektu: " . (string) ($this->formData['topic'] ?? '') . "\n"
-            . "Rozpočet: " . (string) ($this->formData['budget'] ?? '') . "\n\n"
+            . 'Jméno: ' . (string) ($this->formData['fullName'] ?? '') . "\n"
+            . 'Email: ' . (string) ($this->formData['email'] ?? '') . "\n"
+            . 'Telefon: ' . (string) ($this->formData['phone'] ?? '') . "\n"
+            . 'Typ projektu: ' . (string) ($this->formData['topic'] ?? '') . "\n"
+            . 'Rozpočet: ' . (string) ($this->formData['budget'] ?? '') . "\n\n"
             . "Zpráva:\n" . (string) ($this->formData['message'] ?? '') . "\n";
     }
 }

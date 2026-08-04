@@ -160,7 +160,7 @@ class Validator
             $value = $this->value($field);
             $ruleNames = array_map(
                 static fn ($rule): string => is_string($rule) ? strtolower(strtok($rule, ':')) : '',
-                $rules
+                $rules,
             );
             $this->currentRuleNames = $ruleNames;
 

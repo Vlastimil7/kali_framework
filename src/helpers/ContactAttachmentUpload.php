@@ -1,4 +1,5 @@
 <?php
+
 // src/Helpers/ContactAttachmentUpload.php
 
 namespace Helpers;
@@ -17,7 +18,7 @@ class ContactAttachmentUpload
         'image/jpg',
         'application/msword',
         'application/zip',
-        
+
     ];
 
     public function saveTmp(array $files, string $tmpDir): array
@@ -32,7 +33,7 @@ class ContactAttachmentUpload
 
         $count = count($files['name']);
         if ($count > self::MAX_FILES) {
-            return ['success' => false, 'files' => [], 'errors' => ["Maximálně " . self::MAX_FILES . " souborů."]];
+            return ['success' => false, 'files' => [], 'errors' => ['Maximálně ' . self::MAX_FILES . ' souborů.']];
         }
 
         if (!is_dir($tmpDir) && !@mkdir($tmpDir, 0775, true) && !is_dir($tmpDir)) {
@@ -47,7 +48,9 @@ class ContactAttachmentUpload
             $err  = (int)($files['error'][$i] ?? UPLOAD_ERR_NO_FILE);
             $size = (int)($files['size'][$i] ?? 0);
 
-            if ($err === UPLOAD_ERR_NO_FILE) continue;
+            if ($err === UPLOAD_ERR_NO_FILE) {
+                continue;
+            }
 
             if ($err !== UPLOAD_ERR_OK) {
                 $errors[] = "Soubor {$orig}: chyba uploadu ({$err}).";
@@ -55,13 +58,13 @@ class ContactAttachmentUpload
             }
 
             if ($size <= 0 || $size > self::MAX_FILE_BYTES) {
-                $errors[] = "Soubor {$orig}: neplatná velikost (max " . self::MAX_FILE_BYTES . " B).";
+                $errors[] = "Soubor {$orig}: neplatná velikost (max " . self::MAX_FILE_BYTES . ' B).';
                 continue;
             }
 
             $total += $size;
             if ($total > self::MAX_TOTAL_BYTES) {
-                $errors[] = "Překročen celkový limit příloh (max " . self::MAX_TOTAL_BYTES . " B).";
+                $errors[] = 'Překročen celkový limit příloh (max ' . self::MAX_TOTAL_BYTES . ' B).';
                 break;
             }
 
@@ -73,7 +76,7 @@ class ContactAttachmentUpload
 
             $safeOrig = $this->safeFilename($orig);
             $stored = date('Ymd_His') . '_' . bin2hex(random_bytes(8)) . '_' . $safeOrig;
-            $dest = rtrim($tmpDir, "\\/") . DIRECTORY_SEPARATOR . $stored;
+            $dest = rtrim($tmpDir, '\\/') . DIRECTORY_SEPARATOR . $stored;
 
             if (!@move_uploaded_file($tmp, $dest)) {
                 $errors[] = "Soubor {$orig}: nepodařilo se uložit.";
@@ -99,16 +102,22 @@ class ContactAttachmentUpload
     {
         foreach ($savedFiles as $f) {
             $p = $f['path'] ?? null;
-            if ($p && is_file($p)) @unlink($p);
+            if ($p && is_file($p)) {
+                @unlink($p);
+            }
         }
     }
 
     private function detectMime(string $path): string
     {
-        if (!is_file($path)) return 'application/octet-stream';
+        if (!is_file($path)) {
+            return 'application/octet-stream';
+        }
         $fi = finfo_open(FILEINFO_MIME_TYPE);
         $mime = $fi ? finfo_file($fi, $path) : null;
-        if ($fi) finfo_close($fi);
+        if ($fi) {
+            finfo_close($fi);
+        }
         return $mime ?: 'application/octet-stream';
     }
 

@@ -67,12 +67,33 @@ final class EmailMessage
         }
     }
 
-    public function getSubject(): string { return $this->subject; }
-    public function getTemplate(): ?string { return $this->template; }
-    public function getData(): array { return $this->data; }
-    public function getHtml(): ?string { return $this->html; }
-    public function getText(): ?string { return $this->text; }
-    public function getReplyTo(): ?Address { return $this->replyTo; }
+    public function getSubject(): string
+    {
+        return $this->subject;
+    }
+    public function getTemplate(): ?string
+    {
+        return $this->template;
+    }
+    public function getData(): array
+    {
+        return $this->data;
+    }
+    public function getHtml(): ?string
+    {
+        return $this->html;
+    }
+    public function getText(): ?string
+    {
+        return $this->text;
+    }
+    public function getReplyTo(): ?Address
+    {
+        return $this->replyTo;
+    }
     /** @return list<Attachment> */
-    public function getAttachments(): array { return $this->attachments; }
+    public function getAttachments(): array
+    {
+        return $this->attachments;
+    }
 }

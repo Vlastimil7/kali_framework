@@ -4,9 +4,9 @@ namespace Controllers\Front;
 
 use Core\Controller;
 use Core\Request;
+use Helpers\Logger;
 use Services\Payments\ComgateService;
 use Services\Vouchers\OrderService;
-use Helpers\Logger;
 
 class PaymentController extends Controller
 {
@@ -26,7 +26,7 @@ class PaymentController extends Controller
         $refId   = $request->query('refId');
         $paramStatus = $request->query('status');
 
-        Logger::info("Comgate RETURN hit", ['get' => $request->query()]);
+        Logger::info('Comgate RETURN hit', ['get' => $request->query()]);
 
         if (!$refId) {
             $this->show404();
@@ -37,7 +37,9 @@ class PaymentController extends Controller
 
         if ($transId) {
             $apiStatus = $this->comgate->getPaymentStatus((string)$transId);
-            if ($apiStatus !== null) $status = strtolower((string)$apiStatus);
+            if ($apiStatus !== null) {
+                $status = strtolower((string)$apiStatus);
+            }
         }
 
         $this->view('payments/comgate_return', [
@@ -53,7 +55,7 @@ class PaymentController extends Controller
         file_put_contents(config('app.base_path') . '/storage/logs/notify.log', date('c')." HIT\n".print_r($request->post(), true)."\n\n", FILE_APPEND);
 
         $post = $request->post();
-        Logger::info("Comgate NOTIFY hit", ['post' => $post]);
+        Logger::info('Comgate NOTIFY hit', ['post' => $post]);
 
         $normalized = $this->comgate->normalizeNotification($post);
         if ($normalized === null) {
@@ -69,11 +71,11 @@ class PaymentController extends Controller
         $ok = $this->orders->processGatewayNotification($normalized);
         if (!$ok) {
             http_response_code(500);
-            echo "ERROR";
+            echo 'ERROR';
             return;
         }
 
         http_response_code(200);
-        echo "OK";
+        echo 'OK';
     }
 }

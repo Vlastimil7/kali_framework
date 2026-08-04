@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'cookie_banner_accept_all' => 'Accept all',
   'cookie_banner_reject' => 'Reject',
   'cookie_banner_settings' => 'Settings',
@@ -49,5 +49,4 @@ return array (
   'cookies_type_necessary_title' => 'Necessary cookies',
   'cookies_type_telemetry_text' => 'The website may use internal technical measurement for performance monitoring, error detection, and security. These data are not used to identify specific individuals.',
   'cookies_type_telemetry_title' => 'Technical and diagnostic tools (telemetry)',
-);
-
+];

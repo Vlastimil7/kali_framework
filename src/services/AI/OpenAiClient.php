@@ -1,7 +1,6 @@
 <?php
-namespace Services\AI;
 
-use Helpers\Logger;
+namespace Services\AI;
 
 final class OpenAiClient implements AiClientInterface
 {
@@ -15,7 +14,10 @@ final class OpenAiClient implements AiClientInterface
         $this->model = (string)config('ai.providers.openai.model', 'gpt-4o-mini');
     }
 
-    public function name(): string { return 'openai'; }
+    public function name(): string
+    {
+        return 'openai';
+    }
 
     public function getStatus(): array
     {
@@ -29,7 +31,9 @@ final class OpenAiClient implements AiClientInterface
 
     public function testConnection(): bool
     {
-        if ($this->apiKey === '') return false;
+        if ($this->apiKey === '') {
+            return false;
+        }
 
         $payload = [
             'model' => $this->model,
@@ -39,15 +43,17 @@ final class OpenAiClient implements AiClientInterface
 
         [$http, $body, $err] = $this->post($payload, 10);
 
-        if ($err !== '') return false;
+        if ($err !== '') {
+            return false;
+        }
         return $http === 200;
     }
 
     public function ask(string $system, string $user): string
     {
-        
+
         if ($this->apiKey === '') {
-            return "⚠️ **Chyba:** OpenAI API klíč není nastaven.";
+            return '⚠️ **Chyba:** OpenAI API klíč není nastaven.';
         }
 
         $payload = [
@@ -63,7 +69,9 @@ final class OpenAiClient implements AiClientInterface
 
         [$http, $body, $err] = $this->post($payload, 30);
 
-        if ($err !== '') return "⚠️ **Chyba připojení:** {$err}";
+        if ($err !== '') {
+            return "⚠️ **Chyba připojení:** {$err}";
+        }
 
         $json = json_decode($body, true) ?: [];
         if ($http !== 200) {
@@ -72,7 +80,7 @@ final class OpenAiClient implements AiClientInterface
         }
 
         $text = $this->extractText($json);
-        return trim($text) !== '' ? $text : "⚠️ **Chyba:** OpenAI nevrátil text.";
+        return trim($text) !== '' ? $text : '⚠️ **Chyba:** OpenAI nevrátil text.';
     }
 
     private function extractText(array $result): string
@@ -82,7 +90,9 @@ final class OpenAiClient implements AiClientInterface
         }
 
         foreach ($result['output'] as $item) {
-            if (($item['type'] ?? null) !== 'message') continue;
+            if (($item['type'] ?? null) !== 'message') {
+                continue;
+            }
             foreach (($item['content'] ?? []) as $c) {
                 if (($c['type'] ?? null) === 'output_text' && is_string($c['text'] ?? null)) {
                     return $c['text'];
@@ -103,7 +113,7 @@ final class OpenAiClient implements AiClientInterface
                 'Authorization: Bearer ' . $this->apiKey,
             ],
             $timeout,
-            false
+            false,
         );
 
         return [$http, $body, $err];

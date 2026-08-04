@@ -8,13 +8,13 @@ require ROOT_PATH . '/vendor/autoload.php';
 Core\Config::set('app', ['base_url' => '', 'site_url' => 'https://example.test']);
 require ROOT_PATH . '/src/helpers/language_helper.php';
 
-use Services\Mail\Mailables\WelcomeEmail;
-use Services\Mail\Mailables\PasswordResetEmail;
+use Services\Mail\Mailable;
 use Services\Mail\Mailables\ContactEmail;
 use Services\Mail\Mailables\LeadEmail;
 use Services\Mail\Mailables\OrderPaidEmail;
 use Services\Mail\Mailables\OrderStatusChangedEmail;
-use Services\Mail\Mailable;
+use Services\Mail\Mailables\PasswordResetEmail;
+use Services\Mail\Mailables\WelcomeEmail;
 use Services\Mail\TemplateRenderer;
 
 $message = (new WelcomeEmail('<Anna>', 'https://example.test/login?a=1&b=2'))->build();

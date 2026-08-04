@@ -2,8 +2,8 @@
 
 namespace Api\V1\Controllers;
 
-use Api\BaseApiController;
 use Api\ApiResponse;
+use Api\BaseApiController;
 use Core\Request;
 use Helpers\Logger;
 use Helpers\Validator;
@@ -50,7 +50,7 @@ class TelemetryController extends BaseApiController
                 ApiResponse::error(
                     $result['message'] ?? 'Telemetry rejected.',
                     (int)($result['statusCode'] ?? 400),
-                    $result['data'] ?? null
+                    $result['data'] ?? null,
                 );
                 return;
             }

@@ -162,4 +162,4 @@
 </div>
 
 <!-- Obchodni podminky -->
-<?php include "../src/views/terms/shipping_payment.php"; ?>
+<?php include '../src/views/terms/shipping_payment.php'; ?>

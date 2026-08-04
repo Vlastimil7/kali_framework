@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'chat_clear_button' => 'Smazat chat',
   'chat_disclaimer_contact_link' => 'kontakt',
   'chat_disclaimer_text_before' => 'Odpovědi AI jsou orientační a mohou obsahovat nepřesnosti. Pro potvrzení informací použij',
@@ -19,5 +19,4 @@ return array (
   'chat_suggestion_projects' => 'Jaké projekty děláš?',
   'chat_suggestion_tech' => 'Jaké technologie používáš?',
   'chat_typing_text' => 'Vlastimil píše…',
-);
-
+];

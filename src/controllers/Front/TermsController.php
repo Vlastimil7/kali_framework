@@ -6,7 +6,6 @@ use Core\Controller;
 
 class TermsController extends Controller
 {
-
     public function show()
     {
         $this->view('terms/index', [

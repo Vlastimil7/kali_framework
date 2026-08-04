@@ -29,15 +29,15 @@ $badge = function (string $st): array {
 [$cls, $label] = $badge($statusRaw);
 
 // pro user-friendly text
-$hint = "Pokud jste právě zaplatil(a), potvrzení může chvíli trvat. "
-      . "Voucher dorazí e-mailem po přijetí notifikace z platební brány.";
+$hint = 'Pokud jste právě zaplatil(a), potvrzení může chvíli trvat. '
+      . 'Voucher dorazí e-mailem po přijetí notifikace z platební brány.';
 
 if ($label === 'Zaplaceno') {
-    $hint = "Platba je označená jako zaplacená. Voucher(y) vám dorazí e-mailem (obvykle během chvilky).";
+    $hint = 'Platba je označená jako zaplacená. Voucher(y) vám dorazí e-mailem (obvykle během chvilky).';
 }
 
 if ($label === 'Platba zrušena / neproběhla') {
-    $hint = "Platba nebyla dokončena. Můžete to zkusit znovu.";
+    $hint = 'Platba nebyla dokončena. Můžete to zkusit znovu.';
 }
 ?>
 

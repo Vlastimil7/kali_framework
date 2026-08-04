@@ -33,7 +33,9 @@ class TelemetryController extends BaseAdminController
     {
         $app = $request->string('app', 'vk-dev');
         $window = $request->int('window', 20);
-        if (!in_array($window, [10, 20, 30, 60], true)) $window = 20;
+        if (!in_array($window, [10, 20, 30, 60], true)) {
+            $window = 20;
+        }
 
         $rows = $this->svc->getOnline($app, $window, 200);
         $this->view('admin/telemetry/online', [

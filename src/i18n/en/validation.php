@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'contact_validation_budget_long' => 'Budget is too long',
   'contact_validation_budget_required' => 'Please select an estimated budget',
   'contact_validation_email_invalid' => 'Please enter a valid email address',
@@ -17,5 +17,4 @@ return array (
   'contact_validation_phone_long' => 'Phone number is too long',
   'contact_validation_topic_long' => 'Project type is too long',
   'contact_validation_topic_required' => 'Please select a project type',
-);
-
+];

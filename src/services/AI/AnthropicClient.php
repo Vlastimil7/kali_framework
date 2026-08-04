@@ -1,6 +1,7 @@
 <?php
 
 namespace Services\AI;
+
 use Helpers\Logger;
 
 final class AnthropicClient implements AiClientInterface
@@ -34,7 +35,9 @@ final class AnthropicClient implements AiClientInterface
 
     public function testConnection(): bool
     {
-        if ($this->apiKey === '') return false;
+        if ($this->apiKey === '') {
+            return false;
+        }
 
         $payload = [
             'model' => $this->model,
@@ -52,7 +55,7 @@ final class AnthropicClient implements AiClientInterface
                 'content-type: application/json',
             ],
             10,
-            false
+            false,
         );
 
         return $err === '' && $http === 200;
@@ -68,7 +71,7 @@ final class AnthropicClient implements AiClientInterface
     public function ask(string $system, string $user): string
     {
         if ($this->apiKey === '') {
-            return "⚠️ **Chyba:** Anthropic (Claude) API klíč není nastaven.";
+            return '⚠️ **Chyba:** Anthropic (Claude) API klíč není nastaven.';
         }
 
         $payload = [
@@ -89,7 +92,7 @@ final class AnthropicClient implements AiClientInterface
                 'content-type: application/json',
             ],
             30,
-            false
+            false,
         );
 
         $ms = (int) round((microtime(true) - $t0) * 1000);
@@ -131,7 +134,8 @@ final class AnthropicClient implements AiClientInterface
 
         // usage
         $usage = $json['usage'] ?? [];
-        Logger::info('AI response OK', ['provider' => $this->name()], [
+        Logger::info('AI response OK', [
+            'provider' => $this->name(),
             'ms' => $ms,
             'request_id' => $requestId,
             'input_tokens' => $usage['input_tokens'] ?? null,
@@ -142,6 +146,6 @@ final class AnthropicClient implements AiClientInterface
 
         return trim($text) !== ''
             ? $text
-            : "⚠️ **Chyba:** Claude nevrátil text.";
+            : '⚠️ **Chyba:** Claude nevrátil text.';
     }
 }

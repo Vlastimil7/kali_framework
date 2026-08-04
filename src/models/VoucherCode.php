@@ -3,8 +3,8 @@
 namespace Models;
 
 use Core\Database;
-use PDO;
 use Helpers\Logger;
+use PDO;
 
 class VoucherCode
 {
@@ -21,14 +21,14 @@ class VoucherCode
 
     public function countByOrderId(int $orderId): int
     {
-        $st = $this->db->prepare("SELECT COUNT(*) FROM voucher_codes WHERE order_id = :oid");
+        $st = $this->db->prepare('SELECT COUNT(*) FROM voucher_codes WHERE order_id = :oid');
         $st->execute([':oid' => $orderId]);
         return (int)$st->fetchColumn();
     }
 
     public function getById(int $id): ?array
     {
-        $sql = "SELECT * FROM voucher_codes WHERE id = :id LIMIT 1";
+        $sql = 'SELECT * FROM voucher_codes WHERE id = :id LIMIT 1';
         $st = $this->db->prepare($sql);
         $st->execute([':id' => $id]);
         return $st->fetch(PDO::FETCH_ASSOC) ?: null;
@@ -36,11 +36,11 @@ class VoucherCode
 
     public function getByOrderId(int $orderId): array
     {
-        $sql = "SELECT vc.*, v.name AS voucher_name
+        $sql = 'SELECT vc.*, v.name AS voucher_name
                 FROM voucher_codes vc
                 JOIN vouchers v ON v.id = vc.voucher_id
                 WHERE vc.order_id = :order_id
-                ORDER BY vc.id ASC";
+                ORDER BY vc.id ASC';
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':order_id' => $orderId]);
@@ -49,7 +49,7 @@ class VoucherCode
 
     public function getByCode(string $code): ?array
     {
-        $sql = "SELECT vc.*,
+        $sql = 'SELECT vc.*,
                        v.name AS voucher_name,
                        v.slug AS voucher_slug,
                        o.order_number,
@@ -61,7 +61,7 @@ class VoucherCode
                 JOIN vouchers v ON v.id = vc.voucher_id
                 JOIN orders o ON o.id = vc.order_id
                 WHERE vc.code = :code
-                LIMIT 1";
+                LIMIT 1';
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':code' => $code]);
@@ -81,7 +81,7 @@ class VoucherCode
     public function create(array $data): array
     {
         try {
-            $sql = "INSERT INTO voucher_codes (
+            $sql = 'INSERT INTO voucher_codes (
                         order_id, order_item_id, voucher_id,
                         code, valid_from, valid_to, status,
                         exchanged_from_id,
@@ -91,7 +91,7 @@ class VoucherCode
                         :code, :valid_from, :valid_to, :status,
                         :exchanged_from_id,
                         :exchanged_at, :exchanged_by, :exchange_reason
-                    )";
+                    )';
 
             $st = $this->db->prepare($sql);
             $st->execute([
@@ -128,7 +128,7 @@ class VoucherCode
                 return ['success' => true, 'skipped' => true];
             }
 
-            $sql = "SELECT
+            $sql = 'SELECT
                         oi.id AS order_item_id,
                         oi.voucher_id,
                         oi.quantity,
@@ -136,7 +136,7 @@ class VoucherCode
                     FROM order_items oi
                     JOIN vouchers v ON v.id = oi.voucher_id
                     WHERE oi.order_id = :oid
-                    ORDER BY oi.id ASC";
+                    ORDER BY oi.id ASC';
 
             $st = $this->db->prepare($sql);
             $st->execute([':oid' => $orderId]);
@@ -150,11 +150,15 @@ class VoucherCode
             $today = new \DateTimeImmutable('today');
 
             $canTx = method_exists($this->db, 'beginTransaction');
-            if ($canTx) $this->db->beginTransaction();
+            if ($canTx) {
+                $this->db->beginTransaction();
+            }
 
             foreach ($items as $it) {
                 $qty = (int)($it['quantity'] ?? 0);
-                if ($qty <= 0) continue;
+                if ($qty <= 0) {
+                    continue;
+                }
 
                 $voucherId   = (int)$it['voucher_id'];
                 $orderItemId = (int)$it['order_item_id'];
@@ -188,14 +192,18 @@ class VoucherCode
                             break;
                         } catch (\PDOException $e) {
                             $tries++;
-                            if ($tries >= 5) throw $e;
+                            if ($tries >= 5) {
+                                throw $e;
+                            }
                             $code = $this->generateCode($orderId);
                         }
                     }
                 }
             }
 
-            if ($canTx) $this->db->commit();
+            if ($canTx) {
+                $this->db->commit();
+            }
 
             if ($created === 0) {
                 return ['success' => false, 'message' => 'Nevznikl žádný kód (quantity je 0?).'];
@@ -248,10 +256,10 @@ class VoucherCode
                 ':code'     => $code,
             ]);
 
-        if ($st->rowCount() !== 1) {
+            if ($st->rowCount() !== 1) {
 
-            // pokus se označit jako expired (nevadí když nic neupdatuje)
-            $sqlExpire = "
+                // pokus se označit jako expired (nevadí když nic neupdatuje)
+                $sqlExpire = "
                 UPDATE voucher_codes
                 SET status = 'expired'
                 WHERE code = :code
@@ -259,13 +267,13 @@ class VoucherCode
                 AND valid_to IS NOT NULL
                 AND valid_to < CURDATE()
             ";
-            $this->db->prepare($sqlExpire)->execute([':code' => $code]);
+                $this->db->prepare($sqlExpire)->execute([':code' => $code]);
 
-            return [
-                'success' => false,
-                'message' => 'Nelze uplatnit (neplacené / expirované / už uplatněné / neaktivní).'
-            ];
-        }
+                return [
+                    'success' => false,
+                    'message' => 'Nelze uplatnit (neplacené / expirované / už uplatněné / neaktivní).',
+                ];
+            }
 
             return ['success' => true];
         } catch (\Throwable $e) {
@@ -313,7 +321,9 @@ class VoucherCode
     {
         try {
             $old = $this->getByCode($code);
-            if (!$old) return ['success' => false, 'message' => 'Kód nenalezen.'];
+            if (!$old) {
+                return ['success' => false, 'message' => 'Kód nenalezen.'];
+            }
 
             if (($old['status'] ?? '') !== 'active') {
                 return ['success' => false, 'message' => 'Vyměnit lze jen aktivní kód.'];
@@ -325,7 +335,9 @@ class VoucherCode
             }
 
             $canTx = method_exists($this->db, 'beginTransaction');
-            if ($canTx) $this->db->beginTransaction();
+            if ($canTx) {
+                $this->db->beginTransaction();
+            }
 
             $newCode = $this->generateCode((int)$old['order_id']);
 
@@ -357,7 +369,9 @@ class VoucherCode
                     break;
                 } catch (\PDOException $e) {
                     $tries++;
-                    if ($tries >= 5) throw $e;
+                    if ($tries >= 5) {
+                        throw $e;
+                    }
                     $newCode = $this->generateCode((int)$old['order_id']);
                 }
             }
@@ -379,11 +393,15 @@ class VoucherCode
             ]);
 
             if ($stUpd->rowCount() !== 1) {
-                if ($canTx) $this->db->rollBack();
+                if ($canTx) {
+                    $this->db->rollBack();
+                }
                 return ['success' => false, 'message' => 'Nepodařilo se zneplatnit původní kód.'];
             }
 
-            if ($canTx) $this->db->commit();
+            if ($canTx) {
+                $this->db->commit();
+            }
 
             return ['success' => true, 'new_id' => $newId, 'new_code' => $newCode];
         } catch (\Throwable $e) {

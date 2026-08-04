@@ -129,7 +129,28 @@ chmod -R 775 storage/
 
 ### Available Scripts
 
-# Watch for Tailwind changes
+Run the complete PHP quality pipeline:
+
+```bash
+composer quality
+```
+
+Individual checks:
+
+```bash
+composer test          # Pest unit and feature tests
+composer test:smoke    # Existing framework smoke suites through Pest
+composer lint          # PHP syntax check
+composer lint:style    # PSR-12 check without changing files
+composer format        # Apply PHP CS Fixer formatting
+composer analyse       # PHPStan static analysis
+```
+
+Pest configuration is stored in `phpunit.xml` and `tests/Pest.php`. Put isolated tests in `tests/Unit` and application-flow tests in `tests/Feature`. The current PHPStan starting level is defined in `phpstan.neon.dist`; raise it gradually as types are added to older code.
+
+The development quality tools target PHP 8.4 or newer. Production dependencies can still be installed without development tools using `composer install --no-dev`.
+
+Watch for Tailwind changes:
 
 npm run dev
 

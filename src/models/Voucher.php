@@ -1,4 +1,5 @@
 <?php
+
 // src/Models/Voucher.php
 
 namespace Models;
@@ -21,10 +22,10 @@ class Voucher
      */
     public function getActive(): array
     {
-        $sql = "SELECT id, name, slug, description, price_cents, currency, validity_months
+        $sql = 'SELECT id, name, slug, description, price_cents, currency, validity_months
                 FROM vouchers
                 WHERE is_active = 1
-                ORDER BY price_cents ASC, id ASC";
+                ORDER BY price_cents ASC, id ASC';
 
         $stmt = $this->db->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -35,10 +36,10 @@ class Voucher
      */
     public function getBySlug(string $slug): ?array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM vouchers
                 WHERE slug = :slug AND is_active = 1
-                LIMIT 1";
+                LIMIT 1';
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':slug' => $slug]);
@@ -52,10 +53,10 @@ class Voucher
      */
     public function getById(int $id): ?array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM vouchers
                 WHERE id = :id
-                LIMIT 1";
+                LIMIT 1';
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
@@ -69,9 +70,9 @@ class Voucher
      */
     public function getAllAdmin(): array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM vouchers
-                ORDER BY created_at DESC, id DESC";
+                ORDER BY created_at DESC, id DESC';
 
         $stmt = $this->db->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -83,10 +84,10 @@ class Voucher
     public function create(array $data): array
     {
         try {
-            $sql = "INSERT INTO vouchers 
+            $sql = 'INSERT INTO vouchers
                     (name, slug, description, price_cents, currency, validity_months, is_active, created_by)
                     VALUES
-                    (:name, :slug, :description, :price_cents, :currency, :validity_months, :is_active, :created_by)";
+                    (:name, :slug, :description, :price_cents, :currency, :validity_months, :is_active, :created_by)';
 
             $stmt = $this->db->prepare($sql);
             $stmt->execute([
@@ -124,7 +125,7 @@ class Voucher
     public function updateAdmin(int $id, array $data): array
     {
         try {
-            $sql = "UPDATE vouchers
+            $sql = 'UPDATE vouchers
                     SET name = :name,
                         slug = :slug,
                         description = :description,
@@ -132,7 +133,7 @@ class Voucher
                         currency = :currency,
                         validity_months = :validity_months,
                         is_active = :is_active
-                    WHERE id = :id";
+                    WHERE id = :id';
 
             $stmt = $this->db->prepare($sql);
             $stmt->execute([
@@ -168,9 +169,9 @@ class Voucher
     public function deactivate(int $id): array
     {
         try {
-            $sql = "UPDATE vouchers
+            $sql = 'UPDATE vouchers
                     SET is_active = 0
-                    WHERE id = :id";
+                    WHERE id = :id';
 
             $stmt = $this->db->prepare($sql);
             $stmt->execute([':id' => $id]);
@@ -192,15 +193,15 @@ class Voucher
 
     public function existsBySlug(string $slug, ?int $ignoreId = null): bool
     {
-        $sql = "SELECT id FROM vouchers WHERE slug = :slug";
+        $sql = 'SELECT id FROM vouchers WHERE slug = :slug';
         $params = [':slug' => $slug];
 
         if ($ignoreId !== null) {
-            $sql .= " AND id <> :id";
+            $sql .= ' AND id <> :id';
             $params[':id'] = $ignoreId;
         }
 
-        $sql .= " LIMIT 1";
+        $sql .= ' LIMIT 1';
         $st = $this->db->prepare($sql);
         $st->execute($params);
         return (bool)$st->fetchColumn();
@@ -208,10 +209,10 @@ class Voucher
 
     public function getListAdmin(int $limit = 200): array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
             FROM vouchers
             ORDER BY created_at DESC, id DESC
-            LIMIT :lim";
+            LIMIT :lim';
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':lim', $limit, PDO::PARAM_INT);

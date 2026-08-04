@@ -1,4 +1,5 @@
 <?php
+
 namespace Services\AI;
 
 final class GeminiClient implements AiClientInterface
@@ -13,7 +14,10 @@ final class GeminiClient implements AiClientInterface
         $this->model = (string)config('ai.providers.gemini.model', 'gemini-2.5-flash');
     }
 
-    public function name(): string { return 'gemini'; }
+    public function name(): string
+    {
+        return 'gemini';
+    }
 
     public function getStatus(): array
     {
@@ -26,7 +30,9 @@ final class GeminiClient implements AiClientInterface
 
     public function testConnection(): bool
     {
-        if ($this->apiKey === '') return false;
+        if ($this->apiKey === '') {
+            return false;
+        }
 
         $url = $this->buildUrl();
 
@@ -40,7 +46,7 @@ final class GeminiClient implements AiClientInterface
             $payload,
             ['Content-Type: application/json'],
             10,
-            false
+            false,
         );
 
         return $err === '' && $http === 200;
@@ -49,7 +55,7 @@ final class GeminiClient implements AiClientInterface
     public function ask(string $system, string $user): string
     {
         if ($this->apiKey === '') {
-            return "⚠️ **Chyba:** Gemini API klíč není nastaven.";
+            return '⚠️ **Chyba:** Gemini API klíč není nastaven.';
         }
 
         $url = $this->buildUrl();
@@ -66,10 +72,12 @@ final class GeminiClient implements AiClientInterface
             $payload,
             ['Content-Type: application/json'],
             30,
-            false
+            false,
         );
 
-        if ($err !== '') return "⚠️ **Chyba připojení:** {$err}";
+        if ($err !== '') {
+            return "⚠️ **Chyba připojení:** {$err}";
+        }
 
         $json = json_decode($body, true) ?: [];
         if ($http !== 200) {
@@ -80,7 +88,7 @@ final class GeminiClient implements AiClientInterface
         $text = $json['candidates'][0]['content']['parts'][0]['text'] ?? '';
         return (is_string($text) && trim($text) !== '')
             ? $text
-            : "⚠️ **Chyba:** Neočekávaná odpověď z Gemini API.";
+            : '⚠️ **Chyba:** Neočekávaná odpověď z Gemini API.';
     }
 
     private function buildUrl(): string

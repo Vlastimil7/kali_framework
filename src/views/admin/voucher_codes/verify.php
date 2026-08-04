@@ -127,22 +127,22 @@
 
             <?php
             $code = (string)($result['code'] ?? '');
-            $codeStatus  = (string)($result['status'] ?? '');
-            $orderStatus = (string)($result['order_status'] ?? '');
+        $codeStatus  = (string)($result['status'] ?? '');
+        $orderStatus = (string)($result['order_status'] ?? '');
 
-            $isPaidOrder = ($orderStatus === 'paid');
+        $isPaidOrder = ($orderStatus === 'paid');
 
-            $isExpired = false;
-            if (!empty($result['valid_to'])) {
-                $isExpired = (strtotime($result['valid_to'] . ' 23:59:59') < time());
-            }
+        $isExpired = false;
+        if (!empty($result['valid_to'])) {
+            $isExpired = (strtotime($result['valid_to'] . ' 23:59:59') < time());
+        }
 
-            $canRedeem   = $isPaidOrder && ($codeStatus === 'active') && !$isExpired;
-            $canVoid     = $isPaidOrder && in_array($codeStatus, ['active', 'pending_payment', 'expired'], true);
-            $canExchange = $isPaidOrder && ($codeStatus === 'active') && !$isExpired;
+        $canRedeem   = $isPaidOrder && ($codeStatus === 'active') && !$isExpired;
+        $canVoid     = $isPaidOrder && in_array($codeStatus, ['active', 'pending_payment', 'expired'], true);
+        $canExchange = $isPaidOrder && ($codeStatus === 'active') && !$isExpired;
 
-            $disabledCls = 'opacity-50 cursor-not-allowed';
-            ?>
+        $disabledCls = 'opacity-50 cursor-not-allowed';
+        ?>
 
             <div class="pt-4 border-t border-gray-200 space-y-4">
 

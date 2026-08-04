@@ -2,8 +2,6 @@
 
 namespace Helpers;
 
-use Helpers\Logger;
-
 class ReCaptcha
 {
     private string $secretKey;
@@ -40,7 +38,7 @@ class ReCaptcha
             return [
                 'success' => false,
                 'error_type' => 'missing_token',
-                'message' => 'Token nebyl zadán'
+                'message' => 'Token nebyl zadán',
             ];
         }
 
@@ -49,7 +47,7 @@ class ReCaptcha
             return [
                 'success' => false,
                 'error_type' => 'configuration',
-                'message' => 'Secret key není nastaven'
+                'message' => 'Secret key není nastaven',
             ];
         }
 
@@ -78,13 +76,13 @@ class ReCaptcha
             if ($response === false) {
                 Logger::error('reCAPTCHA curl connection failed', $ctxBase + [
                     'curl_error' => $curlErr,
-                    'http_code'  => $httpCode ?? null,
+                    'http_code'  => $httpCode,
                 ]);
 
                 return [
                     'success' => false,
                     'error_type' => 'connection',
-                    'message' => 'Nepodařilo se připojit k reCAPTCHA API: ' . $curlErr
+                    'message' => 'Nepodařilo se připojit k reCAPTCHA API: ' . $curlErr,
                 ];
             }
         } else {
@@ -94,7 +92,7 @@ class ReCaptcha
                     'method'  => 'POST',
                     'content' => http_build_query($data),
                     'timeout' => 8,
-                ]
+                ],
             ];
 
             $context = stream_context_create($options);
@@ -105,7 +103,7 @@ class ReCaptcha
                 return [
                     'success' => false,
                     'error_type' => 'connection',
-                    'message' => 'Nepodařilo se připojit k reCAPTCHA API'
+                    'message' => 'Nepodařilo se připojit k reCAPTCHA API',
                 ];
             }
         }
@@ -121,7 +119,7 @@ class ReCaptcha
             return [
                 'success' => false,
                 'error_type' => 'invalid_response',
-                'message' => 'Neplatná odpověď z reCAPTCHA API'
+                'message' => 'Neplatná odpověď z reCAPTCHA API',
             ];
         }
 
@@ -138,7 +136,7 @@ class ReCaptcha
                 'success' => false,
                 'error_type' => 'verification_failed',
                 'message' => 'Ověření reCAPTCHA selhalo',
-                'error_codes' => $result['error-codes'] ?? []
+                'error_codes' => $result['error-codes'] ?? [],
             ];
         }
 
@@ -216,7 +214,7 @@ class ReCaptcha
 
         return [
             'success' => true,
-            'message' => 'OK'
+            'message' => 'OK',
         ];
     }
 }

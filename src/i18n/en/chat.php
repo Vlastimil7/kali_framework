@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'chat_clear_button' => 'Clear chat',
   'chat_disclaimer_contact_link' => 'contact',
   'chat_disclaimer_text_before' => 'AI responses are indicative and may contain inaccuracies. To confirm information, please use the',
@@ -19,5 +19,4 @@ return array (
   'chat_suggestion_projects' => 'What projects do you build?',
   'chat_suggestion_tech' => 'What technologies do you use?',
   'chat_typing_text' => 'Vlastimil is typing…',
-);
-
+];

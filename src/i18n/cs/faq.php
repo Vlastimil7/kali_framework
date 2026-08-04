@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'faq_q1_text' => 'Jednodušší web bývá hotový během několika týdnů, rozsáhlejší webová aplikace obvykle v horizontu 1–3 měsíců. Na začátku si potvrdíme rozsah a nastavíme realistický plán.',
   'faq_q1_title' => 'Jak dlouho trvá vývoj webu nebo webové aplikace?',
   'faq_q2_text' => 'Cena se odvíjí od rozsahu, funkcí a integrací. Po úvodní konzultaci připravím konkrétní nabídku a jasně popíšu, co je v ceně.',
@@ -15,5 +15,4 @@ return array (
   'faq_q6_title' => 'Jaké technologie používáte?',
   'faq_subtitle' => 'Krátké odpovědi na otázky kolem ceny, termínu a spolupráce.',
   'faq_title' => 'Často kladené otázky',
-);
-
+];

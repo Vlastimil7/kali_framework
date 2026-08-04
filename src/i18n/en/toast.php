@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'ai_mode_restriction_message' => 'You are in AI mode, so navigation to other parts of the website is temporarily restricted. If you want to continue browsing the site, disable AI mode.',
   'contact_toast_attachments_title' => 'Attachments',
   'contact_toast_attachments_upload_exception_msg' => 'An error occurred while uploading attachments. Please try again.',
@@ -15,5 +15,4 @@ return array (
   'contact_toast_success_msg' => 'Your request has been sent successfully. I will get back to you soon.',
   'contact_toast_success_title' => 'Done',
   'contact_toast_validation_title' => 'Form error',
-);
-
+];

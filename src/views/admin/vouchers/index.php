@@ -5,9 +5,13 @@
 <?php
 
 $money = function (?int $cents, string $cur = 'CZK'): string {
-    if ($cents === null) return '-';
+    if ($cents === null) {
+        return '-';
+    }
     $val = $cents / 100;
-    if ($cur === 'CZK') return number_format($val, 0, ',', ' ') . ' Kč';
+    if ($cur === 'CZK') {
+        return number_format($val, 0, ',', ' ') . ' Kč';
+    }
     return number_format($val, 2, ',', ' ') . ' ' . htmlspecialchars($cur);
 };
 

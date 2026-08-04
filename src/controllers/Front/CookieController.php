@@ -7,8 +7,6 @@ use Core\Request;
 
 class CookieController extends Controller
 {
-
-
     public function index()
     {
         $data = [
@@ -35,8 +33,8 @@ class CookieController extends Controller
                 'necessary' => true,
                 'analytics' => false,
                 'marketing' => false,
-                'preferences' => false
-            ]
+                'preferences' => false,
+            ],
         ];
 
         $this->view('cookie/settings', $data);
@@ -58,7 +56,7 @@ class CookieController extends Controller
             'analytics' => $analytics,
             'marketing' => $marketing,
             'preferences' => $preferences,
-            'timestamp' => time()
+            'timestamp' => time(),
         ];
 
         // Uložení do cookie na 1 rok
@@ -80,7 +78,7 @@ class CookieController extends Controller
             'analytics' => true,
             'marketing' => true,
             'preferences' => true,
-            'timestamp' => time()
+            'timestamp' => time(),
         ];
 
         // Uložení do cookie na 1 rok
@@ -102,7 +100,7 @@ class CookieController extends Controller
             'analytics' => false,
             'marketing' => false,
             'preferences' => false,
-            'timestamp' => time()
+            'timestamp' => time(),
         ];
 
         // Uložení do cookie na 1 rok
@@ -126,7 +124,7 @@ class CookieController extends Controller
             'domain' => '',
             'secure' => $secure,
             'httponly' => false,
-            'samesite' => 'Lax'
+            'samesite' => 'Lax',
         ]);
     }
 }

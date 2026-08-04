@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'contact_validation_budget_long' => 'Rozpočet je příliš dlouhý',
   'contact_validation_budget_required' => 'Prosím vyberte přibližný rozpočet',
   'contact_validation_email_invalid' => 'Prosím zadejte platnou emailovou adresu',
@@ -17,5 +17,4 @@ return array (
   'contact_validation_phone_long' => 'Telefon je příliš dlouhý',
   'contact_validation_topic_long' => 'Typ projektu je příliš dlouhý',
   'contact_validation_topic_required' => 'Prosím vyberte typ projektu',
-);
-
+];
