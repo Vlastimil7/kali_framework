@@ -4,12 +4,12 @@ namespace Controllers\Front;
 
 use Core\Controller;
 use Core\Request;
-use Models\User;
+use Helpers\Flash;
 use Helpers\RateLimiter;
 use Helpers\ReCaptcha;
-use Helpers\Flash;
 use Helpers\Toast;
 use Helpers\Validator;
+use Models\User;
 use Services\Mail\Mail;
 use Services\Mail\Mailables\PasswordResetEmail;
 
@@ -97,7 +97,7 @@ class UserController extends Controller
                 'password' => $request->string('password'),
                 'name' => $request->string('name'),
                 'surname' => $request->string('surname'),
-                'phone' => $request->string('phone')
+                'phone' => $request->string('phone'),
             ];
 
             $registrationValidationData = $userData;
@@ -171,7 +171,7 @@ class UserController extends Controller
             $userData = [
                 'name' => $request->string('name'),
                 'surname' => $request->string('surname'),
-                'phone' => $request->string('phone')
+                'phone' => $request->string('phone'),
             ];
 
             // Přidání hesla, pokud bylo vyplněno

@@ -20,5 +20,32 @@
     "comgate/sdk": "^1.7",
     "dompdf/dompdf": "^3.1",
     "google/apiclient": "^2.19"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    },
+    "platform": {
+      "php": "8.4.99"
+    }
+  },
+  "require-dev": {
+    "pestphp/pest": "5.*",
+    "phpstan/phpstan": "2.*",
+    "friendsofphp/php-cs-fixer": "3.*"
+  },
+  "scripts": {
+    "test": "pest",
+    "test:smoke": "pest tests/Feature/SmokeSuitesTest.php",
+    "lint": "@php tools/lint.php",
+    "lint:style": "php-cs-fixer check --diff",
+    "format": "php-cs-fixer fix",
+    "analyse": "phpstan analyse --memory-limit=512M",
+    "quality": [
+      "@lint",
+      "@lint:style",
+      "@analyse",
+      "@test"
+    ]
   }
 }

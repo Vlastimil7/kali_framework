@@ -5,39 +5,45 @@
 /** @var array $codes */
 
 $money = function (?int $cents, string $cur = 'CZK'): string {
-  if ($cents === null) return '-';
-  $val = $cents / 100;
-  if ($cur === 'CZK') return number_format($val, 0, ',', ' ') . ' Kč';
-  return number_format($val, 2, ',', ' ') . ' ' . htmlspecialchars($cur);
+    if ($cents === null) {
+        return '-';
+    }
+    $val = $cents / 100;
+    if ($cur === 'CZK') {
+        return number_format($val, 0, ',', ' ') . ' Kč';
+    }
+    return number_format($val, 2, ',', ' ') . ' ' . htmlspecialchars($cur);
 };
 
 $dt = function (?string $s): string {
-  if (!$s) return '-';
-  return htmlspecialchars(str_replace('T', ' ', $s));
+    if (!$s) {
+        return '-';
+    }
+    return htmlspecialchars(str_replace('T', ' ', $s));
 };
 
 $statusBadge = function (string $status): string {
-  $status = strtolower(trim($status));
+    $status = strtolower(trim($status));
 
-  $map = [
-    'paid'             => 'bg-green-50 text-green-800 border-2 border-green-200',
-    'pending'          => 'bg-yellow-50 text-yellow-800 border-2 border-yellow-200',
-    'awaiting_payment' => 'bg-yellow-50 text-yellow-800 border-2 border-yellow-200',
-    'canceled'         => 'bg-red-50 text-red-800 border-2 border-red-200',
-    'refunded'         => 'bg-purple-50 text-purple-800 border-2 border-purple-200',
-    'expired'          => 'bg-gray-50 text-gray-800 border-2 border-gray-200',
-  ];
+    $map = [
+      'paid'             => 'bg-green-50 text-green-800 border-2 border-green-200',
+      'pending'          => 'bg-yellow-50 text-yellow-800 border-2 border-yellow-200',
+      'awaiting_payment' => 'bg-yellow-50 text-yellow-800 border-2 border-yellow-200',
+      'canceled'         => 'bg-red-50 text-red-800 border-2 border-red-200',
+      'refunded'         => 'bg-purple-50 text-purple-800 border-2 border-purple-200',
+      'expired'          => 'bg-gray-50 text-gray-800 border-2 border-gray-200',
+    ];
 
-  $cls = $map[$status] ?? 'bg-gray-50 text-gray-800 border-2 border-gray-200';
+    $cls = $map[$status] ?? 'bg-gray-50 text-gray-800 border-2 border-gray-200';
 
-  return '<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold ' . $cls . '">'
-    . htmlspecialchars($status ?: '-') . '</span>';
+    return '<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold ' . $cls . '">'
+      . htmlspecialchars($status ?: '-') . '</span>';
 };
 
 $canMarkPaid = function (string $status): bool {
-  $status = strtolower(trim($status));
-  // smysl dává jen u pending/awaiting_payment
-  return in_array($status, ['pending', 'awaiting_payment'], true);
+    $status = strtolower(trim($status));
+    // smysl dává jen u pending/awaiting_payment
+    return in_array($status, ['pending', 'awaiting_payment'], true);
 };
 
 $orderNo = $order['order_number'] ?? ('#' . ($order['id'] ?? ''));

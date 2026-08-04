@@ -25,7 +25,9 @@ class VoucherPdfService
     {
         $orderNo = (string)($order['order_number'] ?? ('order-' . ($order['id'] ?? '0')));
         $outDir = $this->storageDir . DIRECTORY_SEPARATOR . 'pdf' . DIRECTORY_SEPARATOR . 'orders';
-        if (!is_dir($outDir)) mkdir($outDir, 0775, true);
+        if (!is_dir($outDir)) {
+            mkdir($outDir, 0775, true);
+        }
 
         $pdfPath = $outDir . DIRECTORY_SEPARATOR . $orderNo . '-vouchers.pdf';
 
@@ -50,7 +52,9 @@ class VoucherPdfService
         $orderNo = (string)($order['order_number'] ?? ('order-' . ($order['id'] ?? '0')));
 
         $outDir = $this->storageDir . DIRECTORY_SEPARATOR . 'pdf' . DIRECTORY_SEPARATOR . 'vouchers';
-        if (!is_dir($outDir)) mkdir($outDir, 0775, true);
+        if (!is_dir($outDir)) {
+            mkdir($outDir, 0775, true);
+        }
 
         $code = (string)($codeRow['code'] ?? 'voucher');
         $safeCode = preg_replace('~[^A-Z0-9\-]~i', '_', $code);
@@ -90,7 +94,7 @@ class VoucherPdfService
         $date = date('d.m.Y');
 
         ob_start();
-?>
+        ?>
         <!doctype html>
         <html lang="cs">
 
@@ -245,7 +249,7 @@ class VoucherPdfService
         <body>
             <?php foreach ($codes as $idx => $c): ?>
                 <?php
-                $voucherId = (int)($c['voucher_id'] ?? 0);
+                        $voucherId = (int)($c['voucher_id'] ?? 0);
                 $voucherName = (string)($c['voucher_name'] ?? ($voucherNames[$voucherId] ?? 'Voucher'));
                 $code = (string)($c['code'] ?? '');
                 $validFrom = (string)($c['valid_from'] ?? '-');
@@ -355,7 +359,9 @@ class VoucherPdfService
 
     private function fileToDataUri(string $path): ?string
     {
-        if (!$path || !is_file($path)) return null;
+        if (!$path || !is_file($path)) {
+            return null;
+        }
         $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         $mime = match ($ext) {
             'png' => 'image/png',
@@ -363,7 +369,9 @@ class VoucherPdfService
             'svg' => 'image/svg+xml',
             default => null
         };
-        if (!$mime) return null;
+        if (!$mime) {
+            return null;
+        }
         $data = base64_encode((string)file_get_contents($path));
         return "data:$mime;base64,$data";
     }

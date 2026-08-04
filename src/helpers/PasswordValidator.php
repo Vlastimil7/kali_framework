@@ -15,7 +15,7 @@ class PasswordValidator
         bool $requireLowercaseLetter = true,
         bool $requireUppercaseLetter = true,
         bool $requireNumber = true,
-        bool $requireSpecialCharacter = true
+        bool $requireSpecialCharacter = true,
     ) {
         $this->minimumLength = $minimumLength;
         $this->requireLowercaseLetter = $requireLowercaseLetter;

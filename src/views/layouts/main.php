@@ -7,36 +7,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="<?= config('app.base_url', '') ?>/assets/images/logo/fav/vk-dev.ico">
     <?php
-    header("Cache-Control: no-cache, no-store, must-revalidate");
-    header("Pragma: no-cache");
-    header("Expires: 0");
+    header('Cache-Control: no-cache, no-store, must-revalidate');
+header('Pragma: no-cache');
+header('Expires: 0');
 
-    $stylePath = ROOT_PATH . '/public/assets/css/style.css';
-    $ownStylePath = ROOT_PATH . '/public/assets/css/ownStyles.css';
-    $styleVersion    = file_exists($stylePath) ? filemtime($stylePath) : time();
-    $ownStyleVersion = file_exists($ownStylePath) ? filemtime($ownStylePath) : time();
-    $localizedPaths = isset($data['localizedPaths']) && is_array($data['localizedPaths'])
-        ? $data['localizedPaths']
-        : null;
-    $currentPath = $localizedPaths[lang()->getCurrentLanguage()] ?? current_route_path();
-    $pageQuery = request_query_parameters();
-    $currentUrl = locale_site_url($currentPath, lang()->getCurrentLanguage(), $pageQuery);
-    $ogLocales = ['en' => 'en_US', 'cs' => 'cs_CZ', 'de' => 'de_DE'];
+$stylePath = ROOT_PATH . '/public/assets/css/style.css';
+$ownStylePath = ROOT_PATH . '/public/assets/css/ownStyles.css';
+$styleVersion    = file_exists($stylePath) ? filemtime($stylePath) : time();
+$ownStyleVersion = file_exists($ownStylePath) ? filemtime($ownStylePath) : time();
+$localizedPaths = isset($data['localizedPaths']) && is_array($data['localizedPaths'])
+    ? $data['localizedPaths']
+    : null;
+$currentPath = $localizedPaths[lang()->getCurrentLanguage()] ?? current_route_path();
+$pageQuery = request_query_parameters();
+$currentUrl = locale_site_url($currentPath, lang()->getCurrentLanguage(), $pageQuery);
+$ogLocales = ['en' => 'en_US', 'cs' => 'cs_CZ', 'de' => 'de_DE'];
 
-    // SEO defaulty
-    $seoTitle = $data['title'] ?? '';
-    $seoDesc  = $data['description'] ?? '';
-    $seoKw    = $data['keywords'] ?? 'vývoj webových aplikací, tvorba webových stránek, web na míru, firemní weby, vývoj informačních systémů, PHP vývojář, fullstack developer, REST API vývoj, systémové integrace, digitální řešení pro firmy, web developer Hradec Králové, programátor na míru, zakázkový software, vývoj e-commerce, webové portály, agilní vývoj, moderní webové technologie, optimalizace výkonu, bezpečnost webu, UX/UI design, správa a údržba webů';
-    $ogImage  = $data['og_image'] ?? (rtrim(config('app.site_url', ''), '/') . '/assets/images/logo/vk-dev.png');
-    ?>
+// SEO defaulty
+$seoTitle = $data['title'] ?? '';
+$seoDesc  = $data['description'] ?? '';
+$seoKw    = $data['keywords'] ?? 'vývoj webových aplikací, tvorba webových stránek, web na míru, firemní weby, vývoj informačních systémů, PHP vývojář, fullstack developer, REST API vývoj, systémové integrace, digitální řešení pro firmy, web developer Hradec Králové, programátor na míru, zakázkový software, vývoj e-commerce, webové portály, agilní vývoj, moderní webové technologie, optimalizace výkonu, bezpečnost webu, UX/UI design, správa a údržba webů';
+$ogImage  = $data['og_image'] ?? (rtrim(config('app.site_url', ''), '/') . '/assets/images/logo/vk-dev.png');
+?>
     <title><?= htmlspecialchars($seoTitle, ENT_QUOTES) ?></title>
     <meta name="description" content="<?= htmlspecialchars($seoDesc, ENT_QUOTES) ?>">
     <link rel="canonical" href="<?= htmlspecialchars($currentUrl, ENT_QUOTES) ?>">
     <?php foreach (lang()->getSupportedLanguages() as $languageCode): ?>
         <?php
-        if ($localizedPaths !== null && !isset($localizedPaths[$languageCode])) {
-            continue;
-        }
+    if ($localizedPaths !== null && !isset($localizedPaths[$languageCode])) {
+        continue;
+    }
         $alternatePath = $localizedPaths[$languageCode] ?? current_route_path();
         ?>
         <link rel="alternate" hreflang="<?= htmlspecialchars($languageCode, ENT_QUOTES) ?>" href="<?= htmlspecialchars(locale_site_url($alternatePath, $languageCode, $pageQuery), ENT_QUOTES) ?>">
@@ -151,7 +151,7 @@
 </head>
 
 <body class="bg-black min-h-screen flex flex-col">
-    <?php include ROOT_PATH . "/src/views/partials/header.php"; ?>
+    <?php include ROOT_PATH . '/src/views/partials/header.php'; ?>
 
     <!-- Main content -->
     <div class="relative flex-grow flex justify-center gap-8">
@@ -165,8 +165,8 @@
     </div>
     <!-- Footer -->
 
-    <?php include ROOT_PATH . "/src/views/partials/footer.php"; ?>
-    <?php include ROOT_PATH . "/src/views/cookie/banner.php"; ?>
+    <?php include ROOT_PATH . '/src/views/partials/footer.php'; ?>
+    <?php include ROOT_PATH . '/src/views/cookie/banner.php'; ?>
 
     <!-- Tvůj JS -->
     <script src="<?= config('app.base_url', '') ?>/assets/js/cookies.js" defer></script>
@@ -180,14 +180,14 @@
 
     use Helpers\Toast;
 
-    $toasts = Toast::all();
-    ?>
+$toasts = Toast::all();
+?>
     <?php if ($toasts): ?>
         <script>
             window.__toastQueue = window.__toastQueue || [];
             window.__toastQueue.push(...<?= json_encode(
                 $toasts,
-                JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+                JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT,
             ) ?>);
         </script>
     <?php endif; ?>

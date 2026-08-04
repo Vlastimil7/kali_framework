@@ -1,4 +1,5 @@
 <?php
+
 namespace Helpers;
 
 class Flash
@@ -71,7 +72,7 @@ class Flash
     {
         $excluded = array_map(
             static fn ($key): string => strtolower((string)$key),
-            array_merge(self::SENSITIVE_INPUTS, $except)
+            array_merge(self::SENSITIVE_INPUTS, $except),
         );
 
         self::set(self::oldKey($form), self::sanitizeInput($input, $excluded));

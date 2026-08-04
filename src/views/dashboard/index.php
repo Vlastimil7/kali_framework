@@ -93,13 +93,17 @@
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     <?php
                                     $itemCounter = 0;
-                                    foreach ($categories as $category):
-                                        if (!isset($menuItems[$category['id']]) || empty($menuItems[$category['id']])) continue;
+                    foreach ($categories as $category):
+                        if (!isset($menuItems[$category['id']]) || empty($menuItems[$category['id']])) {
+                            continue;
+                        }
 
-                                        foreach ($menuItems[$category['id']] as $item):
-                                            $itemCounter++;
-                                            if ($itemCounter > 10) break 2; // Zobrazit max 10 položek
-                                    ?>
+                        foreach ($menuItems[$category['id']] as $item):
+                            $itemCounter++;
+                            if ($itemCounter > 10) {
+                                break 2;
+                            } // Zobrazit max 10 položek
+                            ?>
                                             <tr class="hover:bg-gray-50">
                                                 <td class="px-6 py-4 whitespace-nowrap">
                                                     <div class="flex items-center">
@@ -151,10 +155,12 @@
                                                 </td>
                                             </tr>
                                     <?php
-                                        endforeach;
-                                        if ($itemCounter > 10) break;
-                                    endforeach;
-                                    ?>
+                        endforeach;
+                        if ($itemCounter > 10) {
+                            break;
+                        }
+                    endforeach;
+?>
                                 </tbody>
                             </table>
                         </div>

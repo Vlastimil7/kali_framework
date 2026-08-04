@@ -211,7 +211,7 @@ final class ChatService
             'development',
             'redesign',
             'create',
-            'build'
+            'build',
 
         ];
 
@@ -251,21 +251,27 @@ final class ChatService
             'personal life',
             'wife',
             'kids',
-            'children'
+            'children',
         ];
 
         $allow = array_values(array_unique($allow));
         $deny  = array_values(array_unique($deny));
 
         foreach ($deny as $w) {
-            if (mb_strpos($q, $w) !== false) return false;
+            if (mb_strpos($q, $w) !== false) {
+                return false;
+            }
         }
 
         foreach ($allow as $w) {
-            if (mb_strpos($q, $w) !== false) return true;
+            if (mb_strpos($q, $w) !== false) {
+                return true;
+            }
         }
 
-        if (count(preg_split('/\s+/u', trim($q))) > 4) return true;
+        if (count(preg_split('/\s+/u', trim($q))) > 4) {
+            return true;
+        }
 
         return false;
     }
@@ -297,7 +303,7 @@ final class ChatService
             if (!$founded) {
                 return $lang === 'en'
                     ? "I don't have that information available. Please use the contact form and I’ll confirm it for you."
-                    : "Tuhle informaci nemám v podkladech. Napište prosím přes kontaktní formulář a ověřím to.";
+                    : 'Tuhle informaci nemám v podkladech. Napište prosím přes kontaktní formulář a ověřím to.';
             }
 
             // spočítej roky (přesněji klidně i měsíce)
@@ -400,7 +406,7 @@ final class ChatService
             usleep(($delay + $jitter) * 1000);
         }
 
-        return "⚠️ **Chyba:** Retry mechanism failed unexpectedly.";
+        return '⚠️ **Chyba:** Retry mechanism failed unexpectedly.';
     }
 
 
@@ -433,7 +439,7 @@ final class ChatService
             $system .= "- Use only the provided data as your source of truth.\n\n";
             $system .= "- If the user asks how to contact you / request a quote, ALWAYS provide the contact options from the provided data (email/phone/contact form link) and propose the next step.\n";
             $system .= "- Never claim we provide a technology unless it is explicitly listed in the provided data.\n";
-            $system .= "- Never guess.";
+            $system .= '- Never guess.';
             $system .= "- If the user asks for a technology or service that is NOT listed in the provided data, treat it as NOT OFFERED and say it clearly (e.g., \"We do not offer .NET development at the moment\").\n";
             $system .= "- Never say \"I don't have that information\" for technologies. Instead, state that it is not offered.\n";
             $system .= "- If the request is outside our stack, propose an alternative within our stack (e.g., web app with PHP/React + REST API).\n";
@@ -471,7 +477,7 @@ final class ChatService
             $system .= "- Používej pouze poskytnutá data jako svůj jediný zdroj pravdy.\n\n";
             $system .= "- Pokud se uživatel ptá jak vás kontaktovat / získat nabídku, VŽDY uveď kontaktní možnosti z podkladů (email/telefon/odkaz na kontaktní formulář) a navrhni další krok.\n";
             $system .= "- Nikdy netvrď, že poskytujeme technologii, která není explicitně uvedena v podkladech.\n";
-            $system .= "- Nikdy nehadej.";
+            $system .= '- Nikdy nehadej.';
             $system .= "- Pokud se uživatel ptá na technologii nebo službu, která NENÍ uvedena v podkladech, ber ji jako NEPOSKYTUJEME a řekni to jasně (např. \"Tuto technologii momentálně nenabízíme\").\n";
             $system .= "- Nikdy neříkej \"nemám v podkladech\" u technologií. Místo toho řekni přímo, že to nenabízíme.\n";
             $system .= "- Pokud je dotaz na technologii mimo náš stack, nabídni alternativu v našem stacku (např. webová aplikace v PHP/React + REST API).\n";
@@ -556,17 +562,23 @@ final class ChatService
             'okay',
             'sure',
             'go ahead',
-            'continue'
+            'continue',
         ];
 
         // buď přesná shoda, nebo velmi krátká věta typu "ano zeptej"
-        if (in_array($q, $continuations, true)) return true;
+        if (in_array($q, $continuations, true)) {
+            return true;
+        }
         $words = preg_split('/\s+/u', $q, -1, PREG_SPLIT_NO_EMPTY);
 
         if (count($words) <= 3) {
             foreach ($continuations as $w) {
-                if ($q === $w) return true;
-                if (str_starts_with($q, $w . ' ')) return true;
+                if ($q === $w) {
+                    return true;
+                }
+                if (str_starts_with($q, $w . ' ')) {
+                    return true;
+                }
             }
         }
         return false;
@@ -585,8 +597,12 @@ final class ChatService
                     return $this->localizeData($data[$lang], $lang);
                 }
                 // fallback když chybí požadovaný jazyk
-                if (array_key_exists('cs', $data)) return $this->localizeData($data['cs'], $lang);
-                if (array_key_exists('en', $data)) return $this->localizeData($data['en'], $lang);
+                if (array_key_exists('cs', $data)) {
+                    return $this->localizeData($data['cs'], $lang);
+                }
+                if (array_key_exists('en', $data)) {
+                    return $this->localizeData($data['en'], $lang);
+                }
             }
 
             $out = [];
@@ -612,10 +628,12 @@ final class ChatService
             'years',
             'since when',
             'when was',
-            'founded'
+            'founded',
         ];
         foreach ($needles as $n) {
-            if (mb_strpos($q, $n) !== false) return true;
+            if (mb_strpos($q, $n) !== false) {
+                return true;
+            }
         }
         return false;
     }
@@ -625,8 +643,8 @@ final class ChatService
     private function greetingText(string $lang): string
     {
         return $lang === 'en'
-            ? "Hi! 👋 How can I help you with a website, e-shop, or web application? Please briefly describe what you need, your timeline, and ideally your budget."
-            : "Ahoj! 👋 S čím ti můžu pomoct ohledně webu, e-shopu nebo webové aplikace? Napiš prosím stručně co potřebuješ, termín a ideálně rozpočet.";
+            ? 'Hi! 👋 How can I help you with a website, e-shop, or web application? Please briefly describe what you need, your timeline, and ideally your budget.'
+            : 'Ahoj! 👋 S čím ti můžu pomoct ohledně webu, e-shopu nebo webové aplikace? Napiš prosím stručně co potřebuješ, termín a ideálně rozpočet.';
     }
 
 
@@ -656,7 +674,7 @@ final class ChatService
             'hi',
             'hey',
             'good morning',
-            'good afternoon'
+            'good afternoon',
         ], true);
     }
 
@@ -703,7 +721,7 @@ final class ChatService
                 'database',
                 'security',
                 'maintenance',
-                'support'
+                'support',
             ],
 
             'pricing' => [
@@ -727,7 +745,7 @@ final class ChatService
                 'pricing',
                 'how much',
                 'quote',
-                'estimate'
+                'estimate',
             ],
 
             'process' => [
@@ -749,7 +767,7 @@ final class ChatService
                 'delivery time',
                 'how long',
                 'cooperation',
-                'project flow'
+                'project flow',
             ],
 
             'contact' => [
@@ -772,8 +790,8 @@ final class ChatService
                 'meeting',
                 'inquiry',
                 'enquiry',
-                'request'
-            ]
+                'request',
+            ],
         ];
 
 
@@ -800,14 +818,14 @@ final class ChatService
     private function outOfScopeText(string $lang): string
     {
         return $lang === 'en'
-            ? "I can only assist with VK-DEV services such as websites, e-shops, web applications, APIs, integrations, maintenance, and security. Please describe your project and I will propose a suitable solution."
-            : "Pomáhám pouze se službami VK-DEV jako jsou weby, e-shopy, webové aplikace, API, integrace, údržba a bezpečnost. Popište prosím svůj projekt a navrhnu vám vhodné řešení.";
+            ? 'I can only assist with VK-DEV services such as websites, e-shops, web applications, APIs, integrations, maintenance, and security. Please describe your project and I will propose a suitable solution.'
+            : 'Pomáhám pouze se službami VK-DEV jako jsou weby, e-shopy, webové aplikace, API, integrace, údržba a bezpečnost. Popište prosím svůj projekt a navrhnu vám vhodné řešení.';
     }
 
     private function noDataText(string $lang): string
     {
         return $lang === 'en'
-            ? "Service data is currently unavailable. Please try again later or contact me through the contact form on www.vk-dev.cz/contact."
-            : "Momentálně nemám načtené podklady o službách. Zkuste to prosím později nebo mě kontaktujte přes formulář webový formulář na adrese www.vk-dev.cz/contact.";
+            ? 'Service data is currently unavailable. Please try again later or contact me through the contact form on www.vk-dev.cz/contact.'
+            : 'Momentálně nemám načtené podklady o službách. Zkuste to prosím později nebo mě kontaktujte přes formulář webový formulář na adrese www.vk-dev.cz/contact.';
     }
 }

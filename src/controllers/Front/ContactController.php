@@ -4,11 +4,11 @@ namespace Controllers\Front;
 
 use Core\Controller;
 use Core\Request;
-use Helpers\RateLimiter;
-use Helpers\ReCaptcha;
-use Helpers\Logger;
 use Helpers\ContactAttachmentUpload;
 use Helpers\Flash;
+use Helpers\Logger;
+use Helpers\RateLimiter;
+use Helpers\ReCaptcha;
 use Helpers\Toast;
 use Helpers\Validator;
 use Services\Mail\Mail;
@@ -31,7 +31,9 @@ class ContactController extends Controller
     private function splitName(string $fullName): array
     {
         $fullName = preg_replace('/\s+/', ' ', trim($fullName));
-        if ($fullName === '') return ['', ''];
+        if ($fullName === '') {
+            return ['', ''];
+        }
 
         $parts = explode(' ', $fullName);
         $first = array_shift($parts);
@@ -166,7 +168,7 @@ class ContactController extends Controller
 
         $result = Mail::to(
             (string)config('mail.to.address', ''),
-            (string)config('mail.to.name', '')
+            (string)config('mail.to.name', ''),
         )
             ->send(new ContactEmail($formData, $upload['files']));
         $attachmentUpload->cleanup($upload['files']);

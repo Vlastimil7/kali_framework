@@ -40,7 +40,7 @@
                 $btnClass = 'w-10 h-10 rounded-full bg-gradient-main flex items-center justify-center hover-glow';
                 $iconClass = 'w-4 h-4 text-white';
 
-            ?>
+                ?>
                 <div class="<?= $wrapClass ?>">
                     <a href="https://www.facebook.com/profile.php?id=61586776062120" target="_blank" rel="noopener noreferrer"
                         class="<?= $btnClass ?>" title="Facebook" data-track="callToActionClick" data-track-meta='{"location":"header","label":"facebook-link"}'>
@@ -74,16 +74,16 @@
             <?php
             }
 
-            /**
-             * Jedna funkcionalita pro generování menu – variant 'desktop' / 'mobile'
-             */
-            function renderMainNav(string $variant = 'desktop'): void
-            {
-                $isMobile = $variant === 'mobile';
+                /**
+                 * Jedna funkcionalita pro generování menu – variant 'desktop' / 'mobile'
+                 */
+                function renderMainNav(string $variant = 'desktop'): void
+                {
+                    $isMobile = $variant === 'mobile';
 
-                $linkBaseClasses = 'nav-item text-gray-700 hover:text-white font-medium cursor-pointer';
-                $linkClasses = $isMobile ? $linkBaseClasses . ' block' : $linkBaseClasses;
-            ?>
+                    $linkBaseClasses = 'nav-item text-gray-700 hover:text-white font-medium cursor-pointer';
+                    $linkClasses = $isMobile ? $linkBaseClasses . ' block' : $linkBaseClasses;
+                    ?>
 
                 <a href="<?= locale_url() ?>" class="<?= $linkClasses ?>" data-track="callToActionClick" data-track-meta='{"location":"header","label":"home-link"}'>
                     <?= __('header_nav_home', [], 'header') ?>
@@ -150,7 +150,9 @@
                 <div class="language-switcher flex space-x-2">
                     <?php $switchPaths = isset($localizedPaths) && is_array($localizedPaths) ? $localizedPaths : null; ?>
                     <?php foreach (lang()->getSupportedLanguages() as $languageCode): ?>
-                        <?php if ($switchPaths !== null && !isset($switchPaths[$languageCode])) continue; ?>
+                        <?php if ($switchPaths !== null && !isset($switchPaths[$languageCode])) {
+                            continue;
+                        } ?>
                         <a href="<?= htmlspecialchars(locale_switch_url($languageCode, $switchPaths), ENT_QUOTES) ?>"
                             hreflang="<?= htmlspecialchars($languageCode, ENT_QUOTES) ?>"
                             class="<?= lang()->getCurrentLanguage() === $languageCode ? 'font-bold text-pink-500' : 'text-gray-600' ?>"
@@ -161,9 +163,9 @@
                 </div>
 
             <?php
-            }
+                }
 
-            ?>
+                ?>
 
             <!-- Desktop menu – zobrazí se až od xl -->
             <div class="hidden xl:flex items-center space-x-6">

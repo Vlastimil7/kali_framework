@@ -1,4 +1,5 @@
 <?php
+
 // src/Models/Transaction.php
 
 namespace Models;
@@ -19,7 +20,7 @@ class Transaction
     public function create(array $data): array
     {
         try {
-            $sql = "INSERT INTO transactions (
+            $sql = 'INSERT INTO transactions (
                         order_id,
                         gateway,
                         gateway_payment_id,
@@ -39,13 +40,13 @@ class Transaction
                         :result_code,
                         :result_message,
                         :raw_payload
-                    )";
+                    )';
 
             $stmt = $this->db->prepare($sql);
             $stmt->execute([
                 ':order_id'          => $data['order_id'],
                 ':gateway'           => $data['gateway'] ?? 'comgate',
-                ':gateway_payment_id'=> $data['gateway_payment_id'] ?? null,
+                ':gateway_payment_id' => $data['gateway_payment_id'] ?? null,
                 ':amount_cents'      => (int)$data['amount_cents'],
                 ':currency'          => $data['currency'] ?? 'CZK',
                 ':status'            => $data['status'] ?? 'pending',
@@ -74,10 +75,10 @@ class Transaction
 
     public function getByOrderId(int $orderId): array
     {
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM transactions
                 WHERE order_id = :order_id
-                ORDER BY created_at DESC, id DESC";
+                ORDER BY created_at DESC, id DESC';
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':order_id' => $orderId]);

@@ -16,14 +16,14 @@ class OrderItem
 
     public function getByOrderId(int $orderId): array
     {
-        $sql = "SELECT 
+        $sql = 'SELECT
                 oi.*,
                 v.name AS voucher_name,
                 v.slug AS voucher_slug
             FROM order_items oi
             LEFT JOIN vouchers v ON v.id = oi.voucher_id
             WHERE oi.order_id = :order_id
-            ORDER BY oi.id ASC";
+            ORDER BY oi.id ASC';
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':order_id' => $orderId]);
@@ -38,7 +38,7 @@ class OrderItem
      */
     public function create(array $data): int
     {
-            $sql = "INSERT INTO order_items (
+        $sql = 'INSERT INTO order_items (
                 order_id,
                 voucher_id,
                 quantity,
@@ -56,7 +56,7 @@ class OrderItem
                 :recipient_name,
                 :note,
                 :voucher_name_snapshot
-            )";
+            )';
 
 
         $stmt = $this->db->prepare($sql);

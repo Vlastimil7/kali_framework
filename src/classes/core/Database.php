@@ -4,7 +4,6 @@ namespace Core;
 
 use Helpers\Logger;
 
-
 class Database
 {
     // Statická proměnná pro singleton instanci
@@ -24,8 +23,8 @@ class Database
         // Accept both the new direct database section and the old ['db' => ...] shape.
         $database = isset($config['db']) && is_array($config['db']) ? $config['db'] : $config;
         if (!isset($database['host'], $database['dbname'], $database['username'], $database['password'])) {
-            Logger::error("Invalid database configuration format");
-            throw new \Exception("Invalid database configuration format");
+            Logger::error('Invalid database configuration format');
+            throw new \Exception('Invalid database configuration format');
         }
         self::$config = $database;
     }
@@ -35,10 +34,10 @@ class Database
     private function __construct()
     {
 
-        
+
         if (self::$config === null) {
-            Logger::error("Database configuration not set. Call Database::setConfig() first.");
-            throw new \Exception("Database configuration not set. Call Database::setConfig() first.");
+            Logger::error('Database configuration not set. Call Database::setConfig() first.');
+            throw new \Exception('Database configuration not set. Call Database::setConfig() first.');
         }
 
         $this->host = self::$config['host'];
@@ -77,7 +76,7 @@ class Database
             $options = [
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-                \PDO::ATTR_EMULATE_PREPARES => false
+                \PDO::ATTR_EMULATE_PREPARES => false,
             ];
 
             $this->pdo = new \PDO($dsn, $this->username, $this->password, $options);
@@ -85,10 +84,10 @@ class Database
 
         } catch (\PDOException $e) {
             // Log chyby do souboru s časovým razítkem
-            Logger::error("Database connection error: " . $e->getMessage());
+            Logger::error('Database connection error: ' . $e->getMessage());
 
 
-            die("Database connection error: " . $e->getMessage());
+            die('Database connection error: ' . $e->getMessage());
         }
     }
 
@@ -96,7 +95,7 @@ class Database
     public function closeConnection()
     {
         if ($this->pdo !== null) {
-            
+
 
             $this->pdo = null;
         }

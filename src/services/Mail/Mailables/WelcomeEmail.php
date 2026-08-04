@@ -23,7 +23,7 @@ final class WelcomeEmail extends Mailable
             ])
             ->text(
                 "Dobrý den {$this->name},\n\n"
-                . "váš účet je připraven. Přihlášení: {$this->loginUrl}\n"
+                . "váš účet je připraven. Přihlášení: {$this->loginUrl}\n",
             );
     }
 }

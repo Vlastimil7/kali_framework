@@ -27,7 +27,7 @@ final class PasswordResetEmail extends Mailable
                 "Dobrý den, {$displayName},\n\n"
                 . "obdrželi jsme žádost o reset hesla. Odkaz je platný jednu hodinu:\n"
                 . $this->resetUrl . "\n\n"
-                . "Pokud jste o reset hesla nežádali, tento email ignorujte.\n"
+                . "Pokud jste o reset hesla nežádali, tento email ignorujte.\n",
             );
     }
 }

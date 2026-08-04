@@ -34,7 +34,7 @@ class CsrfMiddleware implements MiddlewareInterface
         $refererHost = strtolower((string)parse_url($referer, PHP_URL_HOST));
         $siteHost = strtolower((string)parse_url(
             (string)config('app.site_url', ''),
-            PHP_URL_HOST
+            PHP_URL_HOST,
         ));
 
         if ($referer !== '' && $siteHost !== '' && $refererHost === $siteHost) {

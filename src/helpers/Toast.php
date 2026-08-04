@@ -10,7 +10,7 @@ class Toast
         string $type,
         string $message,
         string $title = '',
-        string $position = 'top-right'
+        string $position = 'top-right',
     ): void {
         $toasts = Flash::peek(self::FLASH_KEY, []);
         if (!is_array($toasts)) {

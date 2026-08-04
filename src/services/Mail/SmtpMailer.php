@@ -96,7 +96,7 @@ final class SmtpMailer
         $mailer->Encoding = 'base64';
         $mailer->setFrom(
             (string)config('mail.from.address', ''),
-            (string)config('mail.from.name', '')
+            (string)config('mail.from.name', ''),
         );
         return $mailer;
     }

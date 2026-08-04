@@ -12,7 +12,7 @@ $navMain = [
     ['url' => '/ambulance',          'icon' => '🏥', 'label' => 'Kontakty na odborné ambulance'],
     ['url' => '/about',              'icon' => '👨‍⚕️', 'label' => 'O mně'],
     ['url' => '/tips',               'icon' => '💡', 'label' => 'Praktické rady'],
-    ['url' => '/videa',              'icon' => '📹', 'label' => 'Videa']
+    ['url' => '/videa',              'icon' => '📹', 'label' => 'Videa'],
 
 ];
 

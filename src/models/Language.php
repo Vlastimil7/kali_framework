@@ -22,8 +22,10 @@ final class Language
 
         $default = is_array($config) ? ($config['default'] ?? 'en') : 'en';
         $supported = is_array($config) ? ($config['supported'] ?? ['en']) : ['en'];
-        $supported = array_values(array_filter($supported, fn ($language) =>
-            is_string($language) && preg_match('/^[a-z]{2}(?:-[A-Z]{2})?$/', $language)
+        $supported = array_values(array_filter(
+            $supported,
+            fn ($language) =>
+            is_string($language) && preg_match('/^[a-z]{2}(?:-[A-Z]{2})?$/', $language),
         ));
 
         if (!is_string($default) || !in_array($default, $supported, true)) {

@@ -19,7 +19,7 @@ class AbuseLimiter
 
     private function ensureTableExists(): void
     {
-        $sql = "
+        $sql = '
             CREATE TABLE IF NOT EXISTS abuse_limits (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 ip_address VARCHAR(45) NOT NULL,
@@ -32,14 +32,14 @@ class AbuseLimiter
                 UNIQUE KEY abuse_limits_ip_reason (ip_address, reason),
                 INDEX abuse_limits_blocked_until (blocked_until)
             )
-        ";
+        ';
 
         $this->database->execute($sql);
     }
 
     public function isBlocked(string $reason): bool
     {
-        $sql = "
+        $sql = '
             SELECT blocked_until
             FROM abuse_limits
             WHERE ip_address = :ip_address
@@ -47,7 +47,7 @@ class AbuseLimiter
               AND blocked_until IS NOT NULL
               AND blocked_until > NOW()
             LIMIT 1
-        ";
+        ';
 
         $statement = $this->database->prepare($sql);
         $statement->execute([
@@ -61,9 +61,9 @@ class AbuseLimiter
     public function registerAttempt(
         string $reason,
         int $maxAttempts = 5,
-        int $blockSeconds = 3600
+        int $blockSeconds = 3600,
     ): void {
-        $sql = "
+        $sql = '
             INSERT INTO abuse_limits (
                 ip_address,
                 reason,
@@ -88,7 +88,7 @@ class AbuseLimiter
                     THEN DATE_ADD(NOW(), INTERVAL :block_seconds SECOND)
                     ELSE blocked_until
                 END
-        ";
+        ';
 
         $statement = $this->database->prepare($sql);
         $statement->execute([
@@ -101,7 +101,7 @@ class AbuseLimiter
 
     public function getRemainingBlockSeconds(string $reason): int
     {
-        $sql = "
+        $sql = '
             SELECT TIMESTAMPDIFF(SECOND, NOW(), blocked_until) AS remaining_seconds
             FROM abuse_limits
             WHERE ip_address = :ip_address
@@ -109,7 +109,7 @@ class AbuseLimiter
               AND blocked_until IS NOT NULL
               AND blocked_until > NOW()
             LIMIT 1
-        ";
+        ';
 
         $statement = $this->database->prepare($sql);
         $statement->execute([

@@ -1,0 +1,17 @@
+parameters:
+    level: 1
+    bootstrapFiles:
+        - tools/phpstan-bootstrap.php
+    paths:
+        - src/Api
+        - src/classes
+        - src/controllers
+        - src/helpers
+        - src/middleware
+        - src/models
+        - src/services
+    excludePaths:
+        analyse:
+            - src/views
+    tmpDir: storage/cache/phpstan
+    reportUnmatchedIgnoredErrors: false

@@ -9,8 +9,8 @@ Core\Config::set('app', ['base_url' => '', 'site_url' => 'https://example.test']
 require ROOT_PATH . '/src/helpers/language_helper.php';
 require ROOT_PATH . '/src/helpers/url_helper.php';
 
-use Core\Router;
 use Core\Request;
+use Core\Router;
 use Helpers\Toast;
 use Middleware\AdminMiddleware;
 use Middleware\AuthMiddleware;

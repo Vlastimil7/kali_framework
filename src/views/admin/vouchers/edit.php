@@ -12,7 +12,7 @@ $priceDefault = isset($voucher['price_cents'])
   : '';
 
 $val = function (string $k, $fallback = '') use ($old) {
-  return isset($old[$k]) ? (string)$old[$k] : (string)$fallback;
+    return isset($old[$k]) ? (string)$old[$k] : (string)$fallback;
 };
 ?>
 

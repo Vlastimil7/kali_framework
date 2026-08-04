@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'cta_button_consultation' => 'Free consultation',
   'cta_button_project' => 'Discuss the project',
   'cta_description' => 'Turn your ideas into reality. I offer a free consultation where we can discuss your project and possible cooperation.',
@@ -163,5 +163,4 @@ From simple presentation websites to complex enterprise solutions.',
   'services_feature_6_desc' => 'Application security, performance optimization, and implementation of development best practices.',
   'services_feature_6_title' => 'Security and optimization',
   'services_title' => 'Services',
-);
-
+];

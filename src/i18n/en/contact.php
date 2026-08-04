@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'contact_attachments_click' => 'click to select',
   'contact_attachments_hint' => 'Drag files here or',
   'contact_attachments_label' => 'Attachments (optional)',
@@ -62,5 +62,4 @@ return array (
   'contact_topic_other' => 'Other',
   'contact_topic_reservation' => 'Booking system',
   'contact_topic_web' => 'Website',
-);
-
+];

@@ -55,11 +55,11 @@
               <?php foreach ($rows as $r): ?>
                 <?php
                 $dh = [];
-                if (!empty($r['device_hints_json'])) {
-                  $dh = json_decode((string)$r['device_hints_json'], true) ?: [];
-                }
-                $device = trim(($dh['deviceCategory'] ?? '') . ' ' . ($dh['viewportWidth'] ?? '') . '×' . ($dh['viewportHeight'] ?? ''));
-                ?>
+                  if (!empty($r['device_hints_json'])) {
+                      $dh = json_decode((string)$r['device_hints_json'], true) ?: [];
+                  }
+                  $device = trim(($dh['deviceCategory'] ?? '') . ' ' . ($dh['viewportWidth'] ?? '') . '×' . ($dh['viewportHeight'] ?? ''));
+                  ?>
                 <tr class="hover:bg-gray-50">
                   <td class="px-4 py-3 text-gray-700"><?= htmlspecialchars($r['last_seen'] ?? '-') ?></td>
                   <td class="px-4 py-3 font-mono text-xs text-gray-800"><?= htmlspecialchars($r['page_path'] ?? '-') ?></td>

@@ -3,9 +3,9 @@
 namespace Controllers\Admin;
 
 use Core\Request;
-use Models\VoucherCode;
 use Helpers\Toast;
 use Helpers\Validator;
+use Models\VoucherCode;
 
 class VoucherCodesController extends BaseAdminController
 {

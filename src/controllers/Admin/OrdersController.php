@@ -3,17 +3,17 @@
 namespace Controllers\Admin;
 
 use Core\Request;
-use Models\Order;
-use Models\OrderItem;
-use Models\VoucherCode;
-use Services\VoucherPdfService;
-use Services\Vouchers\OrderService;
-use Services\Mail\Mail;
-use Services\Mail\Mailables\OrderPaidEmail;
-use Services\Mail\Mailables\OrderStatusChangedEmail;
 use Helpers\Flash;
 use Helpers\Toast;
 use Helpers\Validator;
+use Models\Order;
+use Models\OrderItem;
+use Models\VoucherCode;
+use Services\Mail\Mail;
+use Services\Mail\Mailables\OrderPaidEmail;
+use Services\Mail\Mailables\OrderStatusChangedEmail;
+use Services\VoucherPdfService;
+use Services\Vouchers\OrderService;
 
 class OrdersController extends BaseAdminController
 {
@@ -65,7 +65,9 @@ class OrdersController extends BaseAdminController
     public function detail(int $id)
     {
         $order = $this->orderModel->getById($id);
-        if (!$order) return $this->show404();
+        if (!$order) {
+            return $this->show404();
+        }
 
         $items = $this->orderItemModel->getByOrderId($id);
         $codes = $this->voucherCodeModel->getByOrderId($id);
@@ -82,7 +84,9 @@ class OrdersController extends BaseAdminController
     public function markPaid(int $id)
     {
         $order = $this->orderModel->getById($id);
-        if (!$order) return $this->show404();
+        if (!$order) {
+            return $this->show404();
+        }
 
         $st = (string)($order['status'] ?? '');
         if (!in_array($st, ['pending', 'awaiting_payment'], true)) {
@@ -131,7 +135,9 @@ class OrdersController extends BaseAdminController
     public function edit(int $id)
     {
         $order = $this->orderModel->getById($id);
-        if (!$order) return $this->show404();
+        if (!$order) {
+            return $this->show404();
+        }
 
         $this->view('admin/orders/edit', [
             'title' => 'Editace objednávky | Admin',
@@ -143,7 +149,9 @@ class OrdersController extends BaseAdminController
     public function update(Request $request, int $id)
     {
         $order = $this->orderModel->getById($id);
-        if (!$order) return $this->show404();
+        if (!$order) {
+            return $this->show404();
+        }
 
         $data = [
             'billing_name' => $request->string('billing_name'),
@@ -204,7 +212,9 @@ class OrdersController extends BaseAdminController
     public function cancel(Request $request, int $id)
     {
         $order = $this->orderModel->getById($id);
-        if (!$order) return $this->show404();
+        if (!$order) {
+            return $this->show404();
+        }
 
         $status = (string)($order['status'] ?? '');
         if (!in_array($status, ['pending', 'awaiting_payment'], true)) {
@@ -242,7 +252,9 @@ class OrdersController extends BaseAdminController
     public function expire(Request $request, int $id)
     {
         $order = $this->orderModel->getById($id);
-        if (!$order) return $this->show404();
+        if (!$order) {
+            return $this->show404();
+        }
 
         $status = (string)($order['status'] ?? '');
         if (!in_array($status, ['pending', 'awaiting_payment'], true)) {
@@ -282,7 +294,9 @@ class OrdersController extends BaseAdminController
     public function refund(Request $request, int $id)
     {
         $order = $this->orderModel->getById($id);
-        if (!$order) return $this->show404();
+        if (!$order) {
+            return $this->show404();
+        }
 
         if (($order['status'] ?? '') !== 'paid') {
             Toast::error('Refund lze jen pro paid objednávku.');
@@ -300,7 +314,7 @@ class OrdersController extends BaseAdminController
         $cg = $this->orderService->adminRefund(
             $id,
             $this->adminId(),
-            $note
+            $note,
             // amountCents → null = full refund
         );
 

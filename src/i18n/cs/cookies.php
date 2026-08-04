@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'cookie_banner_accept_all' => 'Přijmout vše',
   'cookie_banner_reject' => 'Odmítnout',
   'cookie_banner_settings' => 'Nastavení',
@@ -49,5 +49,4 @@ return array (
   'cookies_type_necessary_title' => 'Nezbytné cookies',
   'cookies_type_telemetry_text' => 'Web může využívat vlastní technické měření pro monitoring výkonu, odhalování chyb a zajištění bezpečnosti. Tyto údaje nejsou používány k identifikaci konkrétních osob.',
   'cookies_type_telemetry_title' => 'Technické a diagnostické nástroje (telemetry)',
-);
-
+];

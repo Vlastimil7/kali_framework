@@ -16,7 +16,7 @@ class Order
 
     public function getById(int $id): ?array
     {
-        $sql = "SELECT * FROM orders WHERE id = :id LIMIT 1";
+        $sql = 'SELECT * FROM orders WHERE id = :id LIMIT 1';
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
@@ -24,14 +24,14 @@ class Order
 
     public function getByOrderNumber(string $orderNumber): ?array
     {
-        $stmt = $this->db->prepare("SELECT * FROM orders WHERE order_number = :n LIMIT 1");
+        $stmt = $this->db->prepare('SELECT * FROM orders WHERE order_number = :n LIMIT 1');
         $stmt->execute([':n' => $orderNumber]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
 
     public function getByComgatePayId(string $payId): ?array
     {
-        $stmt = $this->db->prepare("SELECT * FROM orders WHERE comgate_pay_id = :pid LIMIT 1");
+        $stmt = $this->db->prepare('SELECT * FROM orders WHERE comgate_pay_id = :pid LIMIT 1');
         $stmt->execute([':pid' => $payId]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
@@ -42,7 +42,7 @@ class Order
      */
     public function create(array $data): int
     {
-        $sql = "INSERT INTO orders (
+        $sql = 'INSERT INTO orders (
                     order_number,
                     billing_name, billing_email, billing_phone,
                     billing_street, billing_house_no, billing_city, billing_zip,
@@ -58,7 +58,7 @@ class Order
                     :total_amount_cents, :currency, :status,
                     :payment_method,
                     :comgate_pay_id, :comgate_ref_id
-                )";
+                )';
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
@@ -91,7 +91,7 @@ class Order
     public function updateAdmin(int $id, array $data): array
     {
         try {
-            $sql = "UPDATE orders
+            $sql = 'UPDATE orders
                     SET billing_name = :billing_name,
                         billing_email = :billing_email,
                         billing_phone = :billing_phone,
@@ -103,7 +103,7 @@ class Order
                         billing_ico = :billing_ico,
                         billing_dic = :billing_dic
                     WHERE id = :id
-                    LIMIT 1";
+                    LIMIT 1';
 
             $stmt = $this->db->prepare($sql);
             $stmt->execute([
@@ -134,7 +134,7 @@ class Order
 
     public function updateStatus(int $id, string $status): bool
     {
-        $stmt = $this->db->prepare("UPDATE orders SET status = :s WHERE id = :id");
+        $stmt = $this->db->prepare('UPDATE orders SET status = :s WHERE id = :id');
         $stmt->execute([':id' => $id, ':s' => $status]);
         return $stmt->rowCount() > 0;
     }
@@ -153,7 +153,7 @@ class Order
 
     public function getListAdmin(int $limit = 200): array
     {
-        $sql = "SELECT 
+        $sql = 'SELECT
                     id,
                     order_number,
                     billing_name,
@@ -166,7 +166,7 @@ class Order
                     paid_at
                 FROM orders
                 ORDER BY id DESC
-                LIMIT :lim";
+                LIMIT :lim';
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':lim', $limit, PDO::PARAM_INT);
@@ -186,7 +186,7 @@ class Order
             $adminId = $adminId > 0 ? $adminId : null;
             $note = trim($note);
 
-            $set = ["status = :status"];
+            $set = ['status = :status'];
             $params = [
                 ':id' => $id,
                 ':status' => $status,
@@ -194,31 +194,31 @@ class Order
 
             // Volitelně: ukládej i obecnou admin poznámku
             if ($note !== '') {
-                $set[] = "admin_note = :admin_note";
+                $set[] = 'admin_note = :admin_note';
                 $params[':admin_note'] = $note;
             }
 
             // Audit podle statusu
             if ($status === 'canceled') {
-                $set[] = "canceled_at = NOW()";
-                $set[] = "canceled_by = :admin_id";
-                $set[] = "cancel_reason = :reason";
+                $set[] = 'canceled_at = NOW()';
+                $set[] = 'canceled_by = :admin_id';
+                $set[] = 'cancel_reason = :reason';
                 $params[':admin_id'] = $adminId;
                 $params[':reason'] = ($note !== '' ? $note : null);
             }
 
             if ($status === 'refunded') {
-                $set[] = "refunded_at = NOW()";
-                $set[] = "refunded_by = :admin_id";
-                $set[] = "refund_reason = :reason";
+                $set[] = 'refunded_at = NOW()';
+                $set[] = 'refunded_by = :admin_id';
+                $set[] = 'refund_reason = :reason';
                 $params[':admin_id'] = $adminId;
                 $params[':reason'] = ($note !== '' ? $note : null);
             }
 
             if ($status === 'expired') {
-                $set[] = "expired_at = NOW()";
-                $set[] = "expired_by = :admin_id";
-                $set[] = "expire_reason = :reason";
+                $set[] = 'expired_at = NOW()';
+                $set[] = 'expired_by = :admin_id';
+                $set[] = 'expire_reason = :reason';
                 $params[':admin_id'] = $adminId;
                 $params[':reason'] = ($note !== '' ? $note : null);
             }
@@ -231,7 +231,7 @@ class Order
             //     $set[] = "expired_at = NULL, expired_by = NULL, expire_reason = NULL";
             // }
 
-            $sql = "UPDATE orders SET " . implode(", ", $set) . " WHERE id = :id LIMIT 1";
+            $sql = 'UPDATE orders SET ' . implode(', ', $set) . ' WHERE id = :id LIMIT 1';
             $stmt = $this->db->prepare($sql);
             $stmt->execute($params);
 
@@ -261,7 +261,9 @@ class Order
             'expired' => 'email_expired_sent_at',
         ];
         $col = $map[$type] ?? null;
-        if (!$col) return;
+        if (!$col) {
+            return;
+        }
 
         $st = $this->db->prepare("UPDATE orders SET {$col} = NOW() WHERE id = :id LIMIT 1");
         $st->execute([':id' => $id]);
@@ -269,7 +271,7 @@ class Order
 
     public function markPdfGenerated(int $id, string $path): void
     {
-        $st = $this->db->prepare("UPDATE orders SET pdf_generated_at = NOW(), pdf_path = :p WHERE id = :id LIMIT 1");
+        $st = $this->db->prepare('UPDATE orders SET pdf_generated_at = NOW(), pdf_path = :p WHERE id = :id LIMIT 1');
         $st->execute([':id' => $id, ':p' => $path]);
     }
 

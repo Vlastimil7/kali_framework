@@ -3,15 +3,15 @@
 namespace Controllers\Front;
 
 use Core\Controller;
-use Core\Request;
 use Core\Database;
+use Core\Request;
+use Helpers\Logger;
+use Helpers\Toast;
+use Helpers\Validator;
 use Models\Cart;
 use Models\Order;
 use Models\OrderItem;
 use Services\Payments\ComgateService;
-use Helpers\Logger;
-use Helpers\Toast;
-use Helpers\Validator;
 
 class CartController extends Controller
 {
@@ -363,7 +363,7 @@ class CartController extends Controller
 
             $payId = (string)$paymentResult['transId'];
 
-            $db->prepare("UPDATE orders SET comgate_pay_id = :pid, comgate_ref_id = :rid WHERE id = :id")
+            $db->prepare('UPDATE orders SET comgate_pay_id = :pid, comgate_ref_id = :rid WHERE id = :id')
                 ->execute([
                     ':pid' => $payId,
                     ':rid' => (string)$orderId,
@@ -431,10 +431,10 @@ class CartController extends Controller
 
     private function insertTransaction($db, array $t): int
     {
-        $sql = "INSERT INTO transactions
+        $sql = 'INSERT INTO transactions
                 (order_id, comgate_pay_id, type, amount_cents, currency, status, message, request_payload, response_payload)
                 VALUES
-                (:order_id, :comgate_pay_id, :type, :amount_cents, :currency, :status, :message, :request_payload, :response_payload)";
+                (:order_id, :comgate_pay_id, :type, :amount_cents, :currency, :status, :message, :request_payload, :response_payload)';
 
         $st = $db->prepare($sql);
         $st->execute([
@@ -454,13 +454,13 @@ class CartController extends Controller
 
     private function updateTransaction($db, int $txId, array $t): void
     {
-        $sql = "UPDATE transactions
+        $sql = 'UPDATE transactions
                 SET
                   comgate_pay_id = COALESCE(:comgate_pay_id, comgate_pay_id),
                   status = COALESCE(:status, status),
                   message = :message,
                   response_payload = COALESCE(:response_payload, response_payload)
-                WHERE id = :id";
+                WHERE id = :id';
 
         $st = $db->prepare($sql);
         $st->execute([

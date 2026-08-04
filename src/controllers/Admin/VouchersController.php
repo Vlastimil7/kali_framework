@@ -3,10 +3,10 @@
 namespace Controllers\Admin;
 
 use Core\Request;
-use Models\Voucher;
 use Helpers\Flash;
 use Helpers\Toast;
 use Helpers\Validator;
+use Models\Voucher;
 
 class VouchersController extends BaseAdminController
 {
@@ -32,7 +32,9 @@ class VouchersController extends BaseAdminController
     public function detail(int $id)
     {
         $voucher = $this->voucherModel->getById($id);
-        if (!$voucher) return $this->show404();
+        if (!$voucher) {
+            return $this->show404();
+        }
 
         $this->view('admin/vouchers/detail', [
             'title' => 'Detail voucheru | Admin',
@@ -121,7 +123,9 @@ class VouchersController extends BaseAdminController
     public function edit(int $id)
     {
         $voucher = $this->voucherModel->getById($id);
-        if (!$voucher) return $this->show404();
+        if (!$voucher) {
+            return $this->show404();
+        }
 
         $this->view('admin/vouchers/edit', [
             'title' => 'Upravit voucher | Admin',
@@ -132,7 +136,9 @@ class VouchersController extends BaseAdminController
     public function update(Request $request, int $id)
     {
         $voucher = $this->voucherModel->getById($id);
-        if (!$voucher) return $this->show404();
+        if (!$voucher) {
+            return $this->show404();
+        }
 
         $name = $request->string('name');
         $slug = $request->string('slug');

@@ -2,8 +2,6 @@
 
 namespace Core;
 
-use Models\Language;
-
 class Controller
 {
     protected $language;
@@ -53,7 +51,7 @@ class Controller
         $data['content'] = ob_get_clean();
 
         // Načtení layoutu
-        include ROOT_PATH . "/src/views/layouts/main.php";
+        include ROOT_PATH . '/src/views/layouts/main.php';
     }
 
     protected function renderView($view, $data = [])
@@ -76,7 +74,7 @@ class Controller
             'noindex' => true,
         ];
 
-        require ROOT_PATH . "/src/views/layouts/main.php";
+        require ROOT_PATH . '/src/views/layouts/main.php';
         exit();
     }
 }

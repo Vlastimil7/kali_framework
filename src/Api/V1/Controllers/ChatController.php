@@ -4,10 +4,10 @@ namespace Api\V1\Controllers;
 
 use Api\BaseApiController;
 use Core\Request;
-use Services\AI\ChatService;
-use Services\AI\AiClientFactory;
 use Helpers\Logger;
 use Helpers\Validator;
+use Services\AI\AiClientFactory;
+use Services\AI\ChatService;
 
 class ChatController extends BaseApiController
 {
@@ -15,7 +15,7 @@ class ChatController extends BaseApiController
      * Status API endpoint
      * GET /api/v1/chat/status
      */
-   
+
 
     public function status()
     {
@@ -34,7 +34,7 @@ class ChatController extends BaseApiController
             $this->response([
                 'status'    => 'error',
                 'message'   => $e->getMessage(),
-                'timestamp' => time()
+                'timestamp' => time(),
             ], 500);
         }
     }
@@ -148,7 +148,7 @@ class ChatController extends BaseApiController
                 'status'    => 'healthy',
                 'timestamp' => time(),
                 'checks'    => array_merge([
-                    'memory_usage' => $this->getMemoryUsage()
+                    'memory_usage' => $this->getMemoryUsage(),
                 ], $modelStatus),
                 'provider' => $chat->getProvider(),
             ];
@@ -163,14 +163,16 @@ class ChatController extends BaseApiController
                 }
             }
 
-            if (!$allHealthy) $health['status'] = 'degraded';
+            if (!$allHealthy) {
+                $health['status'] = 'degraded';
+            }
 
             $this->response($health);
         } catch (\Throwable $e) {
             $this->response([
                 'status'    => 'unhealthy',
                 'error'     => $e->getMessage(),
-                'timestamp' => time()
+                'timestamp' => time(),
             ], 503);
         }
     }
@@ -222,13 +224,13 @@ class ChatController extends BaseApiController
     {
         return [
             'used' => $this->formatBytes(memory_get_usage(true)),
-            'peak' => $this->formatBytes(memory_get_peak_usage(true))
+            'peak' => $this->formatBytes(memory_get_peak_usage(true)),
         ];
     }
 
     private function formatBytes($bytes, $precision = 2)
     {
-        $units = array('B', 'KB', 'MB', 'GB');
+        $units = ['B', 'KB', 'MB', 'GB'];
 
         for ($i = 0; $bytes > 1024 && $i < count($units) - 1; $i++) {
             $bytes /= 1024;

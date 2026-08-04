@@ -1,4 +1,5 @@
 <?php
+
 define('ROOT_PATH', dirname(__DIR__));
 require_once ROOT_PATH . '/vendor/autoload.php';
 require_once ROOT_PATH . '/src/config/config.php';
@@ -36,7 +37,7 @@ spl_autoload_register(function ($className) {
         'Models\\' => 'models/',
         'Helpers\\' => 'helpers/',
         'Middleware\\' => 'middleware/',
-        'Services\\' => 'services/'
+        'Services\\' => 'services/',
     ];
 
     foreach ($namespaceMap as $namespace => $path) {
@@ -44,17 +45,17 @@ spl_autoload_register(function ($className) {
             $relativeClass = substr($className, strlen($namespace));
             $file = $baseDir . $path . str_replace('\\', '/', $relativeClass) . '.php';
 
-            Logger::info("Looking for file: " . $file);
+            Logger::info('Looking for file: ' . $file);
 
             if (file_exists($file)) {
                 require_once $file;
-                Logger::info("Successfully loaded class: " . $className);
+                Logger::info('Successfully loaded class: ' . $className);
                 return true;
             }
         }
     }
 
-    Logger::error("File not found for class: " . $className);
+    Logger::error('File not found for class: ' . $className);
     return false;
 });
 
@@ -144,7 +145,7 @@ if ($aiMode && !$isAsset) {
         Toast::info(
             __('ai_mode_restriction_message', [], 'toast'),
             'Notify',
-            'top-right'
+            'top-right',
         );
         exit;
     }

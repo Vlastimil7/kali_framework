@@ -3,28 +3,32 @@
 /** @var array $orders */
 
 $money = function (?int $cents, string $cur = 'CZK'): string {
-  if ($cents === null) return '-';
-  $val = $cents / 100;
-  if ($cur === 'CZK') return number_format($val, 0, ',', ' ') . ' Kč';
-  return number_format($val, 2, ',', ' ') . ' ' . htmlspecialchars($cur);
+    if ($cents === null) {
+        return '-';
+    }
+    $val = $cents / 100;
+    if ($cur === 'CZK') {
+        return number_format($val, 0, ',', ' ') . ' Kč';
+    }
+    return number_format($val, 2, ',', ' ') . ' ' . htmlspecialchars($cur);
 };
 
 $statusBadge = function (?string $status): string {
-  $status = strtolower(trim((string)$status));
+    $status = strtolower(trim((string)$status));
 
-  $map = [
-    'paid'             => ['bg-green-50 text-green-800 border-green-200', 'Zaplaceno'],
-    'awaiting_payment' => ['bg-blue-50 text-blue-800 border-blue-200', 'Čeká na platbu'],
-    'pending'          => ['bg-yellow-50 text-yellow-800 border-yellow-200', 'Pending'],
-    'refunded'         => ['bg-purple-50 text-purple-800 border-purple-200', 'Refundováno'],
-    'canceled'         => ['bg-red-50 text-red-800 border-red-200', 'Zrušeno'],
-    'expired'          => ['bg-gray-50 text-gray-800 border-gray-200', 'Expirovalo'],
-  ];
+    $map = [
+      'paid'             => ['bg-green-50 text-green-800 border-green-200', 'Zaplaceno'],
+      'awaiting_payment' => ['bg-blue-50 text-blue-800 border-blue-200', 'Čeká na platbu'],
+      'pending'          => ['bg-yellow-50 text-yellow-800 border-yellow-200', 'Pending'],
+      'refunded'         => ['bg-purple-50 text-purple-800 border-purple-200', 'Refundováno'],
+      'canceled'         => ['bg-red-50 text-red-800 border-red-200', 'Zrušeno'],
+      'expired'          => ['bg-gray-50 text-gray-800 border-gray-200', 'Expirovalo'],
+    ];
 
-  $cfg = $map[$status] ?? ['bg-gray-50 text-gray-800 border-gray-200', $status ?: '-'];
+    $cfg = $map[$status] ?? ['bg-gray-50 text-gray-800 border-gray-200', $status ?: '-'];
 
-  return '<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold border ' . $cfg[0] . '">'
-    . htmlspecialchars($cfg[1]) . '</span>';
+    return '<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold border ' . $cfg[0] . '">'
+      . htmlspecialchars($cfg[1]) . '</span>';
 };
 ?>
 
@@ -78,14 +82,14 @@ $statusBadge = function (?string $status): string {
             <?php foreach ($orders as $o): ?>
               <?php
               $orderNo = $o['order_number'] ?? ('#' . ($o['id'] ?? ''));
-              $search = strtolower(
-                ($o['id'] ?? '') . ' ' .
-                  $orderNo . ' ' .
-                  ($o['billing_name'] ?? '') . ' ' .
-                  ($o['billing_email'] ?? '') . ' ' .
-                  ($o['status'] ?? '')
-              );
-              ?>
+                $search = strtolower(
+                    ($o['id'] ?? '') . ' ' .
+                    $orderNo . ' ' .
+                    ($o['billing_name'] ?? '') . ' ' .
+                    ($o['billing_email'] ?? '') . ' ' .
+                    ($o['status'] ?? ''),
+                );
+                ?>
               <tr
                 class="hover:bg-gray-50"
                 data-search="<?= htmlspecialchars($search) ?>">

@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'ai_mode_restriction_message' => 'Jste v AI módu, proto je navigace do dalších částí webu dočasně omezená. Pokud chcete pokračovat na web, vypněte AI mód',
   'contact_toast_attachments_title' => 'Přílohy',
   'contact_toast_attachments_upload_exception_msg' => 'Nastala chyba při nahrávání příloh. Zkuste to prosím znovu.',
@@ -15,5 +15,4 @@ return array (
   'contact_toast_success_msg' => 'Vaše poptávka byla úspěšně odeslána. Brzy se ozvu 🙂',
   'contact_toast_success_title' => 'Hotovo',
   'contact_toast_validation_title' => 'Chyba ve formuláři',
-);
-
+];

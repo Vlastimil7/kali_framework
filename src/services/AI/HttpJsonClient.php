@@ -1,4 +1,5 @@
 <?php
+
 namespace Services\AI;
 
 final class HttpJsonClient
@@ -11,7 +12,7 @@ final class HttpJsonClient
         array $payload,
         array $headers,
         int $timeoutSeconds = 30,
-        bool $verifySsl = false
+        bool $verifySsl = false,
     ): array {
         $respHeaders = [];
 
@@ -26,7 +27,9 @@ final class HttpJsonClient
         curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($ch, $headerLine) use (&$respHeaders) {
             $len = strlen($headerLine);
             $headerLine = trim($headerLine);
-            if ($headerLine === '' || strpos($headerLine, ':') === false) return $len;
+            if ($headerLine === '' || strpos($headerLine, ':') === false) {
+                return $len;
+            }
 
             [$name, $value] = explode(':', $headerLine, 2);
             $respHeaders[strtolower(trim($name))] = trim($value);

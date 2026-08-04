@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'header_ai_mode_label' => 'AI MODE',
   'header_nav_admin' => 'Admin',
   'header_nav_contact' => 'Kontakt',
@@ -11,5 +11,4 @@ return array (
   'header_nav_profile' => 'Profil',
   'header_nav_references' => 'Reference',
   'header_nav_services' => 'Služby',
-);
-
+];

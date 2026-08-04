@@ -14,7 +14,9 @@ $qsBase = function (array $overrides = []) use ($app, $range, $filters) {
     ], $overrides);
     // odstranit prázdné
     foreach ($q as $k => $v) {
-        if ($v === '' || $v === null) unset($q[$k]);
+        if ($v === '' || $v === null) {
+            unset($q[$k]);
+        }
     }
     return http_build_query($q);
 };

@@ -49,7 +49,7 @@ class Router
         $options = $this->mergeOptions($this->currentGroupOptions(), $options);
         $this->routes[$method][$route] = [
             'handler' => $handler,
-            'options' => $options
+            'options' => $options,
         ];
         $this->lastRoute = [$method, $route];
         return $this;
@@ -239,7 +239,7 @@ class Router
         // Vyvolání metody kontroleru
         return $this->runMiddleware(
             $routeData['options']['middleware'] ?? [],
-            fn () => $this->invokeControllerMethod($controller, $action)
+            fn () => $this->invokeControllerMethod($controller, $action),
         );
     }
 
@@ -264,7 +264,7 @@ class Router
         // Vyvolání metody kontroleru s parametry
         return $this->runMiddleware(
             $routeData['options']['middleware'] ?? [],
-            fn () => $this->invokeControllerMethod($controller, $action, array_values($params))
+            fn () => $this->invokeControllerMethod($controller, $action, array_values($params)),
         );
     }
 
@@ -288,7 +288,7 @@ class Router
                     return $middleware->handle($this->request ?? Request::capture(), $next);
                 };
             },
-            $destination
+            $destination,
         );
 
         return $pipeline();
@@ -327,7 +327,7 @@ class Router
 
         return array_values(array_filter(
             array_map(static fn ($name): string => trim((string)$name), $middleware),
-            static fn (string $name): bool => $name !== ''
+            static fn (string $name): bool => $name !== '',
         ));
     }
 
@@ -424,7 +424,7 @@ class Router
     private function handleRouteError(\Exception $e)
     {
         // Protokolování chyby
-        Logger::error("Route error: " . $e->getMessage());
+        Logger::error('Route error: ' . $e->getMessage());
 
         // Zobrazení 404
         $this->show404();
@@ -449,7 +449,7 @@ class Router
             $response = [
                 'success' => false,
                 'message' => __('page_not_found', [], '404'),
-                'statusCode' => 404
+                'statusCode' => 404,
             ];
 
             echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
@@ -457,7 +457,7 @@ class Router
         } else {
             // Pro webovou route použijeme HTML layout
             ob_start();
-            include ROOT_PATH . "/src/views/errors/404.php";
+            include ROOT_PATH . '/src/views/errors/404.php';
             $content = ob_get_clean();
 
             // Data pro layout
@@ -468,7 +468,7 @@ class Router
             ];
 
             // Načtení layoutu
-            include ROOT_PATH . "/src/views/layouts/main.php";
+            include ROOT_PATH . '/src/views/layouts/main.php';
             exit();
         }
     }

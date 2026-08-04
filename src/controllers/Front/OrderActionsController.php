@@ -3,11 +3,11 @@
 namespace Controllers\Front;
 
 use Core\Controller;
+use Helpers\Auth;
 use Models\Order;
 use Models\OrderItem;
 use Models\Voucher;
 use Models\VoucherCode;
-use Helpers\Auth;
 
 class OrderActionsController extends Controller
 {
@@ -47,7 +47,9 @@ class OrderActionsController extends Controller
 
             foreach ($items as $item) {
                 $voucher = $this->voucherModel->getById((int)$item['voucher_id']);
-                if (!$voucher) continue;
+                if (!$voucher) {
+                    continue;
+                }
 
                 for ($i = 0; $i < (int)$item['quantity']; $i++) {
                     $code = strtoupper(bin2hex(random_bytes(4))) . '-' . $orderId;

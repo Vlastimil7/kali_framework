@@ -23,7 +23,7 @@ class User
         ) {
             return [
                 'success' => false,
-                'message' => 'Prosím vyplňte všechna povinná pole'
+                'message' => 'Prosím vyplňte všechna povinná pole',
             ];
         }
 
@@ -31,7 +31,7 @@ class User
         if ($this->emailExists($userData['email'])) {
             return [
                 'success' => false,
-                'message' => 'Email již existuje v databázi'
+                'message' => 'Email již existuje v databázi',
             ];
         }
 
@@ -43,8 +43,8 @@ class User
         $role = $userData['role'] ?? 'user';
 
         try {
-            $sql = "INSERT INTO users (email, password, name, surname, phone, role, created_at) 
-                    VALUES (:email, :password, :name, :surname, :phone, :role, NOW())";
+            $sql = 'INSERT INTO users (email, password, name, surname, phone, role, created_at)
+                    VALUES (:email, :password, :name, :surname, :phone, :role, NOW())';
 
             $stmt = $this->db->prepare($sql);
             $stmt->execute([
@@ -53,18 +53,18 @@ class User
                 ':name' => $userData['name'],
                 ':surname' => $userData['surname'],
                 ':phone' => $phone,
-                ':role' => $role
+                ':role' => $role,
             ]);
 
             return [
                 'success' => true,
                 'message' => 'Uživatel byl úspěšně zaregistrován',
-                'user_id' => $this->db->lastInsertId()
+                'user_id' => $this->db->lastInsertId(),
             ];
         } catch (\PDOException $e) {
             return [
                 'success' => false,
-                'message' => 'Chyba databáze: ' . $e->getMessage()
+                'message' => 'Chyba databáze: ' . $e->getMessage(),
             ];
         }
     }
@@ -72,7 +72,7 @@ class User
     // Kontrola, zda email již existuje
     private function emailExists($email)
     {
-        $sql = "SELECT id FROM users WHERE email = :email";
+        $sql = 'SELECT id FROM users WHERE email = :email';
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':email' => $email]);
 
@@ -85,12 +85,12 @@ class User
         if (empty($email) || empty($password)) {
             return [
                 'success' => false,
-                'message' => 'Zadejte prosím email a heslo'
+                'message' => 'Zadejte prosím email a heslo',
             ];
         }
 
         try {
-            $sql = "SELECT id, email, password, name, surname, role FROM users WHERE email = :email";
+            $sql = 'SELECT id, email, password, name, surname, role FROM users WHERE email = :email';
             $stmt = $this->db->prepare($sql);
             $stmt->execute([':email' => $email]);
 
@@ -105,24 +105,24 @@ class User
                     return [
                         'success' => true,
                         'message' => 'Přihlášení úspěšné',
-                        'user' => $user
+                        'user' => $user,
                     ];
                 } else {
                     return [
                         'success' => false,
-                        'message' => 'Neplatné přihlašovací údaje'
+                        'message' => 'Neplatné přihlašovací údaje',
                     ];
                 }
             } else {
                 return [
                     'success' => false,
-                    'message' => 'Uživatel s tímto emailem nebyl nalezen'
+                    'message' => 'Uživatel s tímto emailem nebyl nalezen',
                 ];
             }
         } catch (\PDOException $e) {
             return [
                 'success' => false,
-                'message' => 'Chyba databáze: ' . $e->getMessage()
+                'message' => 'Chyba databáze: ' . $e->getMessage(),
             ];
         }
     }
@@ -130,8 +130,8 @@ class User
     // Získání uživatele podle ID
     public function getUserById($id)
     {
-        $sql = "SELECT id, email, name, surname, phone, role, created_at 
-                FROM users WHERE id = :id";
+        $sql = 'SELECT id, email, name, surname, phone, role, created_at
+                FROM users WHERE id = :id';
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
 
@@ -151,23 +151,23 @@ class User
 
         // Kontrola jednotlivých možných polí
         if (isset($userData['name']) && !empty($userData['name'])) {
-            $updateFields[] = "name = :name";
+            $updateFields[] = 'name = :name';
             $params[':name'] = $userData['name'];
         }
 
         if (isset($userData['surname']) && !empty($userData['surname'])) {
-            $updateFields[] = "surname = :surname";
+            $updateFields[] = 'surname = :surname';
             $params[':surname'] = $userData['surname'];
         }
 
         if (isset($userData['phone'])) {
-            $updateFields[] = "phone = :phone";
+            $updateFields[] = 'phone = :phone';
             $params[':phone'] = $userData['phone'];
         }
 
         // Aktualizace hesla, pokud bylo poskytnuto
         if (isset($userData['password']) && !empty($userData['password'])) {
-            $updateFields[] = "password = :password";
+            $updateFields[] = 'password = :password';
             $params[':password'] = password_hash($userData['password'], PASSWORD_DEFAULT);
         }
 
@@ -175,24 +175,24 @@ class User
         if (empty($updateFields)) {
             return [
                 'success' => false,
-                'message' => 'Žádné údaje k aktualizaci'
+                'message' => 'Žádné údaje k aktualizaci',
             ];
         }
 
         try {
-            $sql = "UPDATE users SET " . implode(', ', $updateFields) . " WHERE id = :id";
+            $sql = 'UPDATE users SET ' . implode(', ', $updateFields) . ' WHERE id = :id';
 
             $stmt = $this->db->prepare($sql);
             $stmt->execute($params);
 
             return [
                 'success' => true,
-                'message' => 'Profil byl úspěšně aktualizován'
+                'message' => 'Profil byl úspěšně aktualizován',
             ];
         } catch (\PDOException $e) {
             return [
                 'success' => false,
-                'message' => 'Chyba databáze: ' . $e->getMessage()
+                'message' => 'Chyba databáze: ' . $e->getMessage(),
             ];
         }
     }
@@ -200,7 +200,7 @@ class User
     // Získání všech uživatelů (admin funkce)
     public function getAllUsers()
     {
-        $sql = "SELECT id, email, name, surname, phone, role, created_at FROM users";
+        $sql = 'SELECT id, email, name, surname, phone, role, created_at FROM users';
         $stmt = $this->db->query($sql);
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -209,7 +209,7 @@ class User
     // Získání počtu uživatelů
     public function getUserCount()
     {
-        $sql = "SELECT COUNT(*) as count FROM users";
+        $sql = 'SELECT COUNT(*) as count FROM users';
         $result = $this->db->query($sql);
         $row = $result->fetch();
         return $row['count'];
@@ -224,46 +224,46 @@ class User
 
         // Kontrola jednotlivých možných polí
         if (isset($userData['name']) && !empty($userData['name'])) {
-            $updateFields[] = "name = :name";
+            $updateFields[] = 'name = :name';
             $params[':name'] = $userData['name'];
         }
 
         if (isset($userData['surname']) && !empty($userData['surname'])) {
-            $updateFields[] = "surname = :surname";
+            $updateFields[] = 'surname = :surname';
             $params[':surname'] = $userData['surname'];
         }
 
         if (isset($userData['email']) && !empty($userData['email'])) {
             // Ověření, zda email již neexistuje u jiného uživatele
-            $sql = "SELECT id FROM users WHERE email = :email AND id != :userId";
+            $sql = 'SELECT id FROM users WHERE email = :email AND id != :userId';
             $stmt = $this->db->prepare($sql);
             $stmt->execute([':email' => $userData['email'], ':userId' => $userId]);
 
             if ($stmt->rowCount() > 0) {
                 return [
                     'success' => false,
-                    'message' => 'Email již používá jiný uživatel'
+                    'message' => 'Email již používá jiný uživatel',
                 ];
             }
 
-            $updateFields[] = "email = :email";
+            $updateFields[] = 'email = :email';
             $params[':email'] = $userData['email'];
         }
 
         if (isset($userData['phone'])) {
-            $updateFields[] = "phone = :phone";
+            $updateFields[] = 'phone = :phone';
             $params[':phone'] = $userData['phone'];
         }
 
         if (isset($userData['role'])) {
-            $updateFields[] = "role = :role";
+            $updateFields[] = 'role = :role';
             $params[':role'] = $userData['role'];
         }
 
 
         // Aktualizace hesla, pokud bylo poskytnuto
         if (isset($userData['password']) && !empty($userData['password'])) {
-            $updateFields[] = "password = :password";
+            $updateFields[] = 'password = :password';
             $params[':password'] = password_hash($userData['password'], PASSWORD_DEFAULT);
         }
 
@@ -271,24 +271,24 @@ class User
         if (empty($updateFields)) {
             return [
                 'success' => false,
-                'message' => 'Žádné údaje k aktualizaci'
+                'message' => 'Žádné údaje k aktualizaci',
             ];
         }
 
         try {
-            $sql = "UPDATE users SET " . implode(', ', $updateFields) . " WHERE id = :id";
+            $sql = 'UPDATE users SET ' . implode(', ', $updateFields) . ' WHERE id = :id';
 
             $stmt = $this->db->prepare($sql);
             $stmt->execute($params);
 
             return [
                 'success' => true,
-                'message' => 'Uživatel byl úspěšně aktualizován'
+                'message' => 'Uživatel byl úspěšně aktualizován',
             ];
         } catch (\PDOException $e) {
             return [
                 'success' => false,
-                'message' => 'Chyba databáze: ' . $e->getMessage()
+                'message' => 'Chyba databáze: ' . $e->getMessage(),
             ];
         }
     }
@@ -311,18 +311,18 @@ class User
             // }
 
             // Smazání uživatele
-            $sql = "DELETE FROM users WHERE id = :id";
+            $sql = 'DELETE FROM users WHERE id = :id';
             $stmt = $this->db->prepare($sql);
             $stmt->execute([':id' => $userId]);
 
             return [
                 'success' => true,
-                'message' => 'Uživatel byl úspěšně smazán'
+                'message' => 'Uživatel byl úspěšně smazán',
             ];
         } catch (\PDOException $e) {
             return [
                 'success' => false,
-                'message' => 'Chyba databáze: ' . $e->getMessage()
+                'message' => 'Chyba databáze: ' . $e->getMessage(),
             ];
         }
     }
@@ -333,8 +333,8 @@ class User
      */
     public function getUserByEmail($email)
     {
-        $sql = "SELECT id, email, name, surname, phone, role, created_at 
-            FROM users WHERE email = :email";
+        $sql = 'SELECT id, email, name, surname, phone, role, created_at
+            FROM users WHERE email = :email';
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':email' => $email]);
 
@@ -354,7 +354,7 @@ class User
         if (!$this->emailExists($email)) {
             return [
                 'success' => false,
-                'message' => 'Email nebyl nalezen v naší databázi'
+                'message' => 'Email nebyl nalezen v naší databázi',
             ];
         }
 
@@ -366,17 +366,17 @@ class User
 
         try {
             // Nejprve deaktivujeme všechny staré tokeny pro tento email
-            $deactivateSql = "UPDATE password_resets SET used = 1 WHERE email = :email";
+            $deactivateSql = 'UPDATE password_resets SET used = 1 WHERE email = :email';
             $stmt = $this->db->prepare($deactivateSql);
             $stmt->execute([':email' => $email]);
 
             // Vložení nového tokenu
-            $sql = "INSERT INTO password_resets (email, token, expires_at) VALUES (:email, :token, :expires)";
+            $sql = 'INSERT INTO password_resets (email, token, expires_at) VALUES (:email, :token, :expires)';
             $stmt = $this->db->prepare($sql);
             $stmt->execute([
                 ':email' => $email,
                 ':token' => $token,
-                ':expires' => $expires
+                ':expires' => $expires,
             ]);
 
             // Získání jména uživatele pro email
@@ -387,12 +387,12 @@ class User
                 'success' => true,
                 'token' => $token,
                 'email' => $email,
-                'userName' => $userName
+                'userName' => $userName,
             ];
         } catch (\PDOException $e) {
             return [
                 'success' => false,
-                'message' => 'Chyba databáze: ' . $e->getMessage()
+                'message' => 'Chyba databáze: ' . $e->getMessage(),
             ];
         }
     }
@@ -403,25 +403,25 @@ class User
     public function verifyPasswordResetToken($token)
     {
         try {
-            $sql = "SELECT * FROM password_resets WHERE token = :token AND used = 0 AND expires_at > NOW()";
+            $sql = 'SELECT * FROM password_resets WHERE token = :token AND used = 0 AND expires_at > NOW()';
             $stmt = $this->db->prepare($sql);
             $stmt->execute([':token' => $token]);
 
             if ($stmt->rowCount() === 1) {
                 return [
                     'success' => true,
-                    'reset_data' => $stmt->fetch(\PDO::FETCH_ASSOC)
+                    'reset_data' => $stmt->fetch(\PDO::FETCH_ASSOC),
                 ];
             } else {
                 return [
                     'success' => false,
-                    'message' => 'Neplatný nebo expirovaný token pro reset hesla'
+                    'message' => 'Neplatný nebo expirovaný token pro reset hesla',
                 ];
             }
         } catch (\PDOException $e) {
             return [
                 'success' => false,
-                'message' => 'Chyba databáze: ' . $e->getMessage()
+                'message' => 'Chyba databáze: ' . $e->getMessage(),
             ];
         }
     }
@@ -448,15 +448,15 @@ class User
             $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
             // Aktualizace hesla
-            $updateSql = "UPDATE users SET password = :password WHERE email = :email";
+            $updateSql = 'UPDATE users SET password = :password WHERE email = :email';
             $stmt = $this->db->prepare($updateSql);
             $stmt->execute([
                 ':password' => $hashedPassword,
-                ':email' => $email
+                ':email' => $email,
             ]);
 
             // Označení tokenu jako použitého
-            $tokenSql = "UPDATE password_resets SET used = 1 WHERE token = :token";
+            $tokenSql = 'UPDATE password_resets SET used = 1 WHERE token = :token';
             $stmt = $this->db->prepare($tokenSql);
             $stmt->execute([':token' => $token]);
 
@@ -464,7 +464,7 @@ class User
 
             return [
                 'success' => true,
-                'message' => 'Heslo bylo úspěšně změněno'
+                'message' => 'Heslo bylo úspěšně změněno',
             ];
         } catch (\PDOException $e) {
             if ($this->db->inTransaction()) {
@@ -473,7 +473,7 @@ class User
 
             return [
                 'success' => false,
-                'message' => 'Chyba databáze: ' . $e->getMessage()
+                'message' => 'Chyba databáze: ' . $e->getMessage(),
             ];
         }
     }
@@ -489,22 +489,22 @@ class User
         if ($email === '') {
             return [
                 'success' => false,
-                'message' => 'Google účet nevrátil email.'
+                'message' => 'Google účet nevrátil email.',
             ];
         }
 
         if ($this->emailExists($email)) {
             return [
                 'success' => false,
-                'message' => 'Uživatel s tímto emailem už existuje.'
+                'message' => 'Uživatel s tímto emailem už existuje.',
             ];
         }
 
         $randomPasswordHash = password_hash(bin2hex(random_bytes(16)), PASSWORD_DEFAULT);
 
         try {
-            $sql = "INSERT INTO users (email, password, name, surname, phone, role, created_at)
-                VALUES (:email, :password, :name, :surname, :phone, :role, NOW())";
+            $sql = 'INSERT INTO users (email, password, name, surname, phone, role, created_at)
+                VALUES (:email, :password, :name, :surname, :phone, :role, NOW())';
 
             $stmt = $this->db->prepare($sql);
             $stmt->execute([

@@ -5,6 +5,7 @@ public/uploads/.htaccess
 /storage/logs/*
 /storage/cache/*
 /storage/uploads/*
+.php-cs-fixer.cache
 .env
 .env.production
 Thumbs.db

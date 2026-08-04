@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'faq_q1_text' => 'A simple website is usually ready within a few weeks. A larger web application typically takes 1–3 months. At the start, we confirm the scope and set a realistic plan.',
   'faq_q1_title' => 'How long does it take to build a website or web application?',
   'faq_q2_text' => 'The price depends on scope, features, and integrations. After an initial consultation, I prepare a specific offer and clearly describe what is included.',
@@ -15,5 +15,4 @@ return array (
   'faq_q6_title' => 'What technologies do you use?',
   'faq_subtitle' => 'Short answers about pricing, timelines, and collaboration.',
   'faq_title' => 'Frequently asked questions',
-);
-
+];

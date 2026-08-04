@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'gdpr_back_home' => '← Back to homepage',
   'gdpr_controller_address' => 'Dobrosvkého 718/6',
   'gdpr_controller_city' => '500 02 Hradec Králové',
@@ -56,5 +56,4 @@ return array (
   'gdpr_section_9_text_1' => 'I have implemented appropriate technical and organisational measures to protect personal data against unauthorised access, loss or misuse.',
   'gdpr_section_9_title' => '9. Security of personal data',
   'gdpr_title' => 'Personal data protection',
-);
-
+];

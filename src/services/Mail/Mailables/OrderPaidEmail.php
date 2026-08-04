@@ -32,7 +32,7 @@ final class OrderPaidEmail extends Mailable
             ->text(
                 "Dobrý den {$name},\n\n"
                 . "objednávka {$orderNumber} byla zaplacena. V příloze posíláme vaše vouchery v PDF.\n\n"
-                . "Děkujeme.\n"
+                . "Děkujeme.\n",
             );
 
         foreach ($this->pdfPaths as $path) {

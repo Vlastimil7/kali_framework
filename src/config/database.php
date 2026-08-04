@@ -1,4 +1,5 @@
 <?php
+
 // src/config/database.php
 
 return [

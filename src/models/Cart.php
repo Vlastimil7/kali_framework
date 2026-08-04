@@ -1,4 +1,5 @@
 <?php
+
 namespace Models;
 
 class Cart
@@ -83,7 +84,9 @@ class Cart
             return $this->removeItem($itemKey);
         }
 
-        if ($quantity > 10) $quantity = 10;
+        if ($quantity > 10) {
+            $quantity = 10;
+        }
 
         $_SESSION['cart']['items'][$itemKey]['quantity'] = $quantity;
         $this->recalcTotals();

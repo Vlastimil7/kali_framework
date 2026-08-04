@@ -6,43 +6,43 @@ class Auth
 {
     public static function check(): bool
     {
-        return isset($_SESSION["user_id"]);
+        return isset($_SESSION['user_id']);
     }
 
     public static function id(): ?int
     {
-        return $_SESSION["user_id"] ?? null;
+        return $_SESSION['user_id'] ?? null;
     }
 
     public static function isAdmin(): bool
     {
-        return self::check() && ($_SESSION["user_role"] ?? null) === "admin";
+        return self::check() && ($_SESSION['user_role'] ?? null) === 'admin';
     }
 
-    public static function requireLogin(string $redirect = "/login"): void
+    public static function requireLogin(string $redirect = '/login'): void
     {
         if (!self::check()) {
-            header("Location: " . locale_url($redirect));
+            header('Location: ' . locale_url($redirect));
             exit();
         }
     }
 
-    public static function requireAdmin(string $redirect = "/login"): void
+    public static function requireAdmin(string $redirect = '/login'): void
     {
         if (!self::isAdmin()) {
-            header("Location: " . locale_url($redirect));
+            header('Location: ' . locale_url($redirect));
             exit();
         }
     }
 
-    public static function userInfo (): array
+    public static function userInfo(): array
     {
         return [
-            "id" => $_SESSION["user_id"] ?? null,
-            "name" => $_SESSION["user_name"] ?? null,
-            "email" => $_SESSION["user_email"] ?? null,
-            "role" => $_SESSION["user_role"] ?? null,
-            "avatar" => $_SESSION["user_avatar"] ?? (config('app.base_url', '') . "/assets/avatars/default.png"),
+            'id' => $_SESSION['user_id'] ?? null,
+            'name' => $_SESSION['user_name'] ?? null,
+            'email' => $_SESSION['user_email'] ?? null,
+            'role' => $_SESSION['user_role'] ?? null,
+            'avatar' => $_SESSION['user_avatar'] ?? (config('app.base_url', '') . '/assets/avatars/default.png'),
         ];
     }
 
@@ -54,7 +54,7 @@ class Auth
         session_destroy();
 
         // Přesměrování na přihlašovací stránku
-        header("Location: " . locale_base_url() . "/login");
+        header('Location: ' . locale_base_url() . '/login');
         exit();
     }
 }

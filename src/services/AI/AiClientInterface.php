@@ -1,4 +1,5 @@
 <?php
+
 namespace Services\AI;
 
 interface AiClientInterface

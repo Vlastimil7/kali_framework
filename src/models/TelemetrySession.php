@@ -17,7 +17,7 @@ class TelemetrySession
     public function touch(array $data): bool
     {
         try {
-            $sql = "INSERT INTO telemetry_sessions (
+            $sql = 'INSERT INTO telemetry_sessions (
                         application_name, session_id, page_path,  client_ip, user_agent, device_hints_json
                     ) VALUES (
                         :application_name, :session_id, :page_path, :client_ip, :user_agent, :device_hints_json
@@ -27,7 +27,7 @@ class TelemetrySession
                         client_ip = VALUES(client_ip),
                         user_agent = VALUES(user_agent),
                         device_hints_json = VALUES(device_hints_json),
-                        last_seen = NOW();";
+                        last_seen = NOW();';
 
             $st = $this->db->prepare($sql);
             $st->execute([
@@ -64,10 +64,10 @@ class TelemetrySession
 
     public function findOne(string $app, string $sid): ?array
     {
-        $sql = "SELECT application_name, session_id, page_path, last_seen, device_hints_json, user_agent, client_ip
+        $sql = 'SELECT application_name, session_id, page_path, last_seen, device_hints_json, user_agent, client_ip
             FROM telemetry_sessions
             WHERE application_name = :app AND session_id = :sid
-            LIMIT 1";
+            LIMIT 1';
         $st = $this->db->prepare($sql);
         $st->execute([':app' => $app, ':sid' => $sid]);
         $row = $st->fetch(\PDO::FETCH_ASSOC);

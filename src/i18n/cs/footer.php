@@ -1,6 +1,6 @@
 <?php
 
-return array (
+return  [
   'footer_about_text' => 'Profesionální vývoj webových stránek, e-shopů a aplikací s důrazem na moderní technologie a uživatelský zážitek. Pomáhám firmám růst v digitálním prostředí.',
   'footer_contact_text' => 'Máte zájem o spolupráci nebo chcete konzultovat váš projekt? Neváhejte mě kontaktovat a společně najdeme řešení.',
   'footer_contact_title' => 'Kontaktujte mě',
@@ -26,5 +26,4 @@ return array (
   'footer_services_title' => 'Služby',
   'footer_services_web_apps' => 'Webové aplikace',
   'footer_services_websites' => 'Webové stránky',
-);
-
+];

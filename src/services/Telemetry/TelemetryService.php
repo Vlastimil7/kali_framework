@@ -156,7 +156,7 @@ class TelemetryService
                 'notAllowedName' => 0,
                 'dataTooLarge' => 0,
             ];
-           
+
 
             foreach ($events as $eventItem) {
                 $validationResult = $this->validateSingleEvent($eventItem);
@@ -183,8 +183,11 @@ class TelemetryService
                         'device_hints_json' => $deviceHintsJson,
                     ]);
 
-                    if ($ok) $acceptedEventsCount++;
-                    else $dbFailedCount++;
+                    if ($ok) {
+                        $acceptedEventsCount++;
+                    } else {
+                        $dbFailedCount++;
+                    }
                     continue;
                 }
 
@@ -195,15 +198,18 @@ class TelemetryService
                     'event_name' => $eventName,
                     'event_data_json' => json_encode(
                         $normalizedEvent['eventData'],
-                        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES,
                     ),
                     'client_ip' => $clientIpAddress,
                     'user_agent' => $userAgent,
                     'device_hints_json' => $deviceHintsJson,
                 ]);
 
-                if ($ok) $acceptedEventsCount++;
-                else $dbFailedCount++;
+                if ($ok) {
+                    $acceptedEventsCount++;
+                } else {
+                    $dbFailedCount++;
+                }
             }
 
 
@@ -283,7 +289,9 @@ class TelemetryService
     private function sanitizeShortText($value, int $maximumLength): string
     {
         $value = trim((string)$value);
-        if ($value === '') return '';
+        if ($value === '') {
+            return '';
+        }
         if (strlen($value) > $maximumLength) {
             $value = substr($value, 0, $maximumLength);
         }
@@ -293,7 +301,9 @@ class TelemetryService
     private function sanitizePath(string $value): string
     {
         $value = trim($value);
-        if ($value === '') return '';
+        if ($value === '') {
+            return '';
+        }
         if ($value[0] !== '/') {
             $value = '/' . ltrim($value, '/');
         }
@@ -311,7 +321,9 @@ class TelemetryService
 
         foreach ($data as $key => $value) {
             $cleanKey = $this->sanitizeShortText((string)$key, 50);
-            if ($cleanKey === '') continue;
+            if ($cleanKey === '') {
+                continue;
+            }
 
             if (is_string($value)) {
                 $cleanData[$cleanKey] = $this->sanitizeShortText($value, 300);
@@ -367,7 +379,7 @@ class TelemetryService
         if (file_put_contents(
             $fileName,
             json_encode($state, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-            LOCK_EX
+            LOCK_EX,
         ) === false) {
             Logger::error('Cannot write telemetry rate limit file');
             return true;

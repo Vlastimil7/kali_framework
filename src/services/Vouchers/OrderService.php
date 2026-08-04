@@ -4,12 +4,11 @@ namespace Services\Vouchers;
 
 use Core\Database;
 use Helpers\Logger;
-use Services\Payments\ComgateService;
+use Models\VoucherCode;
 use Services\Mail\Mail;
 use Services\Mail\Mailables\OrderPaidEmail;
+use Services\Payments\ComgateService;
 use Services\VoucherPdfService;
-
-use Models\VoucherCode;
 
 class OrderService
 {
@@ -105,7 +104,9 @@ class OrderService
                 'redirect' => $paymentResult['redirectUrl'],
             ];
         } catch (\Throwable $e) {
-            if ($this->db->inTransaction()) $this->db->rollback();
+            if ($this->db->inTransaction()) {
+                $this->db->rollback();
+            }
             Logger::exception($e, ['context' => 'OrderService::createOrderAndPayment']);
 
             return [
@@ -186,7 +187,7 @@ class OrderService
 
         Logger::info('Notify received non-final status', [
             'order_id' => $orderId,
-            'status' => $status
+            'status' => $status,
         ]);
 
         return true;
@@ -201,7 +202,9 @@ class OrderService
     private function fulfillPaidOrderOnce(int $orderId): void
     {
         $order = $this->findOrder($orderId);
-        if (!$order) return;
+        if (!$order) {
+            return;
+        }
 
         // idempotence: email už poslán
         if (!empty($order['email_paid_sent_at'])) {
@@ -214,7 +217,7 @@ class OrderService
         if (!($gen['success'] ?? false)) {
             Logger::warning('fulfillPaidOrderOnce: ensureGeneratedForPaidOrder failed', [
                 'order_id' => $orderId,
-                'message' => $gen['message'] ?? null
+                'message' => $gen['message'] ?? null,
             ]);
             return;
         }
@@ -233,14 +236,14 @@ class OrderService
         if ($pdfPath === '' || !is_file($pdfPath)) {
             $pdfPath = $this->voucherPdf->renderOrderVouchersPdf($order, $items, $codes);
 
-            $this->db->prepare("
+            $this->db->prepare('
                 UPDATE orders
                 SET pdf_generated_at = NOW(),
                     pdf_path = :path
                 WHERE id = :id AND pdf_generated_at IS NULL
-            ")->execute([
+            ')->execute([
                 ':id' => $orderId,
-                ':path' => $pdfPath
+                ':path' => $pdfPath,
             ]);
         }
 
@@ -255,24 +258,24 @@ class OrderService
             return;
         }
 
-        $this->db->prepare("
+        $this->db->prepare('
             UPDATE orders
             SET email_paid_sent_at = NOW()
             WHERE id = :id AND email_paid_sent_at IS NULL
-        ")->execute([':id' => $orderId]);
+        ')->execute([':id' => $orderId]);
 
         Logger::info('fulfillPaidOrderOnce: DONE', ['order_id' => $orderId]);
     }
 
     private function getOrderItems(int $orderId): array
     {
-        $stmt = $this->db->prepare("
+        $stmt = $this->db->prepare('
             SELECT oi.*, v.name AS voucher_name
             FROM order_items oi
             LEFT JOIN vouchers v ON v.id = oi.voucher_id
             WHERE oi.order_id = :id
             ORDER BY oi.id ASC
-        ");
+        ');
         $stmt->execute([':id' => $orderId]);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
     }
@@ -281,17 +284,17 @@ class OrderService
 
     private function setOrderStatus(int $orderId, string $status): void
     {
-        $this->db->prepare("UPDATE orders SET status = :s WHERE id = :id")
+        $this->db->prepare('UPDATE orders SET status = :s WHERE id = :id')
             ->execute([':s' => $status, ':id' => $orderId]);
     }
 
     private function setOrderComgateIds(int $orderId, string $payId, string $refId): void
     {
-        $sql = "UPDATE orders
+        $sql = 'UPDATE orders
                 SET
                   comgate_pay_id = COALESCE(comgate_pay_id, :pay),
                   comgate_ref_id = COALESCE(comgate_ref_id, :ref)
-                WHERE id = :id";
+                WHERE id = :id';
         $this->db->prepare($sql)->execute([
             ':id'  => $orderId,
             ':pay' => $payId,
@@ -334,10 +337,10 @@ class OrderService
 
     private function insertTransaction(array $t): int
     {
-        $sql = "INSERT INTO transactions
+        $sql = 'INSERT INTO transactions
                 (order_id, comgate_pay_id, type, amount_cents, currency, status, message, request_payload, response_payload)
                 VALUES
-                (:order_id, :comgate_pay_id, :type, :amount_cents, :currency, :status, :message, :request_payload, :response_payload)";
+                (:order_id, :comgate_pay_id, :type, :amount_cents, :currency, :status, :message, :request_payload, :response_payload)';
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
@@ -357,13 +360,13 @@ class OrderService
 
     private function updateTransaction(int $txId, array $t): void
     {
-        $sql = "UPDATE transactions
+        $sql = 'UPDATE transactions
                 SET
                   comgate_pay_id = COALESCE(:comgate_pay_id, comgate_pay_id),
                   status = COALESCE(:status, status),
                   message = :message,
                   response_payload = COALESCE(:response_payload, response_payload)
-                WHERE id = :id";
+                WHERE id = :id';
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
@@ -379,7 +382,7 @@ class OrderService
 
     private function findOrder(int $orderId): ?array
     {
-        $stmt = $this->db->prepare("SELECT * FROM orders WHERE id = :id LIMIT 1");
+        $stmt = $this->db->prepare('SELECT * FROM orders WHERE id = :id LIMIT 1');
         $stmt->execute([':id' => $orderId]);
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
         return $row ?: null;
@@ -423,8 +426,8 @@ class OrderService
 
     private function insertOrderItem(int $orderId, array $voucher): void
     {
-        $sql = "INSERT INTO order_items (order_id, voucher_id, quantity, price_cents)
-                VALUES (:order_id, :voucher_id, 1, :price)";
+        $sql = 'INSERT INTO order_items (order_id, voucher_id, quantity, price_cents)
+                VALUES (:order_id, :voucher_id, 1, :price)';
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
@@ -437,15 +440,23 @@ class OrderService
     public function adminRefund(int $orderId, int $adminId, string $note = '', ?int $amountCents = null): array
     {
         $order = $this->findOrder($orderId);
-        if (!$order) return ['success' => false, 'error' => 'Order not found'];
+        if (!$order) {
+            return ['success' => false, 'error' => 'Order not found'];
+        }
 
         $payId = (string)($order['comgate_pay_id'] ?? '');
-        if ($payId === '') return ['success' => false, 'error' => 'Missing comgate_pay_id'];
+        if ($payId === '') {
+            return ['success' => false, 'error' => 'Missing comgate_pay_id'];
+        }
 
         $total = (int)($order['total_amount_cents'] ?? 0);
-        if ($total <= 0) return ['success' => false, 'error' => 'Order total is 0'];
+        if ($total <= 0) {
+            return ['success' => false, 'error' => 'Order total is 0'];
+        }
 
-        if ($amountCents === null) $amountCents = $total;
+        if ($amountCents === null) {
+            $amountCents = $total;
+        }
         if ($amountCents <= 0 || $amountCents > $total) {
             return ['success' => false, 'error' => 'Invalid refund amount'];
         }
