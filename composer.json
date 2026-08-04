@@ -11,6 +11,8 @@
     "Helpers\\": "src/helpers/",
     "Middleware\\": "src/middleware/",
     "Services\\": "src/services/",
+    "Actions\\": "src/Actions/",
+    "Dto\\": "src/Dto/",
     "Api\\": "src/Api/"
   }
   },
