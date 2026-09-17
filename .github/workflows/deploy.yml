@@ -8,7 +8,7 @@ on:
 env:
   DEPLOY_HOST: ${{ secrets.DEV_SSH_HOST }}
   DEPLOY_USER: ${{ secrets.DEV_SSH_USER }}
-  DEPLOY_PATH: /var/www/html/kali-framework
+  DEPLOY_PATH: /var/www/web.kalasekvyvoj.cz/web/kali-framework
 
 jobs:
   deploy:
