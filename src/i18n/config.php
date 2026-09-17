@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'default' => 'en',
-    'supported' => ['en', 'cs', 'de'],
+    'default' => 'cs',
+    'supported' => ['cs', 'en'],
 ];

@@ -1,418 +1,269 @@
 # Kali Framework
 
-Easy MVC structure - Light Kali Framework for building websites or web applications
+Lehký PHP základ pro weby a menší aplikace. Výchozí aplikace je malá: úvodní stránka, dokumentace na `/docs`, kontakt na `/contact`, ukázka routy s parametrem, nastavení cookies a jednoduché JSON API. Další funkce se přidávají po částech do rout, kontrolerů, šablon a služeb.
 
-## 🚀 Stack
+## Co je v základu
 
-- **PHP 8+** - Backend logic
-- **Vanilla JavaScript** - Frontend interactions
-- **Tailwind CSS** - Styling framework
-- **PHPMailer** - Email functionality
-- **Node.js** - For Tailwind CSS compilation
-- **Composer** - PHP dependency management
+| Oblast | Připraveno | Kde začít |
+| --- | --- | --- |
+| Routování | GET, POST, PUT, DELETE, parametry v URL, skupiny rout a middleware | `src/routes/web.php`, `src/routes/api.php` |
+| Stránky | Kontrolery, PHP šablony, společný layout, header, footer a stránka 404 | `src/controllers/Front/`, `src/views/` |
+| Kontakt | Připravená stránka bez cizích nebo ukázkových údajů; hodnoty z `.env` | `src/config/site.php`, `src/views/pages/contact.php` |
+| Požadavek | Query, formulářová i JSON data, soubory, hlavičky a parametry routy přes `Core\Request` | `src/classes/core/Request.php` |
+| Překlady | Čeština bez prefixu, angličtina na `/en`, překlady s parametry a fallback | `src/i18n/config.php`, `src/i18n/{cs,en}/` |
+| API | Oddělené routy pod `/api/`, ukázková JSON odpověď a JSON 404 | `src/Api/V1/Controllers/` |
+| Cookies | Lišta, přijetí, odmítnutí, vlastní výběr, pozdější změna a kontrola souhlasu v PHP | `src/views/cookie/`, `src/helpers/cookie_helper.php` |
+| Zabezpečení formulářů | Session a CSRF token s middleware `csrf` | `src/helpers/Csrf.php`, `src/middleware/CsrfMiddleware.php` |
+| Toasty a validace | Čtyři typy oznámení, krátký formulář a chyby u polí | `/` → Živá ukázka, `src/controllers/Front/HomeController.php` |
+| Konfigurace | Hodnoty z `.env` přístupné přes `config('app.name')` | `src/config/` |
+| CSS | Tailwind utility ve šablonách a vlastní CSS, sestavení přes npm | `src/assets/css/framework.css`, `package.json` |
 
-## 📋 Requirements
+Po instalaci můžeš otevřít `/`, `/docs`, `/en/docs`, `/contact`, `/hello/Kali`, `/cookies` a `/api/v1/health`. Na úvodní stránce je živá ukázka toastů a validace. Dokumentace na `/docs` obsahuje menu a praktické ukázky kódu. Úvodní stránku a ukázkové routy v novém projektu nahradíš vlastním obsahem.
 
-- PHP 8.0+
-- Node.js 16+
-- Composer 2.0+
-- MySQL/MariaDB
-- Web server (Apache/Nginx)
+## Co lze rovnou zapojit do nového projektu
 
-## 🛠️ Installation
+Tyto části jsou v repozitáři a nepotřebují starý voucherový web. Pro jejich použití doplníš nastavení a vlastní logiku projektu:
 
-### 1. Clone Repository
+| Součást | Co poskytuje | Co doplníš |
+| --- | --- | --- |
+| Databáze | PDO připojení k MySQL/MariaDB, připravené dotazy a transakce | Přístupové údaje v `.env`, tabulky a modely |
+| Validace | Pravidla jako `required`, `email`, `min`, `max`, `integer` nebo `in`; seznam chyb | Pravidla konkrétního formuláře |
+| E-mail | SMTP přes PHPMailer, text/HTML, přílohy, kopie a výsledek odeslání | SMTP údaje, adresy a vlastní obsah zpráv |
+| Flash zprávy | Hodnoty a dříve zadané údaje pro další požadavek | Zobrazení ve vlastní šabloně |
+| Logování | Zápis informací a chyb do `storage/logs/` | Volání tam, kde je v projektu potřebuješ |
+| Vlastní middleware | Rozšíření routeru o další kontroly rout | Vlastní třídu implementující `MiddlewareInterface` |
 
-git clone https://github.com/your-username/project-name.git
-cd project-name
+`Core\Database` má nastavení připravené při startu, ale připojení vytvoří až při prvním dotazu. Databáze ani SMTP nejsou potřeba pro výchozí stránku.
 
-### 2. Install Dependencies
+## Jak funguje jeden požadavek
 
-# Install PHP dependencies
+1. Webový server předá URL do `public/index.php`. Veřejně dostupný má být jen adresář `public/`.
+2. Načte se Composer autoload, `.env` a konfigurace z `src/config/`. Spustí se session a pomocné funkce.
+3. Z URL se určí jazyk. Výchozí čeština nemá prefix, angličtina používá `/en`. API pod `/api/` se nepřekládá v URL.
+4. Router načte `src/routes/web.php` a `src/routes/api.php`, najde routu a spustí její middleware.
+5. Router zavolá metodu kontroleru. Může jí předat `Core\Request` a hodnoty z URL.
+6. Webový kontroler vykreslí PHP šablonu v layoutu; API kontroler pošle JSON. Neznámá URL vrátí 404.
 
-composer install
+Základní vazba je: **URL → routa → kontroler → šablona nebo JSON**.
 
-# Install Node dependencies
+## Založení nového projektu
 
-npm install
+Požadavky: PHP 8.4+, Composer 2. Node.js, databáze a SMTP jsou pro výchozí aplikaci volitelné.
 
-### 3. Environment Setup
+1. Zkopíruj repozitář do nového adresáře a spusť `composer install`.
+2. Zkopíruj `.env.example` na `.env`. Nastav hlavně `APP_NAME` a `APP_URL`. Pokud web běží v podadresáři, nastav také `APP_BASE_URL`; při kořeni webu ho nech prázdné. Veřejné kontaktní údaje vyplň pomocí `CONTACT_*` a `SOCIAL_*`.
+3. Spusť lokální server:
 
-# Copy environment template
+   ```bash
+   php -S localhost:8000 -t public public/router.php
+   ```
 
-cp .env.example .env
+4. Otevři `http://localhost:8000` a ověř také `/en`, `/cookies` a `/api/v1/health`.
+5. Nahraď ukázkový obsah vlastním. Začni v `src/routes/web.php`, `src/controllers/Front/HomeController.php`, `src/views/home/index.php` a `src/assets/css/framework.css`.
 
-# Edit environment variables
+Při nasazení nastav kořen webu na `public/`, přesměrování neexistujících souborů na `public/index.php`, `APP_ENV=production`, `APP_DEBUG=false` a správnou `APP_URL`. Soubor `.env` nepatří do veřejného adresáře ani do Gitu.
 
-nano .env
+Současná místní `.env` může používat starší názvy `BASE_URL_DEV` a `SITE_URL_DEV`; `src/config/app.php` je zatím přijímá jako náhradní hodnoty. V novém projektu používej `APP_BASE_URL` a `APP_URL`.
 
-### 4. Configure Environment Variables
+### Přehled adresářů
 
-Edit `.env` file with your settings:
+| Cesta | Účel |
+| --- | --- |
+| `public/index.php` | Vstupní bod aplikace |
+| `public/assets/` | Veřejné CSS, JavaScript a obrázky |
+| `src/routes/` | Registrace webových a API rout |
+| `src/controllers/Front/` | Kontrolery webových stránek |
+| `src/Api/V1/Controllers/` | Kontrolery API |
+| `src/views/layouts/main.php` | Společný HTML layout |
+| `src/views/pages/contact.php` | Konfigurovatelná kontaktní stránka |
+| `src/views/docs/index.php` | Dokumentace s menu a ukázkami |
+| `src/views/partials/` | Header a footer |
+| `src/i18n/` | Konfigurace jazyků a překladové soubory |
+| `src/config/` | Nastavení aplikace, databáze, e-mailu a cookies |
+| `src/classes/core/` | Router, požadavek, kontroler, konfigurace, databáze |
+| `src/helpers/` a `src/middleware/` | Pomocné funkce, validace, CSRF |
+| `src/assets/css/framework.css` | Zdroj vlastních stylů a Tailwindu |
+| `src/services/Mail/` | Obecné odesílání e-mailů |
+| `storage/` | Logy, cache a soubory aplikace |
+| `tests/` | Testy |
 
-env
+## Běžná práce s frameworkem
 
-# Application
+### Údaje webu a kontakt
 
-APP_ENV=development
-APP_DEBUG=true
+`APP_NAME` určuje název webu. Veřejné kontakty nastav v `.env` jako `CONTACT_EMAIL`, `CONTACT_PHONE`, `CONTACT_ADDRESS`, `CONTACT_HOURS` a volitelné `SOCIAL_FACEBOOK`, `SOCIAL_INSTAGRAM`, `SOCIAL_LINKEDIN`, `SOCIAL_GITHUB`. Hodnoty čte `src/config/site.php` a v PHP jsou dostupné například jako `config('site.contact.email')`. Kontaktní stránka ukáže jen vyplněné hodnoty; prázdná pole nevytvářejí neplatné odkazy. E-mail pro odesílání (`MAIL_FROM_ADDRESS`) a příjem formulářů (`MAIL_TO_ADDRESS`) jsou samostatné údaje pro SMTP.
 
-# Database
+Stránka `/contact` je výchozí vizitka. Neodesílá formulář, dokud pro daný web nepřidáš jeho routu, validaci a doručení. Chybové stránky 404 a 500 používají společný vzhled; serverové chyby se logují a návštěvníkům se nezobrazuje technický detail.
 
-DB_HOST=localhost
-DB_NAME=your_database_name
-DB_USERNAME=your_db_user
-DB_PASSWORD=your_db_password
+### Přidání stránky
 
-# URLs (adjust for your setup)
-
-BASE_URL_DEV=/your-project/public
-SITE_URL_DEV=http://localhost/your-project
-
-# Production URLs
-
-BASE_URL=
-SITE_URL=https://your-domain.com
-
-# Email Configuration
-
-SMTP_HOST=smtp.gmail.com
-SMTP_USERNAME=your_email@gmail.com
-SMTP_PASSWORD=your_app_password
-SMTP_PORT=587
-MAIL_FROM_ADDRESS=noreply@your-domain.com
-MAIL_FROM_NAME=Your App Name
-
-# reCAPTCHA
-
-RECAPTCHA_SITE_KEY=your_recaptcha_site_key
-RECAPTCHA_SECRET_KEY=your_recaptcha_secret_key
-
-### 5. Configure .htaccess
-
-**Option A: Manual Setup (Recommended)**
-
-Add `public/.htaccess` to `.gitignore` and create manually:
-
-**For Development:**
-apache
-RewriteEngine On
-RewriteBase /your-project/public/
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.\*)$ index.php?url=$1 [QSA,L]
-
-**For Production:**
-apache
-RewriteEngine On
-RewriteBase /
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.\*)$ index.php?url=$1 [QSA,L]
-
-### 6. Build Assets
-
-# Development (with file watching)
-
-npm run dev
-
-# Production build
-
-npm run build
-
-### 7. Set Permissions (Linux/Mac)
-
-chmod -R 755 .
-chmod -R 775 storage/
-
-## 🔧 Development
-
-### Available Scripts
-
-Run the complete PHP quality pipeline:
-
-```bash
-composer quality
-```
-
-Individual checks:
-
-```bash
-composer test          # Pest unit and feature tests
-composer test:smoke    # Existing framework smoke suites through Pest
-composer lint          # PHP syntax check
-composer lint:style    # PSR-12 check without changing files
-composer format        # Apply PHP CS Fixer formatting
-composer analyse       # PHPStan static analysis
-```
-
-Pest configuration is stored in `phpunit.xml` and `tests/Pest.php`. Put isolated tests in `tests/Unit` and application-flow tests in `tests/Feature`. The current PHPStan starting level is defined in `phpstan.neon.dist`; raise it gradually as types are added to older code.
-
-The development quality tools target PHP 8.4 or newer. Production dependencies can still be installed without development tools using `composer install --no-dev`.
-
-Watch for Tailwind changes:
-
-npm run dev
-
-# Build for production
-
-npm run build
-
-# Generate .htaccess (if using dynamic setup)
-
-php generate-htaccess.php
-
-### Project Structure
-
-project/
-├── .env # Environment variables (ignored by git)
-├── .env.example # Environment template
-├── public/ # Web root
-│ ├── .htaccess # URL rewriting (ignored by git)
-│ ├── index.php # Entry point
-│ └── assets/ # Compiled assets
-├── src/ # Application source
-│ ├── API/ # Custom API for anything e.g chat bot
-│ ├── config/ # Configuration files
-│ ├── controllers/ # MVC Controllers
-│ ├── models/ # MVC Models  
-│ ├── views/ # MVC Views
-│ ├── helpers/ # Helper functions
-│ ├── middleware/ # Route middleware (auth, admin, ...)
-│ └── routes/ # Route definitions
-│ └── services/ # Service efinitions
-├── storage/ # App storage
-│ ├── cache/ # Cache files
-│ ├── logs/ # Log files
-│ └── uploads/ # File uploads
-└── vendor/ # Composer dependencies (ignored by git)
-
-### Configuration
-
-Environment variables are translated into application configuration in focused files:
-
-- `src/config/app.php` – environment, URLs, debug mode and timezone
-- `src/config/database.php` – database connection
-- `src/config/mail.php` – SMTP and sender/recipient defaults
-- `src/config/recaptcha.php` – reCAPTCHA keys
-- `src/config/ai.php` – AI provider, models and API keys
-- `src/config/payments.php` – payment gateways
-- `src/config/oauth.php` – OAuth providers
-- `src/config/vouchers.php` – voucher settings
-
-Read values anywhere in PHP with dot notation:
+Do `src/routes/web.php` přidej routu:
 
 ```php
-$host = config('database.host');
-$smtpPort = config('mail.smtp.port', 587);
-$openAiModel = config('ai.providers.openai.model');
+$router->get('about', 'Front\PageController@about');
 ```
 
-Keep secrets only in `.env`; application code should use `config()` rather than calling `env()` directly. Configuration constants are intentionally not created.
-
-### Route middleware
-
-Protect one route with the fluent API:
+Vytvoř `src/controllers/Front/PageController.php`:
 
 ```php
-$router->get('profile', 'Front\\UserController@showProfile')
-    ->middleware('auth');
-```
+<?php
 
-Protect a whole route group:
+namespace Controllers\Front;
 
-```php
-$router->group(['middleware' => ['auth', 'admin']], function (Core\Router $router): void {
-    $router->get('admin/dashboard', 'Admin\\DashboardController@index');
-    $router->get('admin/users', 'Admin\\UserController@index');
-});
-```
+use Core\Controller;
 
-Custom middleware must implement `Core\MiddlewareInterface`. Register an alias with:
-
-```php
-$router->aliasMiddleware('verified', Middleware\VerifiedUserMiddleware::class);
-```
-
-### CSRF protection
-
-Internal state-changing web routes use the `csrf` middleware:
-
-```php
-$router->post('profile/update', 'Front\\UserController@updateProfile')
-    ->middleware(['auth', 'csrf']);
-```
-
-POST forms rendered through the main layout receive a hidden `_token` field automatically. For forms outside the main content, use:
-
-```php
-<?= csrf_field() ?>
-```
-
-The current token is also available for AJAX requests:
-
-```js
-const token = document.querySelector('meta[name="csrf-token"]').content;
-
-fetch('/account/update', {
-  method: 'POST',
-  headers: { 'X-CSRF-TOKEN': token },
-});
-```
-
-External payment callbacks and stateless API endpoints should not use session CSRF middleware; they need their own signature or API-token verification.
-
-### Request object
-
-Type-hint `Core\Request` as the first controller argument. The router injects it automatically, including route parameters:
-
-```php
-use Core\Request;
-
-public function update(Request $request, int $id)
+final class PageController extends Controller
 {
-    $email = $request->string('email');
-    $page = $request->int('page', 1);
-    $enabled = $request->boolean('enabled');
-    $attachment = $request->file('attachment');
+    public function about(): void
+    {
+        $this->view('pages/about', [
+            'title' => __('about_title') . ' | ' . config('app.name'),
+        ]);
+    }
 }
 ```
 
-Common methods include `input()`, `post()`, `query()`, `string()`, `int()`, `boolean()`, `has()`, `filled()`, `only()`, `except()`, `file()`, `header()`, `cookie()`, `route()`, `ip()`, `uri()`, and `isSecure()`.
+Vytvoř `src/views/pages/about.php`:
 
-### Validation
+```php
+<h1><?= htmlspecialchars(__('about_title'), ENT_QUOTES, 'UTF-8') ?></h1>
+<p><?= htmlspecialchars(__('about_text'), ENT_QUOTES, 'UTF-8') ?></p>
+```
 
-Create a validator from request data and declarative rules. Failed forms can store validation errors, safe old input, and an error toast in one call:
+Klíče `about_title` a `about_text` přidej do českého a anglického překladového souboru. Odkaz na stránku vytvoř přes `locale_url('about')`, aby zůstal správný jazyk i případný podadresář.
+
+### Parametry v URL a požadavek
+
+```php
+$router->get('article/{slug}', 'Front\ArticleController@show');
+```
+
+Metoda `show(string $slug)` dostane hodnotu z URL. Pokud jako první argument uvedeš `Core\Request`, router vloží i aktuální požadavek: `show(Request $request, string $slug)`. Z něj čti například `$request->query('page')`, `$request->post('email')`, `$request->file('image')` nebo `$request->header('Accept')`. JSON tělo se u požadavku s `Content-Type: application/json` načte do vstupních dat.
+
+### POST formulář a validace
+
+Routu s formulářem chraň middleware:
+
+```php
+$router->post('contact/send', 'Front\MessageController@send')->middleware('csrf');
+```
+
+Do každého takového formuláře vlož token:
+
+```php
+<form action="<?= htmlspecialchars(locale_url('contact/send'), ENT_QUOTES, 'UTF-8') ?>" method="post">
+    <?= csrf_field() ?>
+    <input name="email" type="email" required>
+    <button type="submit">Odeslat</button>
+</form>
+```
+
+V kontroleru použij `Helpers\Validator`:
 
 ```php
 use Helpers\Validator;
 
 $validator = Validator::make($request->post(), [
-    'email' => 'bail|required|email|max:254',
-    'password' => 'bail|required|string|min:8',
-    'role' => 'required|in:user,admin',
-], [
-    'email.required' => 'Zadejte e-mail.',
-], [
-    'email' => 'e-mail',
+    'email' => 'required|email',
 ]);
 
 if ($validator->fails()) {
-    $validator->flash('registration', $request->post());
-    header('Location: ' . locale_url('register'));
-    exit;
+    $errors = $validator->errors();
+    // Zobraz chyby ve své šabloně nebo je vrať jako JSON.
 }
-
-$data = $validator->validated();
 ```
 
-Use `Flash::old('registration')` to refill the form and `Validator::flashedErrors('registration')` for inline errors. Passwords, tokens, and other sensitive fields are removed from old input automatically.
+CSRF kontroluje token odeslaného formuláře. Validace samostatně ověřuje obsah polí; obě části mají v aplikaci jinou úlohu.
+`MessageController` je příklad kontroleru, který vytvoříš pro vlastní projekt; výchozí kontaktní stránka formulář neodesílá.
 
-Available rules include `required`, `required_if`, `required_with`, `accepted`, `string`, `integer`, `numeric`, `boolean`, `array`, `email`, `url`, `min`, `max`, `between`, `size`, `in`, `not_in`, `same`, `different`, `confirmed`, `regex`, `date`, `date_format`, `alpha`, `alpha_num`, and `slug`. Modifiers `bail`, `sometimes`, and `nullable` are supported. An array of rules can also contain a closure returning `true`, an error string, or `false`.
+### Toasty a živá ukázka
 
-## LOGGER
+Na úvodní stránce otevři sekci **Živá ukázka**. Čtyři tlačítka vyvolají úspěch, informaci, upozornění a chybu. Formulář na `POST /demo/validate` používá skutečný `Helpers\Validator` a middleware `csrf`. Po odeslání se vrátí na úvod, zobrazí toast a při chybě také zprávu u pole. Jméno a e-mail slouží jen k ukázce; neodesílají se e-mailem ani neukládají do databáze.
 
-HOW TO USE IT IN PROJECT
+Vlastní zprávu ze serveru přidej přes `Helpers\Toast::success('Uloženo')`, `::info()`, `::warning()` nebo `::error()`. Na následující stránce se vykreslí automaticky v layoutu. Pro událost v prohlížeči použij `window.toast.success('Uloženo', { title: 'Hotovo' })`; další typy mají stejné názvy. Vzhled je v `src/assets/css/framework.css`, skript v `public/assets/js/ui/toast.js`. Příklad formuláře je v `src/controllers/Front/HomeController.php` a `src/views/home/index.php`.
 
-1. Use a helper - use Helpers/Logger;
-2. Use a function from Logger fyi:  Logger::error('LogoBrief - PDF render failed', ['error' => $e->getMessage()]);
+### API
 
-## 🚀 Deployment
+API routy definuj v `src/routes/api.php` pod `api/`. Ukázka `/api/v1/health` je v `src/Api/V1/Controllers/HealthController.php`. Pro vlastní odpověď nastav `Content-Type: application/json`, odpovídající HTTP status a odešli data pomocí `json_encode()`. `Core\Request` umí číst také JSON vstup.
 
-### Automatic Deployment with GitHub Actions
+### Překlady a URL
 
-This project includes automated deployment setup:
+`src/i18n/config.php` určuje výchozí a podporované jazyky. Překlady jsou PHP pole v `src/i18n/cs/` a `src/i18n/en/`:
 
-1. **Setup Server Requirements:**
+```php
+__('home_title');
+__('welcome', ['name' => $name]);
+__('cart', [], 'shop');
+locale_url('about');
+```
 
-   - Ubuntu/Debian server with SSH access
-   - PHP 8+, Composer, Node.js, Nginx/Apache
-   - Create deploy user with sudo access
+Třetí argument `__('cart', [], 'shop')` znamená soubory `cs/shop.php` a `en/shop.php`. Chybějící překlad se hledá ve výchozím jazyce; pokud není ani tam, zobrazí se klíč. Header obsahuje přepínač jazyků.
 
-2. **Configure GitHub Secrets:**
-   Go to Repository Settings → Secrets and Variables → Actions:
+### Header, footer a cookies
 
-   - `SSH_PRIVATE_KEY`: Server SSH private key
-   - `SERVER_HOST`: Server IP or domain
-   - `SERVER_USER`: Deploy username (usually 'deploy')
+`src/views/layouts/main.php` načítá `src/views/partials/header.php`, `footer.php` a cookie lištu. V headeru a footeru si pro nový web uprav navigaci, značku a odkazy. Patička vždy nabízí návrat do nastavení cookies.
 
-3. **Server Setup:**
+Lišta nabízí přijmout, odmítnout a upravit. Stránka `/cookies` umožňuje volbu změnit kdykoli. Nastavení se ukládá na 180 dní; název a dobu mění `src/config/cookies.php`. Formuláře fungují bez JavaScriptu a jsou chráněné CSRF.
 
-   # Create deploy user
+Výchozí projekt nespouští žádnou analytickou ani marketingovou integraci. Volitelný skript přidej jen po příslušném souhlasu:
 
-   sudo adduser deploy
-   sudo usermod -aG www-data deploy
-   sudo usermod -aG sudo deploy
+```php
+<?php if (cookie_allowed('analytics')): ?>
+    <script src="<?= htmlspecialchars(locale_url('assets/js/analytics.js'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
+<?php endif; ?>
+```
 
-   # Generate SSH keys
+Pro marketing použij `cookie_allowed('marketing')`. Když přidáš externí službu, uprav texty souhlasu podle skutečně použitých cookies a vyřeš také odstranění jejích již uložených cookies po odvolání souhlasu.
 
-   sudo su - deploy
-   ssh-keygen -t rsa -b 4096
+### Databáze a e-mail
 
-   # Setup project directory
+Databázové údaje patří do `.env`, jejich mapování je v `src/config/database.php`. Příklad připraveného dotazu:
 
-   sudo mkdir -p /var/www/projekty/your-project
-   sudo chown deploy:www-data /var/www/projekty/your-project
+```php
+use Core\Database;
 
-4. **Deploy Workflow:**
-   - Push to `main` branch triggers automatic deployment
-   - Installs dependencies, builds assets, updates server
-   - Monitor deployment in GitHub Actions tab
+$statement = Database::getInstance()->execute(
+    'SELECT id, title FROM posts WHERE id = :id',
+    ['id' => $id],
+);
+$post = $statement->fetch();
+```
 
-### Manual Deployment
+Tabulku `posts` si musíš vytvořit v konkrétním projektu. Framework zatím nemá migrace ani ORM.
 
-# On server
+SMTP nastav přes hodnoty v `.env.example`. Jednoduchý textový e-mail:
 
-cd /var/www/your-project
-git pull origin main
-composer install --no-dev --optimize-autoloader
-npm ci --production
-npm run build
-sudo systemctl reload php8.2-fpm nginx
+```php
+use Services\Mail\EmailMessage;
+use Services\Mail\Mail;
 
-## 🔒 Security Notes
+$result = Mail::to('uzivatel@example.com')->send(
+    EmailMessage::make()->subject('Zpráva')->text('Dobrý den.'),
+);
 
-- Never commit `.env` files to repository
-- Use strong database passwords in production
-- Configure proper file permissions on server
-- Enable HTTPS in production
-- Keep dependencies updated
+if (!$result->successful()) {
+    // Zpracuj neúspěšné odeslání.
+}
+```
 
-## 🐛 Troubleshooting
+Podrobnosti k HTML šablonám, přílohám a kopiím jsou v `src/services/Mail/README.md`. Staré e-mailové šablony obsahují texty původního projektu; pro nový web si napiš vlastní.
 
-### Common Issues
+## Co v repozitáři zůstalo ze starého projektu
 
-**1. Permission Denied Errors:**
+Soubory pro uživatele a administraci, vouchery, košík, objednávky, platby Comgate, AI chat, telemetrii, Google OAuth, reCAPTCHA a další specifické funkce jsou stále fyzicky přítomné. `public/index.php` načítá jen `web.php` a `api.php`; starý `admin.php` nenačítá. Tyto moduly tedy nejsou součástí výchozího běhu a jejich šablony či nastavení je před použitím nutné projít a přizpůsobit. Původní `src/views/contact/`, `src/views/gdpr/` a `src/views/terms/` obsahují údaje a texty předchozích projektů. Pro nový web používej `src/views/pages/contact.php` a právní stránky napiš podle skutečného projektu. Německé překladové soubory existují, ale jazyk `de` není zapnutý.
 
-sudo chown -R www-data:www-data storage/
-sudo chmod -R 775 storage/
+Závislosti těchto starých modulů jsou zatím také v `composer.json`. Repozitář ještě čeká na úplný úklid, takže pro nový projekt nekopíruj staré moduly jako hotové obecné funkce.
 
-**2. Assets Not Loading:**
+## Tailwind CSS a ověření
 
-- Check .htaccess RewriteBase path
-- Verify BASE_URL in .env matches your setup
-- Run `npm run build` to compile assets
+Tailwind je napojený přes `package.json`. Utility třídy můžeš psát přímo do PHP šablon v `src/views/`; Tailwind je při sestavení projde. Pro vlastní pravidla upravuj čitelný zdroj `src/assets/css/framework.css`. Výsledný soubor `public/assets/css/style.css` se generuje automaticky, takže ho neupravuj ručně.
 
-**3. Database Connection Failed:**
+```bash
+npm install
+npm run watch  # během úprav
+npm run build  # finální CSS
+```
 
-- Verify database credentials in .env
-- Check if database exists
-- Ensure MySQL/MariaDB is running
+Používej úplné názvy Tailwind tříd, například `bg-indigo-50`, protože sestavení hledá třídy v textu šablon. Nové soubory pod `src/views/` jsou zahrnuté automaticky. Starý soubor `src/assets/css/main.css` je pozůstatek původního projektu a aktuální build ho nepoužívá.
 
-**4. 500 Internal Server Error:**
-
-- Check error logs in `storage/logs/`
-- Verify PHP error reporting settings
-- Check file permissions
-
-## 📞 Support
-
-- Create an issue for bugs or feature requests
-- Check existing issues before creating new ones
-- Provide detailed error messages and steps to reproduce
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-Deployment fixed and tested
+`composer test` spouští aktuální testy základu a `composer lint` kontroluje PHP syntaxi. Před nasazením ověř úvodní stránku, `/docs`, `/en/docs`, `/cookies`, neznámou URL a `/api/v1/health`.

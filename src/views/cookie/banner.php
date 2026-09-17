@@ -1,38 +1,27 @@
-<?php
-// Zkontrolujeme, zda uživatel již udělil souhlas s cookies
-$cookieConsent = isset($_COOKIE['cookie_consent']) ? json_decode($_COOKIE['cookie_consent'], true) : null;
-$showBanner = $cookieConsent === null;
-?>
-
-<!-- Cookie banner -->
-<div id="cookie-banner" class="fixed bottom-0 left-0 w-full bg-gray-800 text-white py-4 px-6 z-50 shadow-lg transition-transform duration-300 <?= $showBanner ? '' : 'translate-y-full hidden' ?>">
-    <div class="container mx-auto">
-        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div class="flex-1">
-                <h3 class="text-xl font-bold mb-2">Používáme cookies</h3>
-                <p class="text-sm md:text-base">
-                    Tato stránka používá cookies pro zlepšení vašeho zážitku, analýzu návštěvnosti a personalizaci obsahu.
-                    Kliknutím na "Přijmout vše" souhlasíte s používáním všech cookies.
-                </p>
-            </div>
-            <div class="flex flex-wrap gap-2">
-                <!-- Odstraněna třída cookie-settings-btn, která způsobovala problém -->
-                <a href="<?= locale_url('cookies/settings') ?>" class="text-sm border border-white text-white px-4 py-2 rounded hover:bg-white hover:text-gray-800 transition">
-                    Nastavení
-                </a>
-                <form action="<?= locale_url('cookies/reject') ?>" method="post">
-                    <?= csrf_field() ?>
-                    <button type="submit" class="text-sm border border-white text-white px-4 py-2 rounded hover:bg-white hover:text-gray-800 transition">
-                        Odmítnout
-                    </button>
-                </form>
-                <form action="<?= locale_url('cookies/accept-all') ?>" method="post">
-                    <?= csrf_field() ?>
-                    <button type="submit" class="text-sm bg-gold border border-gold text-white px-4 py-2 rounded hover:bg-opacity-90 transition">
-                        Přijmout vše
-                    </button>
-                </form>
-            </div>
+<?php if (cookie_preferences() === null && current_route_path() !== 'cookies'): ?>
+<aside class="cookie-banner" aria-labelledby="cookie-banner-title">
+    <div class="cookie-banner-inner">
+        <div>
+            <h2 id="cookie-banner-title"><?= htmlspecialchars(__('cookie_banner_title'), ENT_QUOTES, 'UTF-8') ?></h2>
+            <p><?= htmlspecialchars(__('cookie_description'), ENT_QUOTES, 'UTF-8') ?></p>
+        </div>
+        <div class="cookie-actions">
+            <form action="<?= htmlspecialchars(locale_url('cookies'), ENT_QUOTES, 'UTF-8') ?>" method="post">
+                <?= csrf_field() ?>
+                <input type="hidden" name="choice" value="none">
+                <input type="hidden" name="return_path" value="<?= htmlspecialchars(current_route_path(), ENT_QUOTES, 'UTF-8') ?>">
+                <input type="hidden" name="return_language" value="<?= htmlspecialchars(lang()->getCurrentLanguage(), ENT_QUOTES, 'UTF-8') ?>">
+                <button class="button button-secondary" type="submit"><?= htmlspecialchars(__('cookie_reject'), ENT_QUOTES, 'UTF-8') ?></button>
+            </form>
+            <a class="button button-secondary" href="<?= htmlspecialchars(locale_url('cookies'), ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars(__('cookie_customize'), ENT_QUOTES, 'UTF-8') ?></a>
+            <form action="<?= htmlspecialchars(locale_url('cookies'), ENT_QUOTES, 'UTF-8') ?>" method="post">
+                <?= csrf_field() ?>
+                <input type="hidden" name="choice" value="all">
+                <input type="hidden" name="return_path" value="<?= htmlspecialchars(current_route_path(), ENT_QUOTES, 'UTF-8') ?>">
+                <input type="hidden" name="return_language" value="<?= htmlspecialchars(lang()->getCurrentLanguage(), ENT_QUOTES, 'UTF-8') ?>">
+                <button class="button" type="submit"><?= htmlspecialchars(__('cookie_accept'), ENT_QUOTES, 'UTF-8') ?></button>
+            </form>
         </div>
     </div>
-</div>
+</aside>
+<?php endif; ?>

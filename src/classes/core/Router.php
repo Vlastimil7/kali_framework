@@ -13,8 +13,6 @@ class Router
     private ?Request $request = null;
 
     private array $middlewareAliases = [
-        'auth' => \Middleware\AuthMiddleware::class,
-        'admin' => \Middleware\AdminMiddleware::class,
         'csrf' => \Middleware\CsrfMiddleware::class,
     ];
 
@@ -144,7 +142,7 @@ class Router
         try {
             // Pokus o nalezení a zpracování route
             return $this->matchRoute($url, $method);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             // Zpracování chyb
             return $this->handleRouteError($e);
         }
@@ -418,16 +416,15 @@ class Router
 
     /**
      * Zpracování chyby route
-     * @param \Exception $e Zachycená výjimka
+     * @param \Throwable $e Zachycená chyba
      * @return mixed Výsledek zpracování chyby
      */
-    private function handleRouteError(\Exception $e)
+    private function handleRouteError(\Throwable $e)
     {
         // Protokolování chyby
         Logger::error('Route error: ' . $e->getMessage());
 
-        // Zobrazení 404
-        $this->show404();
+        $this->showError(500);
     }
 
     /**
@@ -435,11 +432,16 @@ class Router
      */
     private function show404(): void
     {
+        $this->showError(404);
+    }
+
+    private function showError(int $statusCode): void
+    {
         // Zjistíme URL
         $url = current_route_path();
 
         // Nastavení HTTP hlavičky
-        http_response_code(404);
+        http_response_code($statusCode);
 
         // Rozlišení mezi API a webovou routou
         if ($this->isApiRoute($url)) {
@@ -448,8 +450,8 @@ class Router
 
             $response = [
                 'success' => false,
-                'message' => __('page_not_found', [], '404'),
-                'statusCode' => 404,
+                'message' => $statusCode === 404 ? __('page_not_found') : __('error_server_title'),
+                'statusCode' => $statusCode,
             ];
 
             echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
@@ -457,12 +459,13 @@ class Router
         } else {
             // Pro webovou route použijeme HTML layout
             ob_start();
-            include ROOT_PATH . '/src/views/errors/404.php';
+            $errorCode = $statusCode;
+            include ROOT_PATH . '/src/views/errors/status.php';
             $content = ob_get_clean();
 
             // Data pro layout
             $data = [
-                'title' => __('page_not_found', [], '404') . ' | VK-DEV.cz',
+                'title' => ($statusCode === 404 ? __('page_not_found') : __('error_server_title')) . ' | ' . config('app.name'),
                 'content' => $content,
                 'noindex' => true,
             ];

@@ -2,27 +2,17 @@
 
 use Core\Config;
 
-$basePath = dirname(dirname(__DIR__));
+$root = dirname(__DIR__, 2);
+require_once $root . '/src/helpers/env.php';
+loadEnv($root . '/.env');
 
-require_once $basePath . '/src/helpers/env.php';
-loadEnv($basePath . '/.env');
-
-require_once $basePath . '/src/helpers/config_helper.php';
-
-foreach (['app', 'database', 'mail', 'recaptcha', 'ai', 'payments', 'oauth', 'vouchers'] as $section) {
-    $values = require $basePath . '/src/config/' . $section . '.php';
-    if (!is_array($values)) {
-        throw new RuntimeException("Configuration section {$section} must return an array.");
-    }
-    Config::set($section, $values);
+foreach (['app', 'site', 'database', 'mail', 'cookies'] as $section) {
+    Config::set($section, require __DIR__ . '/' . $section . '.php');
 }
 
-date_default_timezone_set((string)config('app.timezone', 'Europe/Prague'));
+// Save connection settings now; PDO connects only when first used.
+Core\Database::setConfig((array) config('database'));
 
-if (config('app.env') === 'production' && !config('app.debug', false)) {
-    error_reporting(0);
-    ini_set('display_errors', '0');
-} else {
-    error_reporting(E_ALL);
-    ini_set('display_errors', '1');
-}
+date_default_timezone_set((string) config('app.timezone', 'Europe/Prague'));
+ini_set('display_errors', config('app.debug', false) ? '1' : '0');
+error_reporting(config('app.debug', false) ? E_ALL : 0);

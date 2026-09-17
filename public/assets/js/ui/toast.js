@@ -1,143 +1,99 @@
-(function () {
-  const CONTAINER_PREFIX = "toast-container";
+(() => {
+    'use strict';
 
-  // Tailwind pozice pro container
-  const POSITIONS = {
-    "top-right": "top-4 right-4 items-end",
-    "top-left": "top-4 left-4 items-start",
-    "top-center": "top-4 left-1/2 -translate-x-1/2 items-center",
-    "bottom-right": "bottom-4 right-4 items-end",
-    "bottom-left": "bottom-4 left-4 items-start",
-    "bottom-center": "bottom-4 left-1/2 -translate-x-1/2 items-center",
-    center: "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 items-center",
-  };
+    const allowedTypes = ['success', 'error', 'warning', 'info'];
+    const allowedPositions = [
+        'top-right', 'top-left', 'top-center',
+        'bottom-right', 'bottom-left', 'bottom-center', 'center',
+    ];
+    const icons = { success: '✓', error: '!', warning: '!', info: 'i' };
 
-  function ensureContainer(position = "top-right") {
-    const posKey = POSITIONS[position] ? position : "top-right";
-    const id = `${CONTAINER_PREFIX}-${posKey}`;
+    function stack(position) {
+        const safePosition = allowedPositions.includes(position) ? position : 'top-right';
+        const id = `toast-stack-${safePosition}`;
+        let region = document.getElementById(id);
+        if (region) return region;
 
-    let el = document.getElementById(id);
-    if (el) return el;
-
-    el = document.createElement("div");
-    el.id = id;
-
-    // container: fixed + stack + pointer-events none (kliknutí bere toast samotný)
-    el.className = [
-      "fixed z-[10000] flex flex-col gap-3 pointer-events-none",
-      POSITIONS[posKey],
-    ].join(" ");
-
-    el.setAttribute("aria-live", "polite");
-    el.setAttribute("aria-atomic", "true");
-
-    document.body.appendChild(el);
-    return el;
-  }
-
-  function icon(type) {
-    switch (type) {
-      case "success":
-        return "✓";
-      case "error":
-        return "✕";
-      case "warning":
-        return "!";
-      default:
-        return "ℹ";
-    }
-  }
-
-  function styles(type) {
-    switch (type) {
-      case "success":
-        return "border-green-400/40 bg-green-500/10 text-green-100";
-      case "error":
-        return "border-red-400/40 bg-red-500/10 text-red-100";
-      case "warning":
-        return "border-yellow-400/40 bg-yellow-500/10 text-yellow-100";
-      default:
-        return "border-cyan-400/40 bg-cyan-500/10 text-cyan-100";
-    }
-  }
-
-  function createToast({
-    message,
-    type = "info",
-    title = "",
-    timeout = 3500,
-    closable = true,
-    position = "top-right",
-  }) {
-    const container = ensureContainer(position);
-
-    const el = document.createElement("div");
-    el.className = [
-      "pointer-events-auto",
-      "rounded-2xl border shadow-2xl backdrop-blur",
-      "px-4 py-3",
-      "flex gap-3 items-start",
-      "max-w-[22rem] w-full", // aby to nebylo moc široké
-      "animate-[toastIn_.18s_ease-out]",
-      styles(type),
-    ].join(" ");
-
-    el.innerHTML = `
-      <div class="mt-0.5 text-lg font-extrabold">${icon(type)}</div>
-      <div class="min-w-0 flex-1">
-        ${title ? `<div class="text-sm font-bold text-white">${escapeHtml(title)}</div>` : ""}
-        <div class="text-sm leading-snug text-white/90">${escapeHtml(message)}</div>
-      </div>
-      ${closable ? `<button type="button" class="ml-1 text-xl leading-none opacity-70 hover:opacity-100 cursor-pointer">&times;</button>` : ""}
-    `;
-
-    function remove() {
-      el.classList.remove("animate-[toastIn_.18s_ease-out]");
-      el.classList.add("animate-[toastOut_.18s_ease-in]");
-      window.setTimeout(() => el.remove(), 160);
+        region = document.createElement('div');
+        region.id = id;
+        region.className = `toast-stack toast-stack--${safePosition}`;
+        region.setAttribute('aria-label', document.body.dataset.toastRegion || 'Notifications');
+        document.body.appendChild(region);
+        return region;
     }
 
-    if (closable) {
-      el.querySelector("button")?.addEventListener("click", remove);
+    function show(message, options = {}) {
+        const type = allowedTypes.includes(options.type) ? options.type : 'info';
+        const position = options.position || 'top-right';
+        const item = document.createElement('div');
+        item.className = `toast toast--${type}`;
+        item.setAttribute('role', type === 'error' || type === 'warning' ? 'alert' : 'status');
+
+        const symbol = document.createElement('span');
+        symbol.className = 'toast-icon';
+        symbol.setAttribute('aria-hidden', 'true');
+        symbol.textContent = icons[type];
+
+        const copy = document.createElement('div');
+        copy.className = 'toast-copy';
+        if (options.title) {
+            const title = document.createElement('strong');
+            title.textContent = String(options.title);
+            copy.appendChild(title);
+        }
+        const description = document.createElement('span');
+        description.textContent = String(message);
+        copy.appendChild(description);
+
+        const close = document.createElement('button');
+        close.type = 'button';
+        close.className = 'toast-close';
+        close.setAttribute('aria-label', document.body.dataset.toastClose || 'Close notification');
+        close.textContent = '×';
+        close.addEventListener('click', () => item.remove());
+
+        item.append(symbol, copy, close);
+        stack(position).appendChild(item);
+        const timeout = Number(options.timeout ?? 5000);
+        if (Number.isFinite(timeout) && timeout > 0) {
+            window.setTimeout(() => item.remove(), timeout);
+        }
+        return item;
     }
 
-    if (timeout > 0) window.setTimeout(remove, timeout);
+    window.toast = {
+        show,
+        success: (message, options = {}) => show(message, { ...options, type: 'success' }),
+        error: (message, options = {}) => show(message, { ...options, type: 'error' }),
+        warning: (message, options = {}) => show(message, { ...options, type: 'warning' }),
+        info: (message, options = {}) => show(message, { ...options, type: 'info' }),
+    };
 
-    container.appendChild(el);
-    return { el, remove };
-  }
+    const embedded = document.getElementById('server-toasts');
+    if (embedded) {
+        try {
+            const messages = JSON.parse(embedded.textContent || '[]');
+            if (Array.isArray(messages)) {
+                messages.forEach((entry) => {
+                    if (entry && typeof entry === 'object') {
+                        show(entry.message || '', {
+                            type: entry.type,
+                            title: entry.title,
+                            position: entry.position,
+                            timeout: 7000,
+                        });
+                    }
+                });
+            }
+        } catch (_) {
+            // A malformed optional payload must not break the page.
+        }
+    }
 
-  function escapeHtml(s) {
-    return String(s)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
-
-  // Public API
-  window.toast = {
-    show: (message, opts = {}) => createToast({ message, ...opts }),
-    success: (message, opts = {}) =>
-      createToast({ message, type: "success", ...opts }),
-    error: (message, opts = {}) =>
-      createToast({ message, type: "error", ...opts }),
-    warning: (message, opts = {}) =>
-      createToast({ message, type: "warning", ...opts }),
-    info: (message, opts = {}) =>
-      createToast({ message, type: "info", ...opts }),
-  };
-  // flush queued toasts (rendered before toast.js loaded)
-  if (Array.isArray(window.__toastQueue)) {
-    window.__toastQueue.forEach((t) => {
-      window.toast.show(t.message || "", {
-        type: t.type || "info",
-        title: t.title || "",
-        position: t.position || "top-right",
-        timeout: t.timeout || 7000,
-      });
-    });
-    window.__toastQueue = [];
-  }
+    if (Array.isArray(window.__toastQueue)) {
+        window.__toastQueue.forEach((entry) => {
+            if (entry && typeof entry === 'object') show(entry.message || '', entry);
+        });
+        window.__toastQueue = [];
+    }
 })();

@@ -69,7 +69,7 @@ class Controller
     {
         http_response_code(404);
         $data = [
-            'title' => __('page_not_found', [], '404') . ' | VK-DEV.cz',
+            'title' => __('page_not_found') . ' | ' . config('app.name'),
             'content' => $this->renderView('errors/404'),
             'noindex' => true,
         ];

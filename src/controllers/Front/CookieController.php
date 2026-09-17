@@ -5,126 +5,49 @@ namespace Controllers\Front;
 use Core\Controller;
 use Core\Request;
 
-class CookieController extends Controller
+final class CookieController extends Controller
 {
-    public function index()
+    public function showSettings(): void
     {
-        $data = [
-            'title' => __('cookies_consent_title', [], 'cookies'),
-        ];
-
-        $this->view('cookie/index', $data);
-    }
-
-
-    /**
-     * Zobrazí nastavení cookies
-     */
-    public function showSettings(Request $request)
-    {
-        // Získat aktuální nastavení cookies, pokud existuje
-        $cookieConsent = $request->cookie('cookie_consent')
-            ? json_decode((string)$request->cookie('cookie_consent'), true)
-            : null;
-
-        $data = [
-            'title' => '' . __('cookies_settings_title', [], 'cookies') . ' | VK-DEV.cz',
-            'preferences' => $cookieConsent ?? [
+        $this->view('cookie/settings', [
+            'title' => __('cookie_settings_title') . ' | ' . config('app.name'),
+            'description' => __('cookie_description'),
+            'preferences' => cookie_preferences() ?? [
                 'necessary' => true,
                 'analytics' => false,
                 'marketing' => false,
-                'preferences' => false,
             ],
-        ];
-
-        $this->view('cookie/settings', $data);
+        ]);
     }
 
-    /**
-     * Uloží nastavení cookies podle preferencí uživatele
-     */
-    public function saveConsent(Request $request)
+    public function save(Request $request): void
     {
-        $necessary = true; // Vždy povoleno
-        $analytics = $request->has('analytics');
-        $marketing = $request->has('marketing');
-        $preferences = $request->has('preferences');
+        $choice = (string) $request->post('choice', 'selected');
+        if (!in_array($choice, ['all', 'none', 'selected'], true)) {
+            http_response_code(400);
+            return;
+        }
 
-        // Vytvoření pole preferencí
-        $cookiePreferences = [
-            'necessary' => $necessary,
-            'analytics' => $analytics,
-            'marketing' => $marketing,
-            'preferences' => $preferences,
-            'timestamp' => time(),
+        $preferences = [
+            'version' => 1,
+            'analytics' => $choice === 'all' || ($choice === 'selected' && $request->post('analytics') === '1'),
+            'marketing' => $choice === 'all' || ($choice === 'selected' && $request->post('marketing') === '1'),
         ];
 
-        // Uložení do cookie na 1 rok
-        $this->setCookie('cookie_consent', json_encode($cookiePreferences), 365, $request->isSecure());
-
-        // Přesměrování zpět na stránku, odkud byl požadavek odeslán
-        $referer = $request->header('Referer', config('app.base_url', ''));
-        header('Location: ' . $referer);
-        exit;
-    }
-
-    /**
-     * Přijme všechny cookies
-     */
-    public function acceptAll(Request $request)
-    {
-        $cookiePreferences = [
-            'necessary' => true,
-            'analytics' => true,
-            'marketing' => true,
-            'preferences' => true,
-            'timestamp' => time(),
-        ];
-
-        // Uložení do cookie na 1 rok
-        $this->setCookie('cookie_consent', json_encode($cookiePreferences), 365, $request->isSecure());
-
-        // Přesměrování zpět na stránku, odkud byl požadavek odeslán
-        $referer = $request->header('Referer', config('app.base_url', ''));
-        header('Location: ' . $referer);
-        exit;
-    }
-
-    /**
-     * Odmítne všechny volitelné cookies
-     */
-    public function rejectAll(Request $request)
-    {
-        $cookiePreferences = [
-            'necessary' => true,
-            'analytics' => false,
-            'marketing' => false,
-            'preferences' => false,
-            'timestamp' => time(),
-        ];
-
-        // Uložení do cookie na 1 rok
-        $this->setCookie('cookie_consent', json_encode($cookiePreferences), 365, $request->isSecure());
-
-        // Přesměrování zpět na stránku, odkud byl požadavek odeslán
-        $referer = $request->header('Referer', config('app.base_url', ''));
-        header('Location: ' . $referer);
-        exit;
-    }
-
-    /**
-     * Pomocná metoda pro nastavení cookie
-     */
-    private function setCookie($name, $value, $days = 30, bool $secure = false)
-    {
-        $expiry = time() + ($days * 86400); // 86400 = 1 den v sekundách
-        setcookie($name, $value, [
-            'expires' => $expiry,
-            'path' => '/',
-            'domain' => '',
-            'secure' => $secure,
-            'httponly' => false,
+        $cookiePath = rtrim((string) config('app.base_url', ''), '/') . '/';
+        setcookie((string) config('cookies.name', 'kali_consent'), json_encode($preferences, JSON_THROW_ON_ERROR), [
+            'expires' => time() + (int) config('cookies.lifetime_days', 180) * 86400,
+            'path' => $cookiePath,
+            'secure' => $request->isSecure(),
+            'httponly' => true,
             'samesite' => 'Lax',
         ]);
+
+        $route = trim((string) $request->post('return_path', ''), '/');
+        if (!preg_match('~^[a-zA-Z0-9/_-]*$~', $route)) {
+            $route = '';
+        }
+        $language = (string) $request->post('return_language', lang()->getDefaultLanguage());
+        header('Location: ' . locale_url($route, $language), true, 303);
     }
 }

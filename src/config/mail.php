@@ -1,7 +1,7 @@
 <?php
 
 $fromAddress = (string)env('MAIL_FROM_ADDRESS', '');
-$fromName = (string)env('MAIL_FROM_NAME', config('app.name', 'VK-DEV'));
+$fromName = (string)env('MAIL_FROM_NAME', config('app.name', 'Kali project'));
 
 return [
     'mailer' => (string)env('MAIL_MAILER', 'smtp'),

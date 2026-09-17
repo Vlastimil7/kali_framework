@@ -2,7 +2,7 @@
 
 /**
  * Reads the public locale from the URL and returns the route without its prefix.
- * English is canonical without a prefix; /en/... permanently redirects to /....
+ * The default language has no prefix; other supported languages use /{locale}/.
  */
 function initialize_localized_request(string $rawPath): string
 {
@@ -18,21 +18,21 @@ function initialize_localized_request(string $rawPath): string
 
     $GLOBALS['localized_public_request'] = true;
 
-    if ($firstSegment === 'en') {
+    if ($firstSegment === lang()->getDefaultLanguage()) {
         array_shift($segments);
         $routePath = implode('/', $segments);
         $GLOBALS['localized_route_path'] = $routePath;
         $statusCode = in_array($_SERVER['REQUEST_METHOD'] ?? 'GET', ['GET', 'HEAD'], true) ? 301 : 308;
-        header('Location: ' . locale_url($routePath, 'en', request_query_parameters()), true, $statusCode);
+        header('Location: ' . locale_url($routePath, lang()->getDefaultLanguage(), request_query_parameters()), true, $statusCode);
         exit;
     }
 
-    if (in_array($firstSegment, ['cs', 'de'], true)) {
+    if (lang()->isValidLanguage($firstSegment)) {
         lang()->setLanguage($firstSegment);
         array_shift($segments);
         $path = implode('/', $segments);
     } else {
-        lang()->setLanguage('en');
+        lang()->setLanguage(lang()->getDefaultLanguage());
     }
 
     $GLOBALS['localized_route_path'] = $path;

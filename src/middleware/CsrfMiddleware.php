@@ -5,42 +5,23 @@ namespace Middleware;
 use Core\MiddlewareInterface;
 use Core\Request;
 use Helpers\Csrf;
-use Helpers\Toast;
 
-class CsrfMiddleware implements MiddlewareInterface
+final class CsrfMiddleware implements MiddlewareInterface
 {
-    private const SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS'];
-
     public function handle(Request $request, callable $next)
     {
-        if (in_array($request->method(), self::SAFE_METHODS, true)) {
+        if (in_array($request->method(), ['GET', 'HEAD', 'OPTIONS'], true)) {
             return $next();
         }
 
         $token = $request->post('_token') ?: $request->header('X-CSRF-TOKEN');
-        if (Csrf::validate(is_scalar($token) ? (string)$token : null)) {
+        if (Csrf::validate(is_scalar($token) ? (string) $token : null)) {
             return $next();
         }
 
-        Toast::error('Platnost formuláře vypršela. Obnovte stránku a zkuste to znovu.');
-        header('Location: ' . $this->safeRedirect($request));
-
+        http_response_code(419);
+        header('Content-Type: text/plain; charset=utf-8');
+        echo 'CSRF token is invalid or expired.';
         return null;
-    }
-
-    private function safeRedirect(Request $request): string
-    {
-        $referer = (string)$request->header('Referer', '');
-        $refererHost = strtolower((string)parse_url($referer, PHP_URL_HOST));
-        $siteHost = strtolower((string)parse_url(
-            (string)config('app.site_url', ''),
-            PHP_URL_HOST,
-        ));
-
-        if ($referer !== '' && $siteHost !== '' && $refererHost === $siteHost) {
-            return $referer;
-        }
-
-        return locale_url('');
     }
 }
