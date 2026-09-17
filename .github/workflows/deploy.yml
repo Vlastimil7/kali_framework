@@ -1,72 +1,62 @@
-name: Deploy Kali Framework
+name: Deploy DEV
+
 on:
-  pull_request:
-    branches: [main]
-    types: [closed] # POUZE production deployment při merge do main
-  # Odstraněno: push na develop = žádný auto deployment
+  push:
+    branches:
+      - main
+
+env:
+  DEPLOY_HOST: ${{ secrets.DEV_SSH_HOST }}
+  DEPLOY_USER: ${{ secrets.DEV_SSH_USER }}
+  DEPLOY_PATH: /var/www/html/kali-framework
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    # Pouze při merge do main
-    if: github.event.pull_request.merged == true
-
     steps:
-      - name: Deploy to server
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /var/www/web.kalasekvyvoj.cz/web/kali-framework
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-            echo "🚀 Starting production deployment..."
+      - name: Configure SSH
+        shell: bash
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.DEV_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
 
-            # Backup critical files
-            echo "💾 Backing up critical files..."
-            cp .env /tmp/deploy-env-backup 2>/dev/null || true
+      - name: Validate required tools
+        shell: bash
+        run: |
+          ssh "$DEPLOY_USER@$DEPLOY_HOST" \
+            "command -v php >/dev/null && command -v composer >/dev/null && command -v npm >/dev/null"
 
-            # Fix permissions BEFORE Git operations
-            echo "🔧 Fixing permissions for Git operations..."
-            sudo chown -R deploy:www-data .
-            sudo chmod -R 755 .
+      - name: Ensure deploy path exists
+        shell: bash
+        run: |
+          ssh "$DEPLOY_USER@$DEPLOY_HOST" \
+            "mkdir -p $DEPLOY_PATH"
 
-            # FORCE sync with GitHub from MAIN branch
-            echo "📥 Force syncing with GitHub from main..."
-            git fetch origin
-            git reset --hard origin/main
-            git checkout main
-            # Nemazej storage adresář
-            git clean -fd -e storage/
+      - name: Deploy files
+        shell: bash
+        run: |
+          rsync -az --delete \
+            --exclude=".git/" \
+            --exclude=".github/" \
+            --exclude=".env" \
+            --exclude=".env.production" \
+            --exclude="node_modules/" \
+            --exclude="vendor/" \
+            --exclude="storage/" \
+            ./ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
 
-            # Restore critical files
-            echo "🔄 Restoring critical files..."
-            cp /tmp/deploy-env-backup .env 2>/dev/null || true
-            # .htaccess zůstává server specific - nepřepisuje se
-            chmod 600 .env
-
-            # Install ONLY PHP dependencies
-            echo "📦 Installing PHP dependencies..."
-            composer install --no-dev --optimize-autoloader --no-interaction
-
-            # Remove node_modules if exists (cleanup)
-            echo "🧹 Cleaning up..."
-            rm -rf node_modules/
-            rm -rf storage/cache/*
-            rm -rf storage/logs/*.log
-
-            # Set FINAL permissions for ISPConfig
-            echo "🔧 Setting final permissions for web server..."
-            sudo chown -R web2:client1 .
-            sudo chown -R web2:www-data storage/
-            sudo chmod -R 755 .
-            sudo chmod -R 775 storage/
-            sudo chmod 600 .env
-
-            # Reload services
-            echo "🔄 Reloading services..."
-            sudo systemctl reload php8.1-fpm apache2
-
-            echo "✅ Production deployment completed successfully!"
+      - name: Install production dependencies and build assets
+        shell: bash
+        run: |
+          ssh "$DEPLOY_USER@$DEPLOY_HOST" "
+            cd $DEPLOY_PATH &&
+            composer install --no-dev --optimize-autoloader &&
+            npm ci &&
+            npm run build
+          "
