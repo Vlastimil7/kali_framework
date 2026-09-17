@@ -17,7 +17,7 @@ foreach ($vouchers as $v) {
     <!-- Nadpis -->
     <div class="mb-12 text-center">
         <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
-            Dárkové vouchery Midobarbershop 3
+            Dárkové vouchery Midobarbershop 4
         </h1>
         <p class="mt-4 mx-auto max-w-3xl text-base md:text-lg text-white leading-relaxed">
             Stylový dárek pro každou příležitost. Vyber si hodnotu voucheru, zaplať online
