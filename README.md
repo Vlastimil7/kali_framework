@@ -51,7 +51,7 @@ Základní vazba je: **URL → routa → kontroler → šablona nebo JSON**.
 Požadavky: PHP 8.4+, Composer 2. Node.js, databáze a SMTP jsou pro výchozí aplikaci volitelné.
 
 1. Zkopíruj repozitář do nového adresáře a spusť `composer install`.
-2. Zkopíruj `.env.example` na `.env`. Nastav hlavně `APP_NAME` a `APP_URL`. Pokud web běží v podadresáři, nastav také `APP_BASE_URL`; při kořeni webu ho nech prázdné. Veřejné kontaktní údaje vyplň pomocí `CONTACT_*` a `SOCIAL_*`.
+2. Zkopíruj `.env.example` na `.env`. Nastav `APP_NAME`, `APP_URL_DEVELOPMENT` a `APP_URL_PRODUCTION`. Do každé URL zahrň případný podadresář aplikace. Veřejné kontaktní údaje vyplň pomocí `CONTACT_*` a `SOCIAL_*`.
 3. Spusť lokální server:
 
    ```bash
@@ -61,9 +61,19 @@ Požadavky: PHP 8.4+, Composer 2. Node.js, databáze a SMTP jsou pro výchozí a
 4. Otevři `http://localhost:8000` a ověř také `/en`, `/cookies` a `/api/v1/health`.
 5. Nahraď ukázkový obsah vlastním. Začni v `src/routes/web.php`, `src/controllers/Front/HomeController.php`, `src/views/home/index.php` a `src/assets/css/framework.css`.
 
-Při nasazení nastav kořen webu na `public/`, přesměrování neexistujících souborů na `public/index.php`, `APP_ENV=production`, `APP_DEBUG=false` a správnou `APP_URL`. Soubor `.env` nepatří do veřejného adresáře ani do Gitu.
+### URL pro vývoj a produkci
 
-Současná místní `.env` může používat starší názvy `BASE_URL_DEV` a `SITE_URL_DEV`; `src/config/app.php` je zatím přijímá jako náhradní hodnoty. V novém projektu používej `APP_BASE_URL` a `APP_URL`.
+V `.env` měj dvě úplné adresy. `APP_ENV` určuje, která se použije:
+
+```dotenv
+APP_ENV=development
+APP_URL_DEVELOPMENT=http://localhost:8000
+APP_URL_PRODUCTION=https://example.com
+```
+
+Pokud lokální web běží v podadresáři, zapiš ho přímo do `APP_URL_DEVELOPMENT`, například `http://localhost/my-project/public`. Při změně na `APP_ENV=production` začne framework používat `APP_URL_PRODUCTION`. `config('app.site_url')` vrací aktivní úplnou adresu a `config('app.base_url')` její cestu (například `/my-project/public`); tu už nenastavuješ zvlášť. V šablonách vytvářej interní odkazy pomocí `locale_url('contact')` a úplné odkazy, například do e-mailů, pomocí `locale_site_url('contact')`. Starší projekty s `APP_URL` a případně `APP_BASE_URL` fungují dál, pokud nové proměnné nejsou vyplněné.
+
+Při nasazení nastav kořen webu na `public/`, přesměrování neexistujících souborů na `public/index.php`, `APP_ENV=production` a `APP_DEBUG=false`. Ověř správnou produkční URL v `APP_URL_PRODUCTION`. Soubor `.env` nepatří do veřejného adresáře ani do Gitu.
 
 ### Přehled adresářů
 

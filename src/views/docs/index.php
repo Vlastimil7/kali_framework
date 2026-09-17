@@ -5,12 +5,14 @@ $sections = [
     ['id' => 'start', 'code' => <<<'CODE'
 composer install
 cp .env.example .env
-# Set APP_NAME and APP_URL in .env
+# Set APP_NAME and both environment URLs in .env
 php -S localhost:8000 -t public public/router.php
 CODE],
     ['id' => 'site', 'path' => '.env', 'code' => <<<'CODE'
 APP_NAME="My website"
-APP_URL=https://example.com
+APP_ENV=development
+APP_URL_DEVELOPMENT=http://localhost:8000
+APP_URL_PRODUCTION=https://example.com
 CONTACT_EMAIL=hello@example.com
 CONTACT_PHONE="+420 123 456 789"
 CONTACT_ADDRESS="Main Street 1, Prague"

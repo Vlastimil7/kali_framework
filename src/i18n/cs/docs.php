@@ -11,7 +11,7 @@ return [
     'intro_title' => 'Jak framework funguje',
     'intro_text' => 'Požadavek vstoupí přes public/index.php. Router najde webovou nebo API routu, spustí middleware a zavolá kontroler. Ten vrátí HTML šablonu nebo JSON. Výchozí web používá společný header, footer a nastavení cookies.',
     'start_title' => 'Instalace a nastavení',
-    'start_text' => 'Potřebuješ PHP 8.4+ a Composer 2. Zkopíruj .env.example do .env, nastav APP_NAME a APP_URL. APP_BASE_URL vyplň jen při běhu v podadresáři. Node.js potřebuješ až při úpravách Tailwind CSS.',
+    'start_text' => 'Potřebuješ PHP 8.4+ a Composer 2. Zkopíruj .env.example do .env, nastav APP_NAME, APP_URL_DEVELOPMENT a APP_URL_PRODUCTION. Případný podadresář patří přímo do URL. APP_ENV vybere aktivní prostředí. Node.js potřebuješ až při úpravách Tailwind CSS.',
     'site_title' => 'Údaje webu a kontakt',
     'site_text' => 'Veřejný e-mail, telefon, adresu, dostupnost a sociální odkazy nastav v .env. src/config/site.php je převede na hodnoty config("site.contact.email") a podobně. Stránka /contact zobrazí jen vyplněné údaje; kontaktní formulář není zapnutý, dokud ho pro konkrétní projekt nepřipravíš.',
     'structure_title' => 'Struktura projektu',
@@ -37,6 +37,6 @@ return [
     'extend_title' => 'Rozšiřování projektu',
     'extend_text' => 'Novou funkci přidej jako routu, kontroler, šablonu a případně službu. Vzhled doplň utility třídami Tailwindu nebo vlastními CSS pravidly. Framework nepředepisuje ORM ani složitou strukturu modulů; použij jen to, co konkrétní web potřebuje.',
     'deploy_title' => 'Testy a nasazení',
-    'deploy_text' => 'Před nasazením spusť testy a kontrolu PHP syntaxe. Webový server směruj do public/, nastav APP_ENV=production, APP_DEBUG=false a správnou APP_URL. .env nepatří do Gitu ani do veřejného adresáře.',
+    'deploy_text' => 'Před nasazením spusť testy a kontrolu PHP syntaxe. Webový server směruj do public/, nastav APP_ENV=production, APP_DEBUG=false a správnou APP_URL_PRODUCTION. .env nepatří do Gitu ani do veřejného adresáře.',
     'legacy_note' => 'V repozitáři zatím zůstávají soubory původního projektu. Výchozí routy je nenačítají. Před případným použitím je projdi a přizpůsob novému webu.',
 ];

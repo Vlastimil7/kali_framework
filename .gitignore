@@ -1,4 +1,3 @@
-public/.htaccess
 public.htaccess.example
 public/uploads/.htaccess
 /vendor/
@@ -12,4 +11,3 @@ public/uploads/.htaccess
 Thumbs.db
 desktop.ini
 .vscode/settings.json
-public/.htaccess

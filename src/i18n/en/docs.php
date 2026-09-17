@@ -11,7 +11,7 @@ return [
     'intro_title' => 'How the framework works',
     'intro_text' => 'Requests enter through public/index.php. The router finds a web or API route, runs its middleware and calls a controller. The controller returns an HTML view or JSON. The default site uses a shared header, footer and cookie preferences.',
     'start_title' => 'Installation and setup',
-    'start_text' => 'You need PHP 8.4+ and Composer 2. Copy .env.example to .env and set APP_NAME and APP_URL. Set APP_BASE_URL only when running in a subdirectory. Node.js is needed when editing Tailwind CSS.',
+    'start_text' => 'You need PHP 8.4+ and Composer 2. Copy .env.example to .env and set APP_NAME, APP_URL_DEVELOPMENT and APP_URL_PRODUCTION. Include any subdirectory in the URL itself. APP_ENV selects the active environment. Node.js is needed when editing Tailwind CSS.',
     'site_title' => 'Site and contact details',
     'site_text' => 'Set your public email, phone, address, availability and social links in .env. src/config/site.php exposes them as config("site.contact.email") and similar values. The /contact page shows only configured details; add a contact form when your project is ready to handle submissions.',
     'structure_title' => 'Project structure',
@@ -37,6 +37,6 @@ return [
     'extend_title' => 'Extending a project',
     'extend_text' => 'Add a feature as a route, controller, view and optional service. Extend the design with Tailwind utilities or custom CSS. The framework does not impose an ORM or a complex module structure; use what your site needs.',
     'deploy_title' => 'Tests and deployment',
-    'deploy_text' => 'Run tests and PHP syntax checks before deployment. Point the web server at public/, set APP_ENV=production, APP_DEBUG=false and the correct APP_URL. Keep .env out of Git and the public directory.',
+    'deploy_text' => 'Run tests and PHP syntax checks before deployment. Point the web server at public/, set APP_ENV=production, APP_DEBUG=false and the correct APP_URL_PRODUCTION. Keep .env out of Git and the public directory.',
     'legacy_note' => 'Files from the original project still remain in the repository. Default routes do not load them. Review and adapt them before using them in another site.',
 ];
