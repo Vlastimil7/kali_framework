@@ -75,6 +75,26 @@ Pokud lokální web běží v podadresáři, zapiš ho přímo do `APP_URL_DEVEL
 
 Při nasazení nastav kořen webu na `public/`, přesměrování neexistujících souborů na `public/index.php`, `APP_ENV=production` a `APP_DEBUG=false`. Ověř správnou produkční URL v `APP_URL_PRODUCTION`. Soubor `.env` nepatří do veřejného adresáře ani do Gitu.
 
+#### Apache ve sdíleném kořeni webu
+
+Pokud je projekt uložený jako `kali-framework/`, ale návštěvník má otevírat `/kali-framework/` bez `/public/`, nastav veřejnou adresu právě takto:
+
+```dotenv
+APP_ENV=production
+APP_URL_PRODUCTION=https://web.kalasekvyvoj.cz/kali-framework
+```
+
+Do `.htaccess` v kořeni domény vlož před obecný fallback tato pravidla. První pravidlo zabrání tomu, aby se při dalším průchodu Apache přidávalo `/public/public/`:
+
+```apache
+RewriteEngine On
+RewriteRule ^kali-framework/public(?:/|$) - [L]
+RewriteRule ^kali-framework/?$ kali-framework/public/ [L]
+RewriteRule ^kali-framework/(.*)$ kali-framework/public/$1 [L]
+```
+
+V `kali-framework/public/.htaccess` použij pravidla z tohoto repozitáře. Nezadávej tam `RewriteBase /kali-framework/`: při interním přepisu do adresáře `public` by relativní `index.php` mířilo na nesprávnou cestu. Ověř `/kali-framework/`, `/kali-framework/docs` a `/kali-framework/assets/css/style.css`. Pokud server umožňuje nastavit kořen webu přímo na `kali-framework/public/`, pravidla v kořeni domény nepotřebuješ.
+
 ### Přehled adresářů
 
 | Cesta | Účel |

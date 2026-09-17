@@ -50,6 +50,17 @@ it('selects the production URL independently of development', function (): void 
         ->and($config['base_url'])->toBe('');
 });
 
+it('uses the visible production path when public is hidden by Apache', function (): void {
+    $config = appUrlConfigForTest([
+        'APP_ENV' => 'production',
+        'APP_URL_DEVELOPMENT' => 'http://local.test/kali-framework/public',
+        'APP_URL_PRODUCTION' => 'https://web.example.test/kali-framework',
+    ]);
+
+    expect($config['site_url'])->toBe('https://web.example.test/kali-framework')
+        ->and($config['base_url'])->toBe('/kali-framework');
+});
+
 it('supports a legacy URL when environment URLs are absent', function (): void {
     $config = appUrlConfigForTest([
         'APP_URL' => 'https://old.test/subdir',
