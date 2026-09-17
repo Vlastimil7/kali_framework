@@ -1,4 +1,5 @@
 public/.htaccess
+public.htaccess-example
 public/uploads/.htaccess
 /vendor/
 /node_modules/
