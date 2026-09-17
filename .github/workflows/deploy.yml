@@ -41,7 +41,7 @@ jobs:
       - name: Deploy files
         shell: bash
         run: |
-          rsync -az --delete \
+          rsync -az --omit-dir-times --delete \
             --exclude=".git/" \
             --exclude=".github/" \
             --exclude=".env" \
